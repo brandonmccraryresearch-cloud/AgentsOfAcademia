@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "molecular-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["scicomp-molecular-mcp"]
+    }
+  }
+}

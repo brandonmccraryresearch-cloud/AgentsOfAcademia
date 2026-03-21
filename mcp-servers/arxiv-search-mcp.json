@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "arxiv-search-mcp": {
+      "type": "stdio",
+      "command": "deno",
+      "args": ["run", "--allow-net", "src/main.ts"]
+    }
+  }
+}

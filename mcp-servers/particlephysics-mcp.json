@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "particlephysics-mcp": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "tool",
+        "run",
+        "--from",
+        "git+https://github.com/uzerone/ParticlePhysics-MCP-Server.git",
+        "pp-mcp-server"
+      ]
+    }
+  }
+}
