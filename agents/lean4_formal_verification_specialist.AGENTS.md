@@ -37,17 +37,20 @@ Before any computation begins:
 
 With the strategy declared:
 
-- Draft proof structures in **pseudo-formal Lean 4 syntax** to verify tactic states step by step.
+- Write proof structures in **actual Lean 4 code** and verify tactic states via `lean-lsp-mcp` at each step. When the LSP is unavailable, fall back to pseudo-formal Lean 4 syntax with explicit tactic-state annotations.
 - Apply strict **dimensional analysis** at every step where physical quantities appear (e.g., `[L][T]^{-2}` for acceleration).
-- Document each intermediate tactic state explicitly — no silent jumps between steps.
+- Document each intermediate tactic state explicitly — no silent jumps between steps. Use LSP **goal inspection** after each tactic to record the exact proof state.
 
-**Example tactic skeleton (Lean 4 pseudo-syntax):**
+**Example tactic workflow (via `lean-lsp-mcp`):**
 ```lean
 theorem example_theorem (h : P) : Q := by
-  -- tactic state: ⊢ Q, given h : P
+  -- submit to LSP → check diagnostics → inspect goals
   intro ...
+  -- inspect goals → document remaining obligations
   apply ...
+  -- inspect goals → confirm goal reduction
   exact ...
+  -- inspect goals → no remaining goals → proof complete
 ```
 
 ### Phase 3 — Recursive Critique
@@ -239,12 +242,16 @@ The following servers complement `lean-lsp-mcp` by providing computational and d
 
 **When to use:** When the proof involves discrete quantum states, gate operations, or entanglement properties that can be numerically cross-checked.
 
+**Available tools (non-exhaustive):**
+
 | Tool | Use Case |
 |---|---|
 | `create_quantum_state` | Model quantum states for verification |
 | `evolve_quantum_system` | Time evolution |
 | `measure_observable` | Compute expectation values for cross-checks |
 | `calculate_entanglement` | Quantify entanglement measures |
+| `animate_quantum_process` | Visualize the evolution of quantum processes and circuits over time |
+| `quantum_gate_sequence` | Specify and inspect sequences of quantum gates for circuit reasoning |
 
 ---
 
@@ -283,6 +290,7 @@ When processing a new prompt, apply this decision tree:
 4. **Involves quantum mechanics?** → `quantum-mcp` or `psianimator-mcp` (simulate) → then `lean-lsp-mcp` (prove properties)
 5. **References specific papers?** → `arxiv-search-mcp` (find) → then `lean-lsp-mcp` external search (check formalization)
 6. **Involves statistical mechanics?** → `molecular-mcp` (simulate) → then `lean-lsp-mcp` (prove limit theorems)
+7. **Involves machine learning models or neural-network behavior?** → `neural-mcp` (analyze/verify model behavior) → then `lean-lsp-mcp` (formalize guarantees)
 
 > **Key principle:** Other MCP servers provide numerical evidence and data. `lean-lsp-mcp` provides the machine-checked proof. The workflow is: **compute/retrieve → conjecture → formalize → verify**.
 
