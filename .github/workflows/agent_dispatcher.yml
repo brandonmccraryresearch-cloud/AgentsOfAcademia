@@ -1,0 +1,328 @@
+# ==============================================================================
+# AGENT DISPATCHER — Master Routing Workflow
+# ==============================================================================
+#
+# Routing Logic Diagram:
+#
+#   workflow_dispatch / repository_dispatch (activate_agent)
+#          │
+#          ▼
+#   ┌─────────────────────────────────────────────────────────────┐
+#   │                    auto-route job                           │
+#   │                                                             │
+#   │  agent_id == "auto"?                                        │
+#   │     YES → grep prompt for keywords:                         │
+#   │       proof|theorem|lemma|verify|formal|Lean|LaTeX|         │
+#   │         contradiction|induction                             │
+#   │              → lean4_formal_verification_specialist         │
+#   │                                                             │
+#   │       theory|axiom|hypothesis|empirical|framework|          │
+#   │         falsifiable|ontolog|parameter|observable            │
+#   │              → expert_research_assistant                    │
+#   │                                                             │
+#   │       quark|coupling|lattice|topological|geometric.phase|  │
+#   │         vacuum|Yukawa|cymatics|dimensionless                │
+#   │              → hlre_agent                                   │
+#   │                                                             │
+#   │       (no match) → expert_research_assistant (default)      │
+#   │                                                             │
+#   │  agent_id != "auto" → pass through as-is                   │
+#   └─────────────────────────────────────────────────────────────┘
+#          │
+#          ▼
+#   ┌────────────────────────────────────────────────────────────┐
+#   │  if resolved_id == "expert_research_assistant"             │
+#   │       → trigger_expert_research_assistant workflow         │
+#   ├────────────────────────────────────────────────────────────┤
+#   │  if resolved_id == "lean4_formal_verification_specialist"  │
+#   │       → trigger_lean4_formal_verification_specialist       │
+#   ├────────────────────────────────────────────────────────────┤
+#   │  if resolved_id == "hlre_agent"                            │
+#   │       → trigger_hlre_agent workflow                        │
+#   ├────────────────────────────────────────────────────────────┤
+#   │  else → unknown_agent (fail with descriptive error)        │
+#   └────────────────────────────────────────────────────────────┘
+#          │
+#          ▼
+#   session-context (summary job)
+#
+# ==============================================================================
+
+name: "Agent Dispatcher"
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent_id:
+        description: "Agent to activate (expert_research_assistant | lean4_formal_verification_specialist | hlre_agent | auto)"
+        required: true
+        type: string
+      session_id:
+        description: "Unique session identifier"
+        required: true
+        type: string
+      prompt:
+        description: "Input prompt / query"
+        required: true
+        type: string
+  repository_dispatch:
+    types: [activate_agent]
+
+permissions:
+  contents: read
+
+jobs:
+  # ============================================================================
+  # AUTO-ROUTING JOB
+  # Resolves "auto" to a concrete agent_id via keyword matching on the prompt.
+  # When agent_id is already explicit, it passes through unchanged.
+  # ============================================================================
+  auto-route:
+    name: "Route to Agent"
+    runs-on: ubuntu-latest
+
+    outputs:
+      resolved_agent_id: ${{ steps.route.outputs.resolved_agent_id }}
+      session_id: ${{ steps.route.outputs.session_id }}
+      prompt: ${{ steps.route.outputs.prompt }}
+
+    steps:
+      - name: Resolve agent_id and auto-route if needed
+        id: route
+        run: |
+          # ── Resolve inputs from either trigger type ──────────────────────────
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            AGENT_ID="${{ github.event.client_payload.agent_id }}"
+            SESSION_ID="${{ github.event.client_payload.session_id }}"
+            PROMPT="${{ github.event.client_payload.prompt }}"
+          else
+            AGENT_ID="${{ inputs.agent_id }}"
+            SESSION_ID="${{ inputs.session_id }}"
+            PROMPT="${{ inputs.prompt }}"
+          fi
+
+          echo "Requested agent_id : ${AGENT_ID}"
+          echo "Session ID         : ${SESSION_ID}"
+
+          # ── Auto-routing logic ───────────────────────────────────────────────
+          if [ "${AGENT_ID}" = "auto" ]; then
+            echo "Auto-routing: inspecting prompt for keyword signals..."
+
+            PROMPT_LOWER=$(echo "${PROMPT}" | tr '[:upper:]' '[:lower:]')
+
+            # Priority 1 — Lean 4 / formal verification keywords
+            if echo "${PROMPT_LOWER}" | grep -qiE \
+                'proof|theorem|lemma|verify|formal|lean|latex|contradiction|induction'; then
+              RESOLVED_ID="lean4_formal_verification_specialist"
+
+            # Priority 2 — HLRE / geometric-mechanics keywords
+            elif echo "${PROMPT_LOWER}" | grep -qiE \
+                'quark|coupling|lattice|topological|geometric.phase|vacuum|yukawa|cymatics|dimensionless'; then
+              RESOLVED_ID="hlre_agent"
+
+            # Priority 3 — Research assistant / theoretical framework keywords
+            elif echo "${PROMPT_LOWER}" | grep -qiE \
+                'theory|axiom|hypothesis|empirical|framework|falsifiable|ontolog|parameter|observable'; then
+              RESOLVED_ID="expert_research_assistant"
+
+            # Default fallback
+            else
+              echo "No keyword match found. Defaulting to expert_research_assistant."
+              RESOLVED_ID="expert_research_assistant"
+            fi
+
+            echo "Auto-routed to: ${RESOLVED_ID}"
+          else
+            RESOLVED_ID="${AGENT_ID}"
+            echo "Explicit agent_id passed through: ${RESOLVED_ID}"
+          fi
+
+          echo "resolved_agent_id=${RESOLVED_ID}" >> "$GITHUB_OUTPUT"
+          echo "session_id=${SESSION_ID}"         >> "$GITHUB_OUTPUT"
+          # Use a delimiter to safely handle multi-line / special-char prompts
+          echo "prompt<<PROMPT_EOF"    >> "$GITHUB_OUTPUT"
+          echo "${PROMPT}"             >> "$GITHUB_OUTPUT"
+          echo "PROMPT_EOF"            >> "$GITHUB_OUTPUT"
+
+  # ============================================================================
+  # DISPATCH JOB — Expert Research Assistant
+  # ============================================================================
+  dispatch-expert-research-assistant:
+    name: "Dispatch: Expert Research Assistant"
+    runs-on: ubuntu-latest
+    needs: auto-route
+    if: needs.auto-route.outputs.resolved_agent_id == 'expert_research_assistant'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load & activate Expert Research Assistant persona
+        env:
+          AGENT_ID: expert_research_assistant
+          PERSONA_FILE: agents/expert_research_assistant.md
+          SESSION_ID: ${{ needs.auto-route.outputs.session_id }}
+          PROMPT: ${{ needs.auto-route.outputs.prompt }}
+        run: |
+          ACTIVATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          echo "=== Agent Persona Specification ==="
+          cat "${PERSONA_FILE}"
+          echo ""
+          echo "=== Session Context ==="
+          echo "Agent ID   : ${AGENT_ID}"
+          echo "Session ID : ${SESSION_ID}"
+          echo "Persona    : ${PERSONA_FILE}"
+          echo "Activated  : ${ACTIVATED_AT}"
+          echo ""
+          echo "=== Prompt ==="
+          echo "${PROMPT}"
+          echo ""
+
+          jq -n \
+            --arg session_id   "${SESSION_ID}" \
+            --arg agent_id     "${AGENT_ID}" \
+            --arg persona_file "${PERSONA_FILE}" \
+            --arg prompt       "${PROMPT}" \
+            --arg activated_at "${ACTIVATED_AT}" \
+            '{session_id: $session_id, agent_id: $agent_id, persona_file: $persona_file, prompt: $prompt, activated_at: $activated_at}'
+
+  # ============================================================================
+  # DISPATCH JOB — Lean 4 Formal Verification Specialist
+  # ============================================================================
+  dispatch-lean4-specialist:
+    name: "Dispatch: Lean 4 Formal Verification Specialist"
+    runs-on: ubuntu-latest
+    needs: auto-route
+    if: needs.auto-route.outputs.resolved_agent_id == 'lean4_formal_verification_specialist'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load & activate Lean 4 Specialist persona
+        env:
+          AGENT_ID: lean4_formal_verification_specialist
+          PERSONA_FILE: agents/lean4_formal_verification_specialist.md
+          SESSION_ID: ${{ needs.auto-route.outputs.session_id }}
+          PROMPT: ${{ needs.auto-route.outputs.prompt }}
+        run: |
+          ACTIVATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          echo "=== Agent Persona Specification ==="
+          cat "${PERSONA_FILE}"
+          echo ""
+          echo "=== Session Context ==="
+          echo "Agent ID   : ${AGENT_ID}"
+          echo "Session ID : ${SESSION_ID}"
+          echo "Persona    : ${PERSONA_FILE}"
+          echo "Activated  : ${ACTIVATED_AT}"
+          echo ""
+          echo "=== Prompt ==="
+          echo "${PROMPT}"
+          echo ""
+
+          jq -n \
+            --arg session_id   "${SESSION_ID}" \
+            --arg agent_id     "${AGENT_ID}" \
+            --arg persona_file "${PERSONA_FILE}" \
+            --arg prompt       "${PROMPT}" \
+            --arg activated_at "${ACTIVATED_AT}" \
+            '{session_id: $session_id, agent_id: $agent_id, persona_file: $persona_file, prompt: $prompt, activated_at: $activated_at}'
+
+  # ============================================================================
+  # DISPATCH JOB — HLRE Agent
+  # ============================================================================
+  dispatch-hlre-agent:
+    name: "Dispatch: HLRE Agent"
+    runs-on: ubuntu-latest
+    needs: auto-route
+    if: needs.auto-route.outputs.resolved_agent_id == 'hlre_agent'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load & activate HLRE Agent persona
+        env:
+          AGENT_ID: hlre_agent
+          PERSONA_FILE: agents/hlre_agent.md
+          SESSION_ID: ${{ needs.auto-route.outputs.session_id }}
+          PROMPT: ${{ needs.auto-route.outputs.prompt }}
+        run: |
+          ACTIVATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          echo "=== Agent Persona Specification ==="
+          cat "${PERSONA_FILE}"
+          echo ""
+          echo "=== Session Context ==="
+          echo "Agent ID   : ${AGENT_ID}"
+          echo "Session ID : ${SESSION_ID}"
+          echo "Persona    : ${PERSONA_FILE}"
+          echo "Activated  : ${ACTIVATED_AT}"
+          echo ""
+          echo "=== Prompt ==="
+          echo "${PROMPT}"
+          echo ""
+
+          jq -n \
+            --arg session_id   "${SESSION_ID}" \
+            --arg agent_id     "${AGENT_ID}" \
+            --arg persona_file "${PERSONA_FILE}" \
+            --arg prompt       "${PROMPT}" \
+            --arg activated_at "${ACTIVATED_AT}" \
+            '{session_id: $session_id, agent_id: $agent_id, persona_file: $persona_file, prompt: $prompt, activated_at: $activated_at}'
+
+  # ============================================================================
+  # FALLBACK JOB — Unknown agent_id
+  # Fails with a descriptive error when an invalid explicit agent_id is given.
+  # ============================================================================
+  unknown-agent:
+    name: "Error: Unknown Agent ID"
+    runs-on: ubuntu-latest
+    needs: auto-route
+    if: |
+      needs.auto-route.outputs.resolved_agent_id != 'expert_research_assistant' &&
+      needs.auto-route.outputs.resolved_agent_id != 'lean4_formal_verification_specialist' &&
+      needs.auto-route.outputs.resolved_agent_id != 'hlre_agent'
+
+    steps:
+      - name: Fail with descriptive error
+        run: |
+          echo "ERROR: Unknown agent_id provided."
+          echo ""
+          echo "  Received  : '${{ needs.auto-route.outputs.resolved_agent_id }}'"
+          echo ""
+          echo "  Valid values:"
+          echo "    - expert_research_assistant"
+          echo "    - lean4_formal_verification_specialist"
+          echo "    - hlre_agent"
+          echo "    - auto  (enables automatic routing by keyword analysis)"
+          echo ""
+          echo "Please re-trigger this workflow with a valid agent_id."
+          exit 1
+
+  # ============================================================================
+  # SESSION CONTEXT — Final summary job (always runs after routing completes)
+  # ============================================================================
+  session-context:
+    name: "Session Summary"
+    runs-on: ubuntu-latest
+    needs:
+      - auto-route
+      - dispatch-expert-research-assistant
+      - dispatch-lean4-specialist
+      - dispatch-hlre-agent
+    if: always()
+
+    steps:
+      - name: Print session summary
+        run: |
+          echo "============================================"
+          echo "  DISPATCHER SESSION SUMMARY"
+          echo "============================================"
+          echo "  Resolved Agent : ${{ needs.auto-route.outputs.resolved_agent_id }}"
+          echo "  Session ID     : ${{ needs.auto-route.outputs.session_id }}"
+          echo "  Trigger        : ${{ github.event_name }}"
+          echo "  Run ID         : ${{ github.run_id }}"
+          echo "============================================"
