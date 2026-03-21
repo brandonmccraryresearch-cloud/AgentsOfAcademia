@@ -87,7 +87,7 @@ This pattern is non-trivial. A random collection of physical constants would not
 
 | Ratio | Paper's Interpretation | Mechanical Mapping |
 |:------|:----------------------|:------------------|
-| 2/3 (Koide Q) | Triality normalization | The fraction of a 3-fold symmetric potential's energy that couples to the collective coordinate. For a $\mathbb{Z}_3$-symmetric system, the ratio of quadratic to linear energy channels is always 2:1. |
+| 2/3 (Koide Q) | Triality normalization | The fraction of a 3-fold symmetric potential's energy that couples to the collective coordinate. For an idealized $\mathbb{Z}_3$-symmetric system with non-negative mode amplitudes, the effective ratio of quadratic to linear energy channels tends toward 2:1. |
 | 3/13 (sin²θ_W) | Electroweak projection | The fraction of the 13 electroweak vacuum modes that carry weak isospin charge |
 | 2/9 (θ₀) | Koide phase offset | Ratio of two angular measure factors on the triality quotient space. The "2" counts binary parity; the "9" counts $(3 \text{ generations})^2$ polarization states. |
 | 9/8 (VEV factor) | Generation/spinor ratio | $3^2/2^3$: the ratio of generation-space volume ($N_g^2 = 9$) to spinor representation dimension ($2^3 = 8$) |
@@ -232,7 +232,7 @@ The continuum approximation breaks down at $R \sim L_P^{-2}$ (Planck curvature),
 
 1. **Mass hierarchy:** The $\alpha^n$ impedance cascade provides a natural mechanical explanation for why particle masses span 12 orders of magnitude — each mass corresponds to a different resonance node on the substrate's impedance spectrum.
 
-2. **Koide relation:** The $Q = 2/3$ result for three symmetry-related eigenvalues on a $\mathbb{Z}_3$-symmetric manifold is genuinely mechanical — it follows from the normalization of standing wave modes on a three-fold symmetric potential.
+2. **Koide relation:** The $Q \approx 2/3$ result for three symmetry-related eigenvalues on a $\mathbb{Z}_3$-symmetric manifold is genuinely mechanical — within the restricted phase range where all standing-wave amplitudes are non-negative, it follows from the normalization of modes on a three-fold symmetric potential; outside this range, $Q$ departs from $2/3$.
 
 3. **Lorentzian signature:** The derivation from critical damping mode counting is arguably the paper's strongest result. It provides a concrete mechanical reason for the relative sign between space and time coordinates.
 
