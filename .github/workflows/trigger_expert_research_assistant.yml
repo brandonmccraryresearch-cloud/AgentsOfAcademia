@@ -1,0 +1,115 @@
+name: "Activate Agent: Expert Research Assistant"
+
+on:
+  workflow_dispatch:
+    inputs:
+      session_id:
+        description: "Unique session identifier"
+        required: true
+        type: string
+      prompt:
+        description: "Input prompt / query for the agent"
+        required: true
+        type: string
+      user:
+        description: "Requesting user (optional)"
+        required: false
+        type: string
+  repository_dispatch:
+    types: [activate_expert_research_assistant]
+
+permissions:
+  contents: read
+
+env:
+  AGENT_ID: expert_research_assistant
+  PERSONA_FILE: agents/expert_research_assistant.md
+
+jobs:
+  activate-agent:
+    name: "Load & Activate Expert Research Assistant"
+    runs-on: ubuntu-latest
+
+    outputs:
+      session_id: ${{ steps.session-context.outputs.session_id }}
+      agent_id: ${{ steps.session-context.outputs.agent_id }}
+      activated_at: ${{ steps.session-context.outputs.activated_at }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve inputs (workflow_dispatch vs repository_dispatch)
+        id: resolve-inputs
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "session_id=${{ github.event.client_payload.session_id }}" >> "$GITHUB_OUTPUT"
+            echo 'prompt<<__PROMPT__' >> "$GITHUB_OUTPUT"
+            printf '%s\n' "${{ github.event.client_payload.prompt }}" >> "$GITHUB_OUTPUT"
+            echo '__PROMPT__' >> "$GITHUB_OUTPUT"
+            echo "user=${{ github.event.client_payload.user }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "session_id=${{ inputs.session_id }}" >> "$GITHUB_OUTPUT"
+            echo 'prompt<<__PROMPT__' >> "$GITHUB_OUTPUT"
+            printf '%s\n' "${{ inputs.prompt }}" >> "$GITHUB_OUTPUT"
+            echo '__PROMPT__' >> "$GITHUB_OUTPUT"
+            echo "user=${{ inputs.user }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Load persona specification
+        id: load-persona
+        run: |
+          echo "=== Agent Persona Specification ==="
+          cat "${{ env.PERSONA_FILE }}"
+          echo ""
+          echo "persona_loaded=true" >> "$GITHUB_OUTPUT"
+
+      - name: Emit session context
+        id: session-context
+        run: |
+          ACTIVATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          SESSION_ID="${{ steps.resolve-inputs.outputs.session_id }}"
+          PROMPT="${{ steps.resolve-inputs.outputs.prompt }}"
+          USER_ID="${{ steps.resolve-inputs.outputs.user }}"
+
+          echo "=== Session Context ==="
+          echo "Agent ID   : ${{ env.AGENT_ID }}"
+          echo "Session ID : ${SESSION_ID}"
+          echo "Persona    : ${{ env.PERSONA_FILE }}"
+          echo "User       : ${USER_ID}"
+          echo "Activated  : ${ACTIVATED_AT}"
+          echo ""
+          echo "=== Prompt ==="
+          echo "${PROMPT}"
+          echo ""
+
+          SESSION_JSON=$(jq -n \
+            --arg session_id   "${SESSION_ID}" \
+            --arg agent_id     "${{ env.AGENT_ID }}" \
+            --arg persona_file "${{ env.PERSONA_FILE }}" \
+            --arg prompt       "${PROMPT}" \
+            --arg activated_at "${ACTIVATED_AT}" \
+            '{session_id: $session_id, agent_id: $agent_id, persona_file: $persona_file, prompt: $prompt, activated_at: $activated_at}')
+
+          echo "=== Session JSON Payload ==="
+          echo "${SESSION_JSON}"
+
+          echo "session_id=${SESSION_ID}"     >> "$GITHUB_OUTPUT"
+          echo "agent_id=${{ env.AGENT_ID }}" >> "$GITHUB_OUTPUT"
+          echo "activated_at=${ACTIVATED_AT}" >> "$GITHUB_OUTPUT"
+
+  session-context:
+    name: "Session Summary"
+    runs-on: ubuntu-latest
+    needs: activate-agent
+
+    steps:
+      - name: Print session summary
+        run: |
+          echo "============================================"
+          echo "  AGENT SESSION SUMMARY"
+          echo "============================================"
+          echo "  Agent     : ${{ env.AGENT_ID }}"
+          echo "  Session   : ${{ needs.activate-agent.outputs.session_id }}"
+          echo "  Activated : ${{ needs.activate-agent.outputs.activated_at }}"
+          echo "============================================"
