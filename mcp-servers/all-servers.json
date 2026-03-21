@@ -50,6 +50,15 @@
       "command": "uvx",
       "args": ["scicomp-neural-mcp"],
       "tools": ["*"]
+    },
+    "lean-lsp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["lean-lsp-mcp"],
+      "env": {
+        "LEAN_PROJECT_PATH": "."
+      },
+      "tools": ["*"]
     }
   }
 }
