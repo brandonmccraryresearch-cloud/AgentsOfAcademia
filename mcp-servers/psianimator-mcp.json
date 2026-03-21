@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "psianimator-mcp": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["-m", "psianimator_mcp.cli", "serve"],
+      "env": {
+        "PSIANIMATOR_CONFIG": "~/.config/psianimator-mcp/config.json"
+      },
+      "tools": ["*"]
+    }
+  }
+}

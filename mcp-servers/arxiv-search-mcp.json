@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "arxiv-search-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "arxiv-search-mcp"],
+      "tools": ["*"]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "math-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["scicomp-math-mcp"],
+      "tools": ["*"]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "neural-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["scicomp-neural-mcp"],
+      "tools": ["*"]
+    }
+  }
+}

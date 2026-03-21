@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "quantum-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["scicomp-quantum-mcp"],
+      "tools": ["*"]
+    }
+  }
+}
