@@ -16,13 +16,13 @@
 #   │         contradiction|induction                             │
 #   │              → lean4_formal_verification_specialist         │
 #   │                                                             │
-#   │       theory|axiom|hypothesis|empirical|framework|          │
-#   │         falsifiable|ontolog|parameter|observable            │
-#   │              → expert_research_assistant                    │
-#   │                                                             │
 #   │       quark|coupling|lattice|topological|geometric.phase|  │
 #   │         vacuum|Yukawa|cymatics|dimensionless                │
 #   │              → hlre_agent                                   │
+#   │                                                             │
+#   │       theory|axiom|hypothesis|empirical|framework|          │
+#   │         falsifiable|ontolog|parameter|observable            │
+#   │              → expert_research_assistant                    │
 #   │                                                             │
 #   │       (no match) → expert_research_assistant (default)      │
 #   │                                                             │
@@ -108,20 +108,20 @@ jobs:
           if [ "${AGENT_ID}" = "auto" ]; then
             echo "Auto-routing: inspecting prompt for keyword signals..."
 
-            PROMPT_LOWER=$(echo "${PROMPT}" | tr '[:upper:]' '[:lower:]')
+            PROMPT_LOWER=$(printf '%s\n' "${PROMPT}" | tr '[:upper:]' '[:lower:]')
 
             # Priority 1 — Lean 4 / formal verification keywords
-            if echo "${PROMPT_LOWER}" | grep -qiE \
+            if printf '%s\n' "${PROMPT_LOWER}" | grep -qiE \
                 'proof|theorem|lemma|verify|formal|lean|latex|contradiction|induction'; then
               RESOLVED_ID="lean4_formal_verification_specialist"
 
             # Priority 2 — HLRE / geometric-mechanics keywords
-            elif echo "${PROMPT_LOWER}" | grep -qiE \
+            elif printf '%s\n' "${PROMPT_LOWER}" | grep -qiE \
                 'quark|coupling|lattice|topological|geometric.phase|vacuum|yukawa|cymatics|dimensionless'; then
               RESOLVED_ID="hlre_agent"
 
             # Priority 3 — Research assistant / theoretical framework keywords
-            elif echo "${PROMPT_LOWER}" | grep -qiE \
+            elif printf '%s\n' "${PROMPT_LOWER}" | grep -qiE \
                 'theory|axiom|hypothesis|empirical|framework|falsifiable|ontolog|parameter|observable'; then
               RESOLVED_ID="expert_research_assistant"
 
@@ -139,10 +139,9 @@ jobs:
 
           echo "resolved_agent_id=${RESOLVED_ID}" >> "$GITHUB_OUTPUT"
           echo "session_id=${SESSION_ID}"         >> "$GITHUB_OUTPUT"
-          # Use a delimiter to safely handle multi-line / special-char prompts
-          echo "prompt<<PROMPT_EOF"    >> "$GITHUB_OUTPUT"
-          echo "${PROMPT}"             >> "$GITHUB_OUTPUT"
-          echo "PROMPT_EOF"            >> "$GITHUB_OUTPUT"
+          # Use a randomized delimiter to safely handle multi-line / special-char prompts
+          DELIM="$(uuidgen)"
+          printf 'prompt<<%s\n%s\n%s\n' "$DELIM" "$PROMPT" "$DELIM" >> "$GITHUB_OUTPUT"
 
   # ============================================================================
   # DISPATCH JOB — Expert Research Assistant

@@ -44,12 +44,16 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
             echo "session_id=${{ github.event.client_payload.session_id }}" >> "$GITHUB_OUTPUT"
-            echo "prompt=${{ github.event.client_payload.prompt }}"         >> "$GITHUB_OUTPUT"
-            echo "user=${{ github.event.client_payload.user }}"             >> "$GITHUB_OUTPUT"
+            echo 'prompt<<__PROMPT__' >> "$GITHUB_OUTPUT"
+            printf '%s\n' "${{ github.event.client_payload.prompt }}" >> "$GITHUB_OUTPUT"
+            echo '__PROMPT__' >> "$GITHUB_OUTPUT"
+            echo "user=${{ github.event.client_payload.user }}" >> "$GITHUB_OUTPUT"
           else
             echo "session_id=${{ inputs.session_id }}" >> "$GITHUB_OUTPUT"
-            echo "prompt=${{ inputs.prompt }}"         >> "$GITHUB_OUTPUT"
-            echo "user=${{ inputs.user }}"             >> "$GITHUB_OUTPUT"
+            echo 'prompt<<__PROMPT__' >> "$GITHUB_OUTPUT"
+            printf '%s\n' "${{ inputs.prompt }}" >> "$GITHUB_OUTPUT"
+            echo '__PROMPT__' >> "$GITHUB_OUTPUT"
+            echo "user=${{ inputs.user }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Load persona specification
