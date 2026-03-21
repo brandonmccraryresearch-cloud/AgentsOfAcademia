@@ -10,8 +10,8 @@
     },
     "arxiv-search-mcp": {
       "type": "stdio",
-      "command": "deno",
-      "args": ["run", "--allow-net", "src/main.ts"]
+      "command": "npx",
+      "args": ["-y", "arxiv-search-mcp"]
     },
     "particlephysics-mcp": {
       "type": "stdio",
