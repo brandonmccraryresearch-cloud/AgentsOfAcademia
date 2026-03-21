@@ -9,7 +9,8 @@
         "--from",
         "git+https://github.com/uzerone/ParticlePhysics-MCP-Server.git",
         "pp-mcp-server"
-      ]
+      ],
+      "tools": ["*"]
     }
   }
 }

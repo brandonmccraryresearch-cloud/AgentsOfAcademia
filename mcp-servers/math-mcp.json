@@ -3,7 +3,8 @@
     "math-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-math-mcp"]
+      "args": ["scicomp-math-mcp"],
+      "tools": ["*"]
     }
   }
 }

@@ -3,7 +3,8 @@
     "molecular-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-molecular-mcp"]
+      "args": ["scicomp-molecular-mcp"],
+      "tools": ["*"]
     }
   }
 }

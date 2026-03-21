@@ -3,7 +3,8 @@
     "neural-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-neural-mcp"]
+      "args": ["scicomp-neural-mcp"],
+      "tools": ["*"]
     }
   }
 }

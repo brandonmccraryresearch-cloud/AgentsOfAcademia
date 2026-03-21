@@ -6,7 +6,8 @@
       "args": ["-m", "psianimator_mcp.cli", "serve"],
       "env": {
         "PSIANIMATOR_CONFIG": "~/.config/psianimator-mcp/config.json"
-      }
+      },
+      "tools": ["*"]
     }
   }
 }

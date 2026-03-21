@@ -6,12 +6,14 @@
       "args": ["-m", "psianimator_mcp.cli", "serve"],
       "env": {
         "PSIANIMATOR_CONFIG": "~/.config/psianimator-mcp/config.json"
-      }
+      },
+      "tools": ["*"]
     },
     "arxiv-search-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "arxiv-search-mcp"]
+      "args": ["-y", "arxiv-search-mcp"],
+      "tools": ["*"]
     },
     "particlephysics-mcp": {
       "type": "stdio",
@@ -22,27 +24,32 @@
         "--from",
         "git+https://github.com/uzerone/ParticlePhysics-MCP-Server.git",
         "pp-mcp-server"
-      ]
+      ],
+      "tools": ["*"]
     },
     "math-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-math-mcp"]
+      "args": ["scicomp-math-mcp"],
+      "tools": ["*"]
     },
     "quantum-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-quantum-mcp"]
+      "args": ["scicomp-quantum-mcp"],
+      "tools": ["*"]
     },
     "molecular-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-molecular-mcp"]
+      "args": ["scicomp-molecular-mcp"],
+      "tools": ["*"]
     },
     "neural-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["scicomp-neural-mcp"]
+      "args": ["scicomp-neural-mcp"],
+      "tools": ["*"]
     }
   }
 }
