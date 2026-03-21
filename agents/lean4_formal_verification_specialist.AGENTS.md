@@ -230,7 +230,7 @@ The following servers complement `lean-lsp-mcp` by providing computational and d
 
 | Tool | Use Case |
 |---|---|
-| `define_model` / `train_model` / `evaluate_model` | Standard ML workflow |
+| `define_model` / `train_model` / `evaluate_model` | Define architectures, train on datasets, and evaluate — use when verifying properties of learned functions or approximation bounds |
 | `info` | Discover additional capabilities |
 
 ---
