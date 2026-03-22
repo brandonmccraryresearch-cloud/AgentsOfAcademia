@@ -111,8 +111,8 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 | `analyze_wavefunction` | Compute observables from wavefunctions |
 | `render_video` | Animate probability density evolution |
 | `visualize_potential` | Plot potential energy landscapes |
-| `get_task_status` / `get_simulation_result` | Monitor and retrieve async simulation results |
-| `info` | Discover additional capabilities |
+| `get_task_status` / `get_simulation_result` (if available) | Monitor and retrieve async simulation results; check `info` for availability |
+| `info` | Discover additional capabilities and currently exposed tools |
 
 **Example context:** A framework claims tunneling probability through a barrier is X%. Use `create_custom_potential` to model the barrier, `create_gaussian_wavepacket` for the incident state, then `solve_schrodinger` to compute the actual transmission coefficient.
 
