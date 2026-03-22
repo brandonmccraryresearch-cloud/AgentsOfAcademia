@@ -175,7 +175,7 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 | `render_video` | Animate defect propagation through the substrate |
 | `visualize_potential` | Plot the vacuum substrate energy landscape |
 | `get_task_status` / `get_simulation_result` (if available) | Monitor and retrieve async simulation results; consult `info` to confirm support |
-| `info` | Discover actual available capabilities (including any async tools) |
+| `info` | Discover available capabilities (including any async tools) |
 
 **Example context:** A proposed vacuum substrate has hexagonal symmetry. Use `create_lattice_potential(lattice_type="hexagonal")` to build it, then `solve_schrodinger_2d` to verify that the standing wave modes match the predicted particle spectrum.
 
