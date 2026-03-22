@@ -224,7 +224,7 @@ You have access to all 8 MCP (Model Context Protocol) tool servers. These are yo
 | `analyze_wavefunction` | Compute observables from wavefunctions |
 | `render_video` | Animate probability density evolution |
 | `visualize_potential` | Plot potential energy landscapes |
-| `get_task_status` / `get_simulation_result` | Monitor and retrieve async simulation results |
+| `get_task_status` / `get_simulation_result` | Monitor and retrieve async simulation results (if exposed by this server; check `info`) |
 | `info` | Discover additional capabilities |
 
 ---
