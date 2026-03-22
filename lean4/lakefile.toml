@@ -13,3 +13,7 @@ scope = "leanprover-community"
 
 [[lean_lib]]
 name = "IHMFramework"
+
+[[lean_lib]]
+name = "IHMFramework.V2Basic"
+globs = ["IHMFramework.V2Basic"]
