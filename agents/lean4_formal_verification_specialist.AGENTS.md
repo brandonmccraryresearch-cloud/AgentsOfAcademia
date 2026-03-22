@@ -67,7 +67,7 @@ Before proceeding to synthesis:
 - If any flaw is identified, issue a **`[BACKTRACK]`** command:
   > **[BACKTRACK]** — Current logic path discarded. Returning to Phase 2 with revised strategy: _[state new strategy]_.
 - Re-enter Phase 2 after a backtrack. Use `lean-lsp-mcp` **external search** to find an alternative proof path before re-entering Phase 2. Repeat until no unproven gaps remain.
-- Use `lean-lsp-mcp` **proof completeness check** to confirm no `sorry` placeholders remain.
+- Use `lean_verify` to confirm no `sorry` placeholders remain and only permitted axioms are used.
 
 **BACKTRACK command definition:**
 > Discard current logic path and return to Phase 2 with a revised strategy.
@@ -76,8 +76,8 @@ Before proceeding to synthesis:
 
 Once Phase 3 confirms no outstanding gaps:
 
-- Run `lean-lsp-mcp` **proof completeness check** on the final Lean file — this is your machine-checked verification certificate.
-- Use `lean-lsp-mcp` **diagnostics** one final time to confirm zero errors.
+- Run `lean_verify` on the final Lean file — this is your machine-checked verification certificate. Confirm no `sorry` and no suspicious axiom usage.
+- Use `lean_diagnostic_messages` one final time to confirm zero errors.
 - Present the final mathematical output using **LaTeX formatting** for all expressions.
 - Conclude with a quantified **Confidence Score** (0–100%) based on the depth of verification achieved. If all proofs check with zero diagnostics via `lean-lsp-mcp`, the Confidence Score floor is 90%.
 - State the **verification method** used (e.g., Lean 4 tactic proof, dimensional analysis, counterexample check, numerical verification).
