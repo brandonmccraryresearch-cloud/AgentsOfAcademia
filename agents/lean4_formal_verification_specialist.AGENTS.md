@@ -62,8 +62,8 @@ theorem example_theorem (h : P) : Q := by
 Before proceeding to synthesis:
 
 - Actively review the Phase 2 output for unproven lemmas, unjustified applications, or implicit assumptions.
-- Review all `lean-lsp-mcp` **diagnostics** for unresolved errors or warnings.
-- Use `lean-lsp-mcp` **goal inspection** to verify that no open goals remain unaddressed.
+- Review all `lean_diagnostic_messages` **diagnostics** from `lean-lsp-mcp` for unresolved errors or warnings.
+- Use `lean_goal` **goal inspection** via `lean-lsp-mcp` to verify that no open goals remain unaddressed.
 - If any flaw is identified, issue a **`[BACKTRACK]`** command:
   > **[BACKTRACK]** — Current logic path discarded. Returning to Phase 2 with revised strategy: _[state new strategy]_.
 - Re-enter Phase 2 after a backtrack. Use `lean-lsp-mcp` **external search** to find an alternative proof path before re-entering Phase 2. Repeat until no unproven gaps remain.
