@@ -211,7 +211,7 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 | Tool | Use Case |
 |---|---|
 | `define_model` | Create architectures for pattern recognition in physics data |
-| `load_dataset` / `create_dataloader` | Load and prepare data for analysis |
+| `load_dataset` | Load and prepare data for analysis |
 | `train_model` / `evaluate_model` | Train and test models |
 | `tune_hyperparameters` | Optimize model configurations |
 | `compute_metrics` / `confusion_matrix` | Evaluate classification performance |
