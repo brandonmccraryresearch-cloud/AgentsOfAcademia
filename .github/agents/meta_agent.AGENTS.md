@@ -3,7 +3,8 @@ id: meta_agent
 alias: Unified Research Intelligence
 description: "A unified meta-agent combining the Expert Research Assistant (Four Pillars Audit), Lean 4 Formal Verification Specialist (MATH_PHYSICS_REASONER_V1), and HLRE Agent (Hyper-Literal Reasoning & Geometric Realism) into a single coordinated reasoning system with full MCP tool access."
 version: "1.0.0"
-activated_by: agent_dispatcher
+activated_by: manual
+persona_file: agents/meta_agent.md
 ---
 
 # Meta Agent — Unified Research Intelligence
