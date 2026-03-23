@@ -48,7 +48,9 @@ theorem holographicProjection_zero_boundary
     (B : HolographicBdry) (k r : ℝ) :
     let zeroField : BoundaryField B := {
       Ψ := fun _ => 0,
-      hΨ := integrable_zero B.α ℝ B.μ
+      hΨ := by
+        simpa using
+          (integrable_zero : Integrable (fun _ : B.α => (0 : ℝ)) B.μ)
     }
     holographicProjection B zeroField k r = 0 := by
   simp [holographicProjection, integral_zero]
