@@ -149,9 +149,5 @@ theorem gravitational_vacuum_limit (W : WaveEquation)
       ≤ 1 * |W.field x| := by exact mul_le_mul_of_nonneg_right h1 (abs_nonneg _)
     _ = |W.field x| := one_mul _
 
-#check @nodeAmplitude_stability
-#check @phonon_velocity_consistent
-#check @mass_gap
-#check @dispersion_UV_limit
-#check @d4Spacing_lt_planck
-#check @gravitational_vacuum_limit
+-- Note: former `#check` commands for internal debugging were removed
+-- to avoid extra work and noise during library compilation/CI.
