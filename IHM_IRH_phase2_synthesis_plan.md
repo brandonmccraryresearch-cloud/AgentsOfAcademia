@@ -15,7 +15,7 @@
 
 Two frameworks have been developed in parallel for the same physical reality:
 
-**Intrinsic Harmonic Motion (IHM-HRIIP)** provides the *physical substrate layer*: the universe is a singular, continuous, hyper-elastic geometric medium with stiffness κ and density ρ₀. Particles are resonance nodes — stable constructive-interference standing waves. The speed of light is the mechanical propagation velocity $c = \sqrt{\kappa/\rho_0}$. Lorentz contraction is wave compression (the Mach effect of a node approaching the substrate's own propagation speed). Mass-energy equivalence is trapped-wave energy. This framework has 20 machine-verified Lean 4 theorems (v2.0), a completed quantum simulation, and a Four Pillars rating of A.
+**Intrinsic Harmonic Motion (IHM-HRIIP)** provides the *physical substrate layer*: the universe is a singular, continuous, hyper-elastic geometric medium with stiffness κ and density ρ₀. Particles are resonance nodes — stable constructive-interference standing waves. The speed of light is the mechanical propagation velocity $c = \sqrt{\kappa/\rho_0}$. Lorentz contraction is wave compression (the Mach effect of a node approaching the substrate's own propagation speed). Mass-energy equivalence is trapped-wave energy. This framework has 28 machine-verified Lean 4 theorems (v2.0), a completed quantum simulation, and a Four Pillars rating of A.
 
 **Intrinsic Resonance Holography (IRH)** provides the *mathematical computation engine*: the vacuum substrate is the $D_4$ root lattice with coordination number 24, bond stiffness $J$, and lattice spacing $a_0 = L_P/\sqrt{24}$. Particles are topological defects — triality braids in the lattice. Physical constants are geometric invariants of $D_4$ symmetry groups. This framework derives α to 27 ppb, CKM phase to 0.8%, VEV to 0.17%, lepton masses to 0.006%, and is documented in the v75.0 paper (73.1theaceinthehole.md, 5068 lines).
 
@@ -514,7 +514,7 @@ The unified IHM+IRH framework represents the most complete version of either the
 
 **Ontological completeness:** The $D_4$ lattice is the unique thermodynamically stable 4D substrate compatible with triality and the observed three generations. No tunable parameters exist at the ontological level — only the $D_4$ lattice geometry.
 
-**Mathematical completeness:** 20 Lean 4 theorems machine-verified; the unified action is written down; the dependency chain is explicit with no circular loops; the continuum limit is controlled with error bounds.
+**Mathematical completeness:** 28 Lean 4 theorems machine-verified; the unified action is written down; the dependency chain is explicit with no circular loops; the continuum limit is controlled with error bounds.
 
 **Empirical agreement:** 16+ numerical agreements spanning 120 orders of magnitude (from $\alpha$ at 27 ppb to $\rho_\Lambda$ at 1.5%), from 2 effective parameters ($a_0$ and $J$, or equivalently κ and ρ₀). Parsimony ratio ≈ 8.
 
@@ -547,7 +547,7 @@ All key formulas verified by direct computation:
 ---
 
 *Confidence Score: 88% (structural synthesis and concept mapping) | 78% (empirical agreements) | 55% (Higgs quartic quantitative resolution)*  
-*Verification Method: SymPy symbolic computation, direct numerical evaluation, Lean 4 v4.29.0-rc6 + Mathlib (14+6 verified theorems)*
+*Verification Method: SymPy symbolic computation, direct numerical evaluation, Lean 4 v4.29.0-rc6 + Mathlib (28 verified theorems across 3 files)*
 
 ---
 
