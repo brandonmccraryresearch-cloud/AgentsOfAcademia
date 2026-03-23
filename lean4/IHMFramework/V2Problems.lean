@@ -183,9 +183,3 @@ theorem continuum_limit_velocity (J : ℝ) (hJ : 0 < J) (a₀ : ℝ) (ha₀ : 0 
     phononVelocitySq lat = 12 := by
   simp [phononVelocitySq, D4Lattice.mk]
   ring
-
-#check @holographicProjection_zero_boundary
-#check @holographicProjection_linear
-#check @standingWave_stability
-#check @phononDispersion_massless
-#check @massiveDispersion_gt_massless
