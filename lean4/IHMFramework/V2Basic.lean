@@ -63,10 +63,13 @@ theorem phonon_velocity_consistent (L_P c_0 : ℝ) (hL : 0 < L_P) (hc : 0 < c_0)
     let a₀ := L_P / Real.sqrt 24
     let Ω_P := Real.sqrt 24 * c_0 / L_P
     a₀ * Ω_P = c_0 := by
-  simp only
-  field_simp
+  -- Unfold the let-bound definitions so we see an explicit rational expression.
+  simp [a₀, Ω_P]
+  -- Establish that all denominators are nonzero before using `field_simp`.
+  have hLne : (L_P : ℝ) ≠ 0 := ne_of_gt hL
   have hsqrt24 : Real.sqrt 24 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
-  field_simp [hsqrt24]
+  -- Clear denominators using the nonzero proofs, then finish algebraically.
+  field_simp [hLne, hsqrt24]
   ring
 
 /-- The D₄ phonon dispersion in the long-wavelength limit:
