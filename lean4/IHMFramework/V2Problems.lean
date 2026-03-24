@@ -3,7 +3,7 @@
 -- P2 (gravity emergence) is in V2Basic.lean; P3 (Born rule) and P6 (simulation)
 -- are documented in the v2.0 paper but not formalized in Lean.
 
-import Mathlib.MeasureTheory.Integral.Bochner
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -72,11 +72,15 @@ theorem holographicProjection_linear
       c * holographicProjection B f k r +
       d * holographicProjection B g k r := by
   simp only [holographicProjection]
-  rw [show (fun θ => (c * f.Ψ θ + d * g.Ψ θ) * helmholtzKernel k r θ)
-       = (fun θ => c * (f.Ψ θ * helmholtzKernel k r θ) +
-                    d * (g.Ψ θ * helmholtzKernel k r θ)) from by ext θ; ring]
-  rw [integral_add (hf_int.smul c) (hg_int.smul d)]
-  simp [integral_smul]
+  -- Step 1: rewrite integrand algebraically
+  have heq : (fun θ => (c * f.Ψ θ + d * g.Ψ θ) * helmholtzKernel k r θ)
+       = fun θ => c * (f.Ψ θ * helmholtzKernel k r θ) +
+                   d * (g.Ψ θ * helmholtzKernel k r θ) := by ext θ; ring
+  rw [heq]
+  -- Step 2: use linearity of the integral  
+  rw [MeasureTheory.integral_add
+        (hf_int.const_mul c) (hg_int.const_mul d),
+      MeasureTheory.integral_const_mul, MeasureTheory.integral_const_mul]
 
 /-! ## Problem 4: Standing Wave Stability (Topological Protection)
 
@@ -111,15 +115,10 @@ theorem standingWave_stability
     (R : ℝ → ℝ) (hR : Continuous R)
     (x₀ : ℝ) (hpos : 0 < R x₀) :
     ∀ (γ : ℝ → ℝ → ℝ) (hγ : Continuous (fun p : ℝ × ℝ => γ p.1 p.2)),
-      γ 0 = R → γ 1 = fun _ => 0 →
+      γ 0 = R → (∀ y, γ 1 y = 0) →
       ∃ t ∈ Set.Icc (0 : ℝ) 1, γ t x₀ = 0 := by
   intro γ hγ h0 h1
-  -- We can take `t = 1`, where the amplitude is identically zero.
-  refine ⟨1, ?hmem, ?hval⟩
-  · -- Show that `1 ∈ [0, 1]`.
-    exact And.intro zero_le_one le_rfl
-  · -- At `t = 1`, the deformation is the zero wave.
-    simpa [h1]
+  exact ⟨1, ⟨zero_le_one, le_rfl⟩, h1 x₀⟩
 
 /-! ## Problem 5: Dispersion Relation on D₄ Lattice
 
@@ -146,7 +145,11 @@ noncomputable def phononVelocitySq (lat : D4Lattice) : ℝ :=
 /-- c² > 0 for any valid lattice -/
 theorem phononVelocitySq_pos (lat : D4Lattice) : 0 < phononVelocitySq lat := by
   unfold phononVelocitySq
-  positivity
+  apply div_pos
+  · apply mul_pos
+    · apply mul_pos (by norm_num : (0:ℝ) < 12) lat.J_pos
+    · exact sq_pos_of_pos lat.a₀_pos
+  · exact lat.M_star_pos
 
 /-- The D₄ phonon dispersion relation (long-wavelength limit):
     ω² = (12·J·a₀²/M*) · k² = c² · k² -/
@@ -182,10 +185,9 @@ theorem massiveDispersion_gt_massless (lat : D4Lattice) (k : ℝ)
     This shows the dispersion is independent of a₀ in the continuum limit. -/
 theorem continuum_limit_velocity (J : ℝ) (hJ : 0 < J) (a₀ : ℝ) (ha₀ : 0 < a₀) :
     let M_star := J * a₀ ^ 2 -- M* = J·a₀² gives Ω_P = 1/a₀ (normalized)
-    let lat : D4Lattice := ⟨J, hJ, a₀, ha₀, M_star, by positivity⟩
+    let lat : D4Lattice := ⟨J, hJ, a₀, ha₀, M_star, mul_pos hJ (sq_pos_of_pos ha₀)⟩
     phononVelocitySq lat = 12 := by
-  simp [phononVelocitySq, D4Lattice.mk]
-  have ha₀ne : a₀ ≠ 0 := ne_of_gt ha₀
-  have hJne : J ≠ 0 := ne_of_gt hJ
-  field_simp
-  ring
+  intro M_star lat
+  show 12 * J * a₀ ^ 2 / (J * a₀ ^ 2) = 12
+  have hJa : J * a₀ ^ 2 ≠ 0 := ne_of_gt (mul_pos hJ (sq_pos_of_pos ha₀))
+  field_simp [hJa]
