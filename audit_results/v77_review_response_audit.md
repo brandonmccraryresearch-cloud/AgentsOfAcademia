@@ -3,7 +3,7 @@
 **Date:** March 2026  
 **Auditors:** Unified Meta-Agent (Expert Research Assistant + Lean 4 Specialist + HLRE Agent)  
 **Document:** 73.1theaceinthehole.md, Version 77.0  
-**Review Addressed:** Review1 — Constructive Critical Review of "Intrinsic Resonance Holography" (Unified IHM+IRH) v77.0  
+**Review Addressed:** Review1 — Constructive Critical Review of "Intrinsic Resonance Holography" (Unified IHM+IRH) v76.0  
 **Protocol:** Full Four Pillars Structural Audit + Lean 4 Formal Verification + HLRE Mechanical Translation
 
 ---
