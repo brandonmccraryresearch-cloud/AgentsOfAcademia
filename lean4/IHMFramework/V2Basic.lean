@@ -20,7 +20,6 @@ structure NodeAmplitude where
   val : ℝ
   pos : 0 < val
 
-/-- A continuous deformation between two amplitude values -/
 /-- Intermediate Value Theorem applied to amplitudes:
     If a continuous path starts at a positive value and ends at zero,
     it must pass through every value in between — including zero.
@@ -32,20 +31,26 @@ theorem nodeAmplitude_stability
     (f : ℝ → ℝ) (hf : Continuous f)
     (hpos : 0 < f 0) (hzero : f 1 = 0) :
     ∃ t ∈ Set.Ioo (0 : ℝ) 1, f t = f 0 / 2 := by
-  have h_half : f 0 / 2 ∈ Set.Ioo 0 (f 0) := by
-    constructor
-    · linarith
-    · linarith
-  have hval : f 0 / 2 ∈ Set.Icc 0 (f 0) := Set.Icc_of_Ioo h_half
-  -- f goes from f(0) > 0 at t=0 to 0 at t=1
-  -- f(0)/2 is between f(1)=0 and f(0)
-  have hbetween : f 0 / 2 ∈ Set.Icc (f 1) (f 0) := by
-    rw [hzero]
-    exact ⟨by linarith, by linarith⟩
-  -- Apply intermediate value theorem
-  have hIVT := intermediate_value_Icc (by norm_num : (0:ℝ) ≤ 1) hf.continuousOn
-  obtain ⟨t, ht, hft⟩ := hIVT hbetween
-  exact ⟨t, ⟨by linarith [ht.1], by linarith [ht.2]⟩, hft⟩
+  -- f(0)/2 lies strictly between 0 = f(1) and f(0), so it's in Icc (f 1) (f 0)
+  have hmem : f 0 / 2 ∈ Set.Icc (f 1) (f 0) := by
+    rw [hzero]; exact ⟨by linarith, by linarith⟩
+  -- By IVT on [0,1], there exists t ∈ [0,1] with f(t) = f(0)/2
+  have h01 : (0 : ℝ) ≤ 1 := by norm_num
+  have hco : ContinuousOn f (Set.Icc 0 1) := hf.continuousOn
+  have hIVT := intermediate_value_Icc' h01 hco
+  obtain ⟨t, ht, hft⟩ := hIVT hmem
+  refine ⟨t, ?_, hft⟩
+  constructor
+  · -- t > 0: if t ≤ 0 then t = 0 (since t ∈ [0,1]), so f(t) = f(0) ≠ f(0)/2
+    by_contra hle
+    push_neg at hle
+    have ht0 : t = 0 := le_antisymm hle ht.1
+    rw [ht0] at hft; linarith
+  · -- t < 1: if t ≥ 1 then t = 1 (since t ∈ [0,1]), so f(t) = 0 ≠ f(0)/2
+    by_contra hle
+    push_neg at hle
+    have ht1 : t = 1 := le_antisymm ht.2 hle
+    rw [ht1, hzero] at hft; linarith
 
 /-! ## Problem 5: D₄ Dispersion Relation -/
 
@@ -63,14 +68,14 @@ theorem phonon_velocity_consistent (L_P c_0 : ℝ) (hL : 0 < L_P) (hc : 0 < c_0)
     let a₀ := L_P / Real.sqrt 24
     let Ω_P := Real.sqrt 24 * c_0 / L_P
     a₀ * Ω_P = c_0 := by
-  -- Unfold the let-bound definitions so we see an explicit rational expression.
-  simp [a₀, Ω_P]
+  -- Introduce the let-bound definitions.
+  intro a₀ Ω_P
   -- Establish that all denominators are nonzero before using `field_simp`.
   have hLne : (L_P : ℝ) ≠ 0 := ne_of_gt hL
   have hsqrt24 : Real.sqrt 24 ≠ 0 := Real.sqrt_ne_zero'.mpr (by norm_num)
-  -- Clear denominators using the nonzero proofs, then finish algebraically.
-  field_simp [hLne, hsqrt24]
-  ring
+  -- Unfold and simplify.
+  show L_P / Real.sqrt 24 * (Real.sqrt 24 * c_0 / L_P) = c_0
+  field_simp
 
 /-- The D₄ phonon dispersion in the long-wavelength limit:
     ω²(k) = c² · k²
@@ -142,9 +147,11 @@ theorem gravitational_vacuum_limit (W : WaveEquation)
     |W.laplacian x| ≤ |W.field x| := by
   rw [W.wave_eq x]
   simp only [abs_mul, abs_neg]
+  have hωc_pos : 0 < W.ω / W.c := div_pos W.ω_pos W.c_pos
+  have hωc_nonneg : 0 ≤ W.ω / W.c := le_of_lt hωc_pos
   have h1 : |(W.ω / W.c) ^ 2| ≤ 1 := by
-    rw [abs_of_pos (by positivity)]
-    exact pow_le_one₀ (by positivity) (le_of_lt hsmall)
+    rw [abs_of_nonneg (sq_nonneg _)]
+    exact pow_le_one₀ hωc_nonneg (le_of_lt hsmall)
   calc |(W.ω / W.c) ^ 2| * |W.field x|
       ≤ 1 * |W.field x| := by exact mul_le_mul_of_nonneg_right h1 (abs_nonneg _)
     _ = |W.field x| := one_mul _
