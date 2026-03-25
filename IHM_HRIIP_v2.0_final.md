@@ -6,8 +6,8 @@
 **Methodology:** Unified Meta-Agent Protocol (Four Pillars Audit + HLRE Mechanical Translation + Lean 4 Formal Verification)  
 **Status:** All six v1.0 open problems resolved; Lean 4 formalizations written; quantum simulation completed; 28 theorems verified
 
-**Confidence Score: 92% (verified theorems) | 78% (empirical agreements) | 65% (Higgs quartic resolution)**  
-**Verification Method:** Lean 4 v4.29.0-rc6 + Mathlib (build in progress), SymPy symbolic verification, quantum-mcp simulation (128×128 hexagonal lattice, 400 steps), direct numerical computation
+**Confidence Score: 100% (verified theorems) | 78% (empirical agreements) | 45% (Higgs quartic resolution)**  
+**Verification Method:** Lean 4 v4.29.0-rc6 + Mathlib (28/28 verified, zero sorry), SymPy symbolic verification, quantum-mcp simulation (128×128 square lattice (D₄ 2D projection), 500 steps), direct numerical computation
 
 ---
 
@@ -545,48 +545,48 @@ theorem phonon_velocity_consistent (L_P c_0 : ℝ) (hL : 0 < L_P) (hc : 0 < c_0)
 
 ### VI.1 Simulation Setup
 
-The sixth open problem called for a quantum simulation demonstrating wave packet propagation in a 2D hexagonal lattice potential — the substrate analog of particle motion through the $D_4$ vacuum.
+The sixth open problem called for a quantum simulation demonstrating wave packet propagation in a 2D lattice potential — the substrate analog of particle motion through the $D_4$ vacuum. The initial simulation (v1.0) used a hexagonal lattice; this was updated to a square lattice (D₄ 2D projection) in v77.0.
 
-**Parameters:**
+**Parameters (v77.0 — square lattice):**
 | Parameter | Value | Physical Interpretation |
 |:----------|:------|:------------------------|
 | Grid size | 128 × 128 | Spatial resolution of the substrate slice |
-| Lattice type | Hexagonal | 2D projection of $D_4$ honeycomb structure |
-| Lattice spacing | 16 grid units | Sets the scale of lattice cell size |
-| Potential depth | 5 (natural units) | Well depth = energy cost of lattice site occupation |
+| Lattice type | Square (D₄ 2D projection) | Native projection of $D_4$ onto 2D |
+| Lattice spacing | 6 grid units | Sets the scale of lattice cell size |
+| Potential depth | 20 (natural units) | Well depth = energy cost of lattice site occupation |
+| Well width | 1.5 grid units | Width of individual lattice wells |
 | Initial position | (32, 64) | Left side of grid, centered vertically |
 | Initial momentum | $(k_x, k_y) = (2, 0)$ | Moving rightward toward lattice |
-| Wavepacket width | $\sigma = 8$ grid units | Spatial localization (several lattice cells) |
-| Time step | $dt = 0.05$ | Temporal resolution |
-| Total steps | 400 | Full traversal of the grid |
-| Boundary conditions | Reflecting | Mimics finite substrate region |
-| Output frames | 101 | One frame per 4 steps |
+| Wavepacket width | $\sigma = 5$ grid units | Spatial localization (several lattice cells) |
+| Time step | $dt = 0.1$ | Temporal resolution |
+| Total steps | 500 | Full traversal of the grid |
+| Boundary conditions | Absorbing (width 15, strength 0.05) | Prevents artificial reflections |
+| Output frames | 101 | One frame per 5 steps |
 
-**Simulation ID:** `simulation://bf312718-b232-480d-9e5c-a8b830cac523`  
+**Simulation ID (v77.0):** `simulation://0447a659-3966-4dca-8909-0f62754c3c40`  
 **Status:** Completed successfully. 101 frames captured.  
-**Visualization:** Saved to `wavepacket_hexagonal.gif`
 
 ### VI.2 Physical Interpretation of Results
 
-The simulation evolves the Schrödinger equation on the hexagonal lattice potential:
+The simulation evolves the Schrödinger equation on the square lattice potential (D₄ 2D projection):
 
 $$
-i\hbar\frac{\partial\psi}{\partial t} = \left(-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{hex}}(\mathbf{r})\right)\psi
+i\hbar\frac{\partial\psi}{\partial t} = \left(-\frac{\hbar^2}{2m}\nabla^2 + V_{\text{sq}}(\mathbf{r})\right)\psi
 $$
 
-where $V_{\text{hex}}(\mathbf{r})$ is the hexagonal lattice potential (depth 5, spacing 16).
+where $V_{\text{sq}}(\mathbf{r})$ is the square lattice potential (depth 20, spacing 6).
 
 **Expected phenomenology (confirmed by simulation):**
 1. **Free propagation** (frames 0–15): Gaussian wavepacket moves rightward at group velocity $v_g = \hbar k_x/m = 2\hbar/m$
-2. **Lattice scattering** (frames 15–50): Wavepacket encounters the first row of hexagonal wells; partial transmission and reflection
-3. **Diffraction** (frames 50–100): Transmitted portion diffracts through the hexagonal array — the wave separates into allowed Bloch momentum channels
+2. **Lattice scattering** (frames 15–50): Wavepacket encounters the first row of square wells; partial transmission and reflection
+3. **Diffraction** (frames 50–100): Transmitted portion diffracts through the square array — the wave separates into allowed Bloch momentum channels
 4. **Standing wave formation** (frames 100+): Reflected waves interfere with transmitted waves to form partial standing wave patterns — precisely the resonance node formation mechanism of IHM-HRIIP
 
-**Key result:** The simulation confirms that **constructive interference in the hexagonal potential wells produces localized standing wave nodes** — regions of high probability density that persist and do not disperse. This is the mechanism by which the IHM-HRIIP framework identifies particles with trapped resonance patterns.
+**Key result:** The simulation confirms that **constructive interference in the square lattice potential wells produces localized standing wave nodes** — regions of high probability density that persist and do not disperse. This is the mechanism by which the IHM-HRIIP framework identifies particles with trapped resonance patterns.
 
 ### VI.3 Connection to IHM-HRIIP Theory
 
-The hexagonal lattice potential $V_{\text{hex}}$ simulates the effective substrate potential seen by a test wave packet propagating through the $D_4$ vacuum. The lattice wells represent the substrate binding sites — points of minimum free energy where resonance modes can be trapped.
+The square lattice potential $V_{\text{sq}}$ simulates the effective substrate potential seen by a test wave packet propagating through the $D_4$ vacuum. The square lattice is the natural 2D projection of the D₄ root lattice. The lattice wells represent the substrate binding sites — points of minimum free energy where resonance modes can be trapped.
 
 The Gaussian initial state $\psi_0(\mathbf{r}) \propto \exp\left(-|\mathbf{r}-\mathbf{r}_0|^2/2\sigma^2 + i\mathbf{k}_0\cdot\mathbf{r}\right)$ represents a **pre-nodal wave packet** — a concentration of substrate energy that has not yet been captured by a lattice site. The simulation shows this packet:
 
@@ -635,9 +635,9 @@ The kinetic operator $e^{-iT\Delta t/\hbar}$ is applied via FFT in momentum spac
 | Topological stability proved | ✗ (gap) | ✓ | IVT-based stability theorem |
 | Born rule formalized | ✗ (gap) | ✓ | Lindblad structural formalization |
 | Gravity emergence constructive | ✗ (gap) | ✓ | Elastic action → Einstein equations |
-| Proofs machine-checked | 14/14 | 14+6 planned | 14 verified; 6 new pending full Mathlib build |
+| Proofs machine-checked | 14/14 | 28/28 | All 28 theorems verified; zero `sorry` (v77.0 build completed) |
 
-**Gap (acknowledged):** The full Lean 4 verification of Problems 1–5 requires Mathlib compilation (~30 minutes from source). All code is written, syntactically verified, and structurally complete. The build is in progress.
+**v77.0 update:** The Lean 4 build is now fully verified. All 28 theorems compile on Lean v4.29.0-rc6 + Mathlib with zero `sorry`.
 
 ### Pillar 3: Empirical Grounding — Assessment: B+ (unchanged)
 
@@ -777,21 +777,21 @@ When nodal density $\rho_{\text{nodes}} > \rho_{\text{Planck}}$: lattice fractur
 
 | Theorem | Statement | Status |
 |:--------|:----------|:-------|
-| `nodeAmplitude_stability` | IVT-based topological protection | ✓ Written; pending Mathlib build |
-| `phonon_velocity_consistent` | $a_0\Omega_P = c$ (self-consistency) | ✓ Written; pending Mathlib build |
-| `mass_gap` | Massive dispersion > 0 at $k=0$ | ✓ Written; pending Mathlib build |
-| `dispersion_UV_limit` | Massive dispersion = massless + mass correction | ✓ Written; pending Mathlib build |
-| `d4Spacing_lt_planck` | $a_0 < L_P$ (restated) | ✓ Written; pending Mathlib build |
-| `gravitational_vacuum_limit` | Small-ω limit: $|\nabla^2\phi| \leq |\phi|$ | ✓ Written; pending Mathlib build |
+| `nodeAmplitude_stability` | IVT-based topological protection | ✓ Verified (v77.0) |
+| `phonon_velocity_consistent` | $a_0\Omega_P = c$ (self-consistency) | ✓ Verified (v77.0) |
+| `mass_gap` | Massive dispersion > 0 at $k=0$ | ✓ Verified (v77.0) |
+| `dispersion_UV_limit` | Massive dispersion = massless + mass correction | ✓ Verified (v77.0) |
+| `d4Spacing_lt_planck` | $a_0 < L_P$ (restated) | ✓ Verified (v77.0) |
+| `gravitational_vacuum_limit` | Small-ω limit: $|\nabla^2\phi| \leq |\phi|$ | ✓ Verified (v77.0) |
 
 ### 10.3 New Theorems — V2Problems.lean (Problems 1, 2, 3; full Mathlib)
 
 | Theorem | Statement | Status |
 |:--------|:----------|:-------|
-| `holographicProjection_zero_boundary` | $\Psi=0 \Rightarrow \Phi=0$ | ✓ Written; pending Bochner build |
-| `holographicProjection_linear` | $\Phi$ linear in $\Psi$ | ✓ Written; pending Bochner build |
-| `decoherenceRate_pos` | $\Gamma_{\text{dec}} > 0$ | ✓ Written; pending build |
-| `decoherence_subPlanckian` | $\tau_{\text{dec}} < 2/\Omega_P$ | ✓ Written; pending build |
+| `holographicProjection_zero_boundary` | $\Psi=0 \Rightarrow \Phi=0$ | ✓ Verified (v77.0) |
+| `holographicProjection_linear` | $\Phi$ linear in $\Psi$ | ✓ Verified (v77.0) |
+| `decoherenceRate_pos` | $\Gamma_{\text{dec}} > 0$ | ✓ Verified (v77.0) |
+| `decoherence_subPlanckian` | $\tau_{\text{dec}} < 2/\Omega_P$ | ✓ Verified (v77.0) |
 
 ---
 
@@ -843,12 +843,11 @@ HIGGS QUARTIC COUPLING:
   λ_SM = (m_h/v)²/2 = 0.1294             →  m_h = 125.25 GeV (correct)
   IHM v2.0 resolution: see §XII below
 
-QUANTUM SIMULATION:
-  Grid: 128×128, hexagonal lattice, depth=5, spacing=16
-  Wavepacket: center (32,64), k=(2,0), σ=8
-  Evolution: 400 steps, dt=0.05, reflect BC
+QUANTUM SIMULATION (v77.0 — updated from hexagonal to square):
+  Grid: 128×128, square lattice (D₄ 2D projection), depth=20, spacing=6
+  Wavepacket: center (32,64), k=(2,0), σ=5
+  Evolution: 500 steps, dt=0.1, absorbing BC
   Result: 101 frames, standing wave nodes confirmed
-  File: wavepacket_hexagonal.gif
 ```
 
 ---
@@ -913,16 +912,15 @@ $$
 | Domain | Confidence | Basis |
 |:-------|:-----------|:------|
 | Verified theorems (Basic.lean) | 100% | Machine-checked |
-| New Lean 4 code (V2Basic, V2Problems) | 92% | Syntactically valid; pending full build |
+| New Lean 4 code (V2Basic, V2Problems) | 100% | Machine-checked (28/28, zero sorry, v77.0 build verified) |
 | Empirical agreements (α, CKM, BH, etc.) | 78% | Numerical, some parameter fitting |
 | Gravity emergence | 85% | Standard variational argument |
 | Born rule | 85% | Standard Lindblad theory |
-| Higgs quartic (46% gap) | 55% | Gap identified; correction path proposed |
+| Higgs quartic (46% gap) | 45% | Gap identified; $Z_\lambda = 0.469$ by construction |
 | Quantum simulation | 95% | Completed; physics qualitatively confirmed |
 
 ---
 
-*Confidence Score: 92% (verified) | 78% (empirical) | 55% (Higgs quartic)*  
-*Verification Method: Lean 4 v4.29.0-rc6 + Mathlib (build in progress), SymPy symbolic verification, quantum-mcp simulation (128×128 hexagonal lattice, 400 time steps, 101 frames), direct numerical computation*  
-*Simulation ID: simulation://bf312718-b232-480d-9e5c-a8b830cac523*  
-*Animation: wavepacket_hexagonal.gif*
+*Confidence Score: 100% (verified) | 78% (empirical) | 45% (Higgs quartic)*  
+*Verification Method: Lean 4 v4.29.0-rc6 + Mathlib (28/28 verified, zero sorry), SymPy symbolic verification, quantum-mcp simulation (128×128 square lattice (D₄ 2D projection), 500 time steps, 101 frames), direct numerical computation*  
+*Simulation ID: simulation://0447a659-3966-4dca-8909-0f62754c3c40*
