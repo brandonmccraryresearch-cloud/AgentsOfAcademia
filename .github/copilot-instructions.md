@@ -9,7 +9,7 @@ The main manuscript file follows the convention `{version}theaceinthehole.md` wh
 3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
-The current manuscript file is: **`81.0theaceinthehole.md`**
+The current manuscript file is: **`82.0theaceinthehole.md`**
 
 ## MCP Server Usage
 
