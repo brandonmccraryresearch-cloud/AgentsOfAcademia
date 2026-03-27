@@ -45,10 +45,10 @@
 |-------|--------|--------|
 | Lattice-mechanical language | ✅ PASS | All entities described as lattice objects: triality defects at sites $\mathbf{n}_1, \mathbf{n}_2$, Wilson lines as path-ordered exponentials of the $S_3$ connection, phonon propagation at speed $c = a_0\Omega_P$. |
 | Banned metaphor scan | ✅ PASS | No uses of "flavor" (as metaphor), "color" (as metaphor), or "intrinsic spin" without grounding found in §VI.3.2. |
-| Mechanical sense check | ⚠️ FLAG | The phrase "three triality sectors $(8_v, 8_s, 8_c)$ provide the three measurement bases required for maximal CHSH violation" is mechanically imprecise. CHSH requires **two** measurement settings per party (four total, not three). The three sectors provide the representation-theoretic structure from which two measurement bases per party can be extracted, but the direct mapping from $S_3$ group elements to CHSH measurement operators is not spelled out. This is a **mechanical gap**, not an error. |
+| Mechanical sense check | ✅ PASS | The current §VI.3.2 wording correctly states that CHSH uses **two** measurement settings per party (four total). The three triality sectors $(8_v, 8_s, 8_c)$ are treated as the representation-theoretic structure from which these two measurement settings per party are selected, so the previous "three measurement bases" phrasing has been retired and the mechanical description is now consistent with CHSH. |
 | Hidden "intrinsic" properties | ✅ PASS | No intrinsic properties invoked. Triality charge is defined as a lattice-geometric property (representation sector under $S_3$), not as an intrinsic quantum number. |
 
-**HLRE Verdict: PASS with one mechanical-clarity FLAG.**
+**HLRE Verdict: PASS.**
 
 ### 1.3 Lean 4 Specialist — Formalization Assessment
 
@@ -265,11 +265,11 @@ This accounting works numerically ($14 + 6 = 20$ hidden DOF) and is now consiste
 
 | In §VIII.5 (line 2338) | In Y.6 (line 8014–8018) | Consistent? |
 |------------------------|------------------------|-------------|
-| "Open Calculation #1" (two-loop CW) | #4 (two-loop effective potential) | ⚠️ **INCONSISTENT** — §VIII.5 calls the two-loop CW potential "Open Calculation #1" but Y.6 lists it as priority #4 |
+| "Open Calculation #4" (two-loop CW) | #4 (two-loop effective potential) | ✅ Consistent |
 | "Open Calculation #2" (§IV.5, line 1220) | #2 (two-loop thresholds) | ✅ Consistent |
 | "Open Calculation #3" (Y.4, line 7991) | #3 ($\kappa_4$ computation) | ✅ Consistent |
 
-**⚠️ MINOR INCONSISTENCY:** The numbering scheme changed between §VIII.5 (where the two-loop CW potential is called "Open Calculation #1" in the context of being the most important open calculation in the framework) and Y.6 (where it is renumbered as #4 after Review4 reprioritization). The full one-loop BZ integral (the new #1) was not previously numbered. This is a **renumbering artifact**, not a logical inconsistency, but the text in §VIII.5 should be updated to reference the revised priority.
+**Resolved:** Earlier drafts labeled the two-loop CW potential in §VIII.5 as "Open Calculation #1" while Y.6 listed it as priority #4. In the current v80.0 text, both §VIII.5 and Appendix Y.6 consistently use "Open Calculation #4", and this verification report has been updated to reflect the resolved numbering.
 
 ---
 
@@ -336,12 +336,12 @@ We numerically verified the spherical 5-design property of the 24-cell (supporti
 | ID | Type | Location | Description | Severity |
 |----|------|----------|-------------|----------|
 | **I1** | Counting | §IV.5, line 1200 | "8 DOF that become the visible SM gauge bosons" — SM has 12 gauge bosons, not 8. The "8" likely refers to $8_v$ rep of SO(8) but this is not stated. | **Medium** — needs textual clarification |
-| **I2** | Numbering | §VIII.5 (line 2338) vs Y.6 (line 8014) | "Open Calculation #1" in §VIII.5 refers to two-loop CW potential, but Y.6 renumbers it as #4. | **Low** — renumbering artifact from Review4 reprioritization |
+| **I2** | Numbering (resolved) | §VIII.5 vs Y.6 | Earlier drafts used "Open Calculation #1" in §VIII.5 but #4 in Y.6. Now consistently "#4" in both locations. Entry retained for traceability only. | **Resolved** — no remaining issue |
 | **I3** | Missing derivation | §IV.5, line 1204 | Mass scale formula $M_{G_2} \sim M_{\text{lattice}}/\sqrt{7}$ stated without derivation from lattice potential. | **High** — claimed "zero free parameters" but formula itself is an assumption |
 | **I4** | Missing theorem | §XIV.3 / Y.5 | No theorem for ground state identification ($|\Psi^-\rangle$ as ground state of Wilson line sector). Gap between T1 and T2. | **Medium** — affects T2 feasibility |
 | **I5** | Precision | §VIII.5 CW potential | UV cutoff written as $a_0^{-1}$ rather than $\pi/a_0$ (BZ boundary). Factor of $\pi$ matters at ~10% level for $Z_\lambda$. | **Low** — within scheme-dependence, but should be noted |
 | **I6** | Oversimplification | Y.2 HLRE | "Hidden phonons contribute equally at one loop" assumes SM-singlet status, but $G_2$ adjoint members have nontrivial SM quantum numbers depending on the embedding. | **Medium** — affects threshold correction calculation |
-| **I7** | CHSH mapping | §VI.3.2, line 1722 | "Three triality sectors provide the three measurement bases required for maximal CHSH violation" — CHSH needs 2 settings per party, not 3 bases. | **Low** — imprecise phrasing, not an error |
+| **I7** | CHSH mapping (resolved) | §VI.3.2 | Original phrasing referenced "three measurement bases" for CHSH; wording has been updated in v80.0 to the correct 2-settings-per-party description. Entry retained for traceability only. | **Resolved** — no remaining issue in §VI.3.2 text |
 
 ---
 
