@@ -1,6 +1,6 @@
 # v81.0 Meta-Agent Verification Report
 
-**Date:** 2025-07-22
+**Date:** March 2026 (aligned with Review5 and v81.0 completion)
 **Agent:** Unified Meta-Agent (Four Pillars + HLRE + Lean 4 Specialist)
 **Source:** Review5.md (AgentsOfAcademia)
 **Target:** 81.0theaceinthehole.md
@@ -92,7 +92,7 @@ Version 81.0 of the IRH manuscript has been successfully updated in response to 
 - [x] Validation benchmarks: references existing 2D simulation (ID 0447a659)
 - [x] Four Pillars grade table included
 - [x] HLRE mechanical translation included
-- [x] Status marker: Open Computation #3 (third priority)
+- [x] Status marker: Open Calculation #3 (third priority)
 
 ### §XIV.4.1 — Community Submission Plan
 - [x] arXiv plan: 3 papers with categories and scope

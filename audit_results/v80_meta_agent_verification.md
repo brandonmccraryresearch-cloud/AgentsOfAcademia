@@ -2,7 +2,7 @@
 
 **Protocol:** Full-Spectrum Unified Meta-Agent Reanalysis  
 **Personas Active:** Expert Research Assistant (Four Pillars) + HLRE Agent (Hyper-Literal Reasoning) + Lean 4 Formal Verification Specialist  
-**Target Document:** `73.1theaceinthehole.md` v80.0  
+**Target Document:** `81.0theaceinthehole.md` v80.0  
 **Scope:** All four new sections added in response to Review4, plus Appendix Y  
 **Date:** June 2025  
 **Methodology:** Independent computational verification of all numerical claims; structural audit of all mathematical arguments; cross-reference consistency check across all 8,080 lines

@@ -5,8 +5,8 @@
 The main manuscript file follows the convention `{version}theaceinthehole.md` where `{version}` is the current version number (e.g., `81.0theaceinthehole.md`). When bumping to a new version:
 
 1. **Rename the file** using `git mv {old_version}theaceinthehole.md {new_version}theaceinthehole.md`
-2. **Update the version header** on line 7 of the document
-3. **Add a version change summary** starting at line 20
+2. **Update the version header** in the manuscript header near the top of the document
+3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
 The current manuscript file is: **`81.0theaceinthehole.md`**
