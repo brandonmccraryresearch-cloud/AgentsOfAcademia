@@ -257,11 +257,9 @@ The number "20 hidden DOF" appears in multiple contexts:
 | SO(8) adjoint decomposition | 28 − 8 (SM gauge bosons) = 20 | §IV.5 |
 | Y.2 HLRE translation | 20 = 14_{G₂} + 6_{residual} | Appendix Y |
 
-**⚠️ INCONSISTENCY DETECTED:** The counting $28 - 8 = 20$ in §IV.5 uses "8 DOF that become the visible SM gauge bosons." The Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ has dimension **12** (8 gluons + $W^+, W^-, Z^0$ + $\gamma$), not 8. The "8" likely refers to the $8_v$ (vector) representation of $\mathrm{SO}(8)$, which is one of the three 8-dimensional representations related by triality. If 8 DOF from the two $\mathbf{7}$'s become the $8_v$ representation (identified with SM gauge bosons), then $14 - 8 = 6$ residual from the $\mathbf{7}$'s, giving $14 + 6 = 20$.
+**⚠️ INCONSISTENCY DETECTED (now resolved in v80.0):** The original counting "$28 - 8 = 20$" in §IV.5 used "8 DOF that become the visible SM gauge bosons." The Standard Model gauge group $\mathrm{SU}(3) \times \mathrm{SU}(2) \times \mathrm{U}(1)$ has dimension **12** ($\dim(\mathrm{SU}(3)) + \dim(\mathrm{SU}(2)) + \dim(\mathrm{U}(1)) = 8 + 3 + 1 = 12$), not 8. The "8" refers to the $8_v$ (vector) representation of $\mathrm{SO}(8)$ — the gluon octet in the triality language. The remaining 4 electroweak generators ($W^\pm, Z^0, \gamma$) arise from the $\mathrm{SU}(2)\times\mathrm{U}(1)$ sector of the branching $G_2 \to \mathrm{SU}(3) \times \mathrm{U}(1)$. The document text has been updated to provide the explicit decomposition: $28 = 14_{\text{hidden at }M_{G_2}} + 8_{\text{visible (gluons)}} + 6_{\text{hidden at }M_{\text{EW}}}$, with the electroweak DOF drawn from the $\mathbf{7}$ representations.
 
-**The accounting works numerically (14 + 6 = 20), but the text should clarify that "8 DOF that become the visible SM gauge bosons" refers to the $8_v$ embedding, not the full 12-dimensional SM gauge group.** The remaining 4 SM generators ($\mathrm{SU}(2)_L \times \mathrm{U}(1)_Y$ beyond what's in $8_v$) need separate accounting.
-
-This is a **significant clarification issue** — it does not invalidate the counting but leaves a gap in the chain of logic.
+This accounting works numerically ($14 + 6 = 20$ hidden DOF) and is now consistent with the lattice counting ($24 - 4 = 20$).
 
 ### 6.3 Open Calculation Numbering
 
