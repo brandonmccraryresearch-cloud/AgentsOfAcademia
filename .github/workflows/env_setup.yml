@@ -100,7 +100,7 @@ jobs:
         run: |
           export PATH="$HOME/.elan/bin:$PATH"
           cd lean4
-          LEAN_VERSION=$(cat lean-toolchain | sed 's|leanprover/lean4:||')
+          LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
           echo "Required Lean version: $LEAN_VERSION"
           elan toolchain install leanprover/lean4:$LEAN_VERSION
           lean --version

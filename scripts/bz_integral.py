@@ -108,8 +108,9 @@ def multi_channel_integral(N_samples=2000000, seed=42):
     for i in range(4):
         for j in range(i + 1, 4):
             # Vertex from D₄ roots (±e_i ± e_j): 4 roots per pair
-            # V_ij² = [sin(qi+qj)]² + [sin(qi-qj)]² + [sin(-qi+qj)]² + [sin(-qi-qj)]²
-            # = 2[sin²(qi+qj) + sin²(qi-qj)]
+            # V_ij² = Σ over 4 roots: sin²(±qi ± qj)
+            # Since sin(-x) = -sin(x), the four terms reduce to two unique:
+            # sin²(qi+qj) and sin²(qi-qj), each appearing twice → factor of 2
             V_sq = 2 * (np.sin(q_samples[mask, i] + q_samples[mask, j])**2 +
                         np.sin(q_samples[mask, i] - q_samples[mask, j])**2)
 

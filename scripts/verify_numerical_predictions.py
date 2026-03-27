@@ -36,6 +36,7 @@ def check(name, theory, experiment, tolerance_pct, unit=""):
 
 
 def main():
+    global PASS, FAIL
     print("=" * 72)
     print("IRH/IHM-HRIIP NUMERICAL VERIFICATION (v82.0)")
     print("=" * 72)
@@ -76,14 +77,13 @@ def main():
     rho_ratio_theory = alpha**57 / (4 * np.pi)
     rho_ratio_exp = 1.26e-123
     log_diff = abs(np.log10(rho_ratio_theory) - np.log10(rho_ratio_exp))
-    print(f"  [{'PASS' if log_diff < 0.1 else 'FAIL'}] "
+    status = "PASS" if log_diff < 0.1 else "FAIL"
+    print(f"  [{status}] "
           f"ρ_Λ/ρ_P = α⁵⁷/(4π): theory={rho_ratio_theory:.3e}, "
           f"obs≈{rho_ratio_exp:.2e}, Δlog₁₀={log_diff:.4f}")
     if log_diff < 0.1:
-        global PASS
         PASS += 1
     else:
-        global FAIL
         FAIL += 1
     print()
 
