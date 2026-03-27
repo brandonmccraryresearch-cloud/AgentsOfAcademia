@@ -102,7 +102,7 @@ $$\Pi_{ij}^{(2)}(\text{hidden}) \propto \mathrm{Tr}\bigl[T_i^{(8_v)} T_j^{(8_v)}
 
 The mass thresholds $M_k$ at which hidden phonon branches decouple from the running are determined by the $\mathrm{SO}(8)$ breaking pattern. The cascade $\mathrm{SO}(8) \to G_2 \times \mathrm{U}(1) \to \mathrm{SU}(3)\times\mathrm{SU}(2)\times\mathrm{U}(1)$ has exactly two intermediate scales:
 
-- $M_{G_2} \sim M_{\text{lattice}} / \sqrt{7}$ (7 = dim($G_2$) − dim($\mathrm{SU}(3)$))  
+- $M_{G_2} \sim M_{\text{lattice}} / \sqrt{7}$ (7 = $\dim(\mathbf{7})$, the fundamental representation of $G_2$)  
 - $M_{\text{EW}} \sim M_{\text{lattice}} / \sqrt{14}$ (14 = dim($G_2$))
 
 These two scales, plus the 20 multiplicities partitioned as $20 = 14_G + 6_{\text{residual}}$, give a predicted threshold correction.
