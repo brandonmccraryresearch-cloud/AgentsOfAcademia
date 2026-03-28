@@ -215,8 +215,16 @@ def main():
         print(f"\nFailed checks: {', '.join(failures)}")
         if args.strict:
             return 1
-    return 0
+    # In strict mode, enforce the D₄ 5-design property as a hard requirement.
+    strict = "--strict" in sys.argv[1:]
+    roots = d4_root_vectors()
+    design_ok, quartic, mixed = verify_5_design(roots)
 
+    exit_code = 0
+    if strict and not design_ok:
+        print("ERROR: D₄ 5-design verification failed in strict mode.", file=sys.stderr)
+        exit_code = 1
 
+    return exit_code
 if __name__ == "__main__":
     sys.exit(main())
