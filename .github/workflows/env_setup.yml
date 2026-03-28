@@ -1,0 +1,172 @@
+# ==============================================================================
+# SESSION ENVIRONMENT SETUP — Lean 4, Python Scientific Stack, Verification
+# ==============================================================================
+#
+# This workflow activates at the onset of any new agent session to install:
+#   - Lean 4 (via elan) at the version specified in lean4/lean-toolchain
+#   - Python scientific computing stack (NumPy, SciPy, SymPy, Matplotlib)
+#   - Lean 4 project dependencies (Mathlib) and build verification
+#   - Computational scripts for open problem resolution
+#
+# Trigger: workflow_dispatch (manual), push to main, or on schedule
+# ==============================================================================
+
+name: "Session Environment Setup"
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_lean_build:
+        description: "Build Lean 4 project (slow, ~30 min)"
+        required: false
+        type: boolean
+        default: true
+      run_computations:
+        description: "Run verification computations"
+        required: false
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths:
+      - 'lean4/**'
+      - 'scripts/**'
+  schedule:
+    # Run weekly to catch Mathlib updates
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  # ============================================================================
+  # PYTHON SCIENTIFIC ENVIRONMENT
+  # ============================================================================
+  python-env:
+    name: "Python Scientific Stack"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install scientific dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy sympy matplotlib
+
+      - name: Verify Python environment
+        run: |
+          python -c "
+          import numpy as np
+          import scipy
+          import sympy
+          print(f'NumPy:  {np.__version__}')
+          print(f'SciPy:  {scipy.__version__}')
+          print(f'SymPy:  {sympy.__version__}')
+          print('Python scientific stack: OK')
+          "
+
+      - name: Run verification computations
+        if: ${{ github.event.inputs.run_computations != 'false' }}
+        run: |
+          python scripts/verify_numerical_predictions.py
+          python scripts/d4_phonon_spectrum.py --strict
+          python scripts/bz_integral.py --strict
+
+      - name: Run full computations (high sample count)
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+        run: |
+          python scripts/d4_phonon_spectrum.py --samples 500000
+          python scripts/bz_integral.py --samples 2000000
+
+  # ============================================================================
+  # LEAN 4 ENVIRONMENT
+  # ============================================================================
+  lean4-env:
+    name: "Lean 4 Formal Verification"
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_lean_build != 'false' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install elan (Lean version manager)
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Verify Lean installation
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          cd lean4
+          LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
+          echo "Required Lean version: $LEAN_VERSION"
+          elan toolchain install leanprover/lean4:$LEAN_VERSION
+          lean --version
+
+      - name: Cache Lean 4 dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            lean4/.lake
+            lean4/lake-packages
+            ~/.elan
+          key: lean4-${{ hashFiles('lean4/lakefile.toml', 'lean4/lean-toolchain', 'lean4/lake-manifest.json') }}
+          restore-keys: |
+            lean4-
+
+      - name: Build Lean 4 project
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          cd lean4
+          lake update
+          lake build
+        timeout-minutes: 60
+
+      - name: Verify zero sorry
+        run: |
+          cd lean4
+          SORRY_COUNT=$(grep -r "sorry" IHMFramework/ --include="*.lean" | wc -l)
+          echo "sorry count: $SORRY_COUNT"
+          if [ "$SORRY_COUNT" -ne 0 ]; then
+            echo "FAIL: Found sorry in Lean files!"
+            grep -rn "sorry" IHMFramework/ --include="*.lean"
+            exit 1
+          fi
+          echo "PASS: Zero sorry in all files"
+
+      - name: Count verified theorems
+        run: |
+          cd lean4
+          THEOREM_COUNT=$(grep -r "^theorem\|^def.*theorem\|^noncomputable.*theorem" IHMFramework/ --include="*.lean" | wc -l)
+          echo "Verified theorems: $THEOREM_COUNT"
+          echo "Expected: 28"
+          if [ "$THEOREM_COUNT" -lt 28 ]; then
+            echo "WARNING: Expected at least 28 theorems, found $THEOREM_COUNT"
+          fi
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  summary:
+    name: "Environment Summary"
+    runs-on: ubuntu-latest
+    needs: [python-env, lean4-env]
+    if: always()
+
+    steps:
+      - name: Report environment status
+        run: |
+          echo "========================================"
+          echo "Session Environment Setup Complete"
+          echo "========================================"
+          echo "Python scientific stack: ${{ needs.python-env.result }}"
+          echo "Lean 4 verification: ${{ needs.lean4-env.result || 'skipped' }}"
+          echo "========================================"
