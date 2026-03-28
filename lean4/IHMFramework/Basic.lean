@@ -389,7 +389,7 @@ theorem latticeSpacing_lt_planck (lP : ℝ) (hlP : 0 < lP) :
 
 /-! ## Summary of Verification Status
 
-  ### Fully Verified (no sorry):
+  ### Fully Verified (no unproved theorems):
   - `luminalSpeed_pos`: c > 0 ✓
   - `luminalSpeed_sq`: c² = κ/ρ₀ ✓
   - `lorentzFactorSqInv_pos`: 1 - v²/c² > 0 for |v| < c ✓
