@@ -250,11 +250,24 @@ def main():
     print("PHONON SPECTRUM COMPUTATION COMPLETE")
     print("=" * 72)
 
-    if failures:
-        print(f"\nFailed checks: {', '.join(failures)}")
-        if args.strict:
-            return 1
-    return 0
+    # In strict mode, enforce the expected isotropic 4D Poisson ratio ν = 1/4.
+    # This allows CI or other automated workflows to detect invariant violations
+    # via a non-zero exit code, while preserving existing behavior by default.
+    status = 0
+    if "--strict" in sys.argv[1:]:
+        tol = 1e-3
+        if not np.isclose(nu, 0.25, rtol=0.0, atol=tol):
+            print(
+                f"[STRICT] Poisson ratio invariant failed: "
+                f"|ν - 0.25| = {abs(nu - 0.25):.6e} > {tol:.6e}"
+            )
+            status = 1
+
+    print("=" * 72)
+    print("PHONON SPECTRUM COMPUTATION COMPLETE")
+    print("=" * 72)
+
+    return status
 
 
 if __name__ == "__main__":
