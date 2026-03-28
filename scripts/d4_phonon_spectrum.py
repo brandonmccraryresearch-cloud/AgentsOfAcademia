@@ -22,6 +22,9 @@ import numpy as np
 import sys
 
 
+ISOTROPY_TOLERANCE = 1e-10
+
+
 def d4_root_vectors():
     """Generate all 24 root vectors of the D₄ lattice."""
     roots = []
@@ -140,7 +143,7 @@ def main():
     k_R = hsp['R']
     D_R = dynamical_matrix(k_R, roots)
     eigs_R = np.linalg.eigvalsh(D_R)
-    zone_zero = np.allclose(eigs_R, 0)
+    zone_zero = np.allclose(eigs_R, 0, atol=1e-12)
     for delta in roots[:3]:  # Show proof for first 3 roots
         kdot = np.dot(k_R, delta)
         print(f"  k·δ = {kdot:.4f} → cos(k·δ) = {np.cos(kdot):.6f}"
@@ -179,7 +182,7 @@ def main():
     eigs1 = np.linalg.eigvalsh(D1)
     eigs2 = np.linalg.eigvalsh(D2)
     max_diff = np.max(np.abs(eigs1 - eigs2))
-    is_isotropic = max_diff < 1e-10
+    is_isotropic = max_diff < ISOTROPY_TOLERANCE
     print(f"  k₁ = ({eps},0,0,0): ω² = {eigs1}")
     print(f"  k₂ ∝ (1,1,1,1):    ω² = {eigs2}")
     print(f"  Max difference: {max_diff:.2e}")

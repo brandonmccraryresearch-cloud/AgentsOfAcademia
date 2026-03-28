@@ -136,6 +136,7 @@ def main():
     args = parser.parse_args()
 
     failures = []
+    N = args.samples
 
     print("=" * 72)
     print("BRILLOUIN ZONE INTEGRAL — VACUUM POLARIZATION ON D₄ (v82.0)")
@@ -153,8 +154,6 @@ def main():
     if not ok:
         failures.append("5-design property")
     print()
-
-    N = args.samples
 
     # ===== Level 1: Bare Loop =====
     print(f"Level 1: Bare Scalar Loop ({N} samples)")
