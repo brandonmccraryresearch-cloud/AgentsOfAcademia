@@ -76,8 +76,14 @@ jobs:
         if: ${{ github.event.inputs.run_computations != 'false' }}
         run: |
           python scripts/verify_numerical_predictions.py
-          python scripts/d4_phonon_spectrum.py
-          python scripts/bz_integral.py
+          python scripts/d4_phonon_spectrum.py --strict
+          python scripts/bz_integral.py --strict
+
+      - name: Run full computations (high sample count)
+        if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+        run: |
+          python scripts/d4_phonon_spectrum.py --samples 500000
+          python scripts/bz_integral.py --samples 2000000
 
   # ============================================================================
   # LEAN 4 ENVIRONMENT
@@ -152,7 +158,7 @@ jobs:
   summary:
     name: "Environment Summary"
     runs-on: ubuntu-latest
-    needs: [python-env]
+    needs: [python-env, lean4-env]
     if: always()
 
     steps:

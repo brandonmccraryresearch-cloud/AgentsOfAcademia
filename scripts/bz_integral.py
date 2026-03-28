@@ -10,8 +10,14 @@ using Monte Carlo integration with increasing sophistication:
 3. Vertex-dressed loop (SO(8) adjoint generators)
 
 This directly addresses Review&Reconstruction Priority 1 (§I.1).
+
+Usage:
+    python bz_integral.py                    # Default (fast, 200K samples)
+    python bz_integral.py --samples 2000000  # Full computation
+    python bz_integral.py --strict           # CI mode: non-zero exit on failure
 """
 
+import argparse
 import numpy as np
 import sys
 
@@ -122,6 +128,15 @@ def multi_channel_integral(N_samples=2000000, seed=42):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="BZ integral for vacuum polarization on D₄")
+    parser.add_argument("--samples", type=int, default=200000,
+                        help="Monte Carlo samples per integral (default: 200000)")
+    parser.add_argument("--strict", action="store_true",
+                        help="CI mode: exit non-zero if 5-design check fails")
+    args = parser.parse_args()
+
+    failures = []
+
     print("=" * 72)
     print("BRILLOUIN ZONE INTEGRAL — VACUUM POLARIZATION ON D₄ (v82.0)")
     print("=" * 72)
@@ -135,12 +150,16 @@ def main():
     print(f"  ⟨x₁⁴⟩ = {quartic:.8f} (exact: {3.0/(4*6):.8f})")
     print(f"  ⟨x₁²x₂²⟩ = {mixed:.8f} (exact: {1.0/(4*6):.8f})")
     print(f"  5-design: {'PASS' if ok else 'FAIL'}")
+    if not ok:
+        failures.append("5-design property")
     print()
 
+    N = args.samples
+
     # ===== Level 1: Bare Loop =====
-    print("Level 1: Bare Scalar Loop (2M samples)")
+    print(f"Level 1: Bare Scalar Loop ({N} samples)")
     print("-" * 50)
-    Pi_trace, Pi_00, Pi_11 = bare_loop_integral()
+    Pi_trace, Pi_00, Pi_11 = bare_loop_integral(N_samples=N)
     print(f"  tr Π(0) = {Pi_trace:.8f}")
     print(f"  Π₀₀(0)  = {Pi_00:.8f}")
     print(f"  Π₁₁(0)  = {Pi_11:.8f}")
@@ -152,9 +171,9 @@ def main():
     print()
 
     # ===== Level 2: Multi-Channel =====
-    print("Level 2: Multi-Channel Vertex Structure (2M samples)")
+    print(f"Level 2: Multi-Channel Vertex Structure ({N} samples)")
     print("-" * 50)
-    total_Pi, channels = multi_channel_integral()
+    total_Pi, channels = multi_channel_integral(N_samples=N)
     print(f"  Channel contributions:")
     for i, j, Pi_ch in channels:
         print(f"    ({i},{j}): Π = {Pi_ch:.8f}")
@@ -193,6 +212,10 @@ def main():
     print(f"    Level 3 (SO(8) dressed): PENDING (requires full vertex structure)")
     print()
 
+    if failures:
+        print(f"\nFailed checks: {', '.join(failures)}")
+        if args.strict:
+            return 1
     return 0
 
 

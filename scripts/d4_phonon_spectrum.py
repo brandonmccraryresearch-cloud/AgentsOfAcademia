@@ -10,8 +10,14 @@ Computes the full phonon dispersion for the D₄ root lattice:
 - Spectral density integral (partial)
 
 This directly addresses Review&Reconstruction §I.2 and §II.2.
+
+Usage:
+    python d4_phonon_spectrum.py                  # Default (fast, 10K samples)
+    python d4_phonon_spectrum.py --samples 500000 # Full computation
+    python d4_phonon_spectrum.py --strict          # CI mode: non-zero exit on failure
 """
 
+import argparse
 import numpy as np
 import sys
 
@@ -50,6 +56,38 @@ def dynamical_matrix(k, roots, J=1.0):
     return D
 
 
+def dynamical_matrix_batch(k_batch, roots, J=1.0):
+    """
+    Vectorized dynamical matrix computation for a batch of wavevectors.
+
+    Parameters:
+        k_batch: (N, 4) array of wavevectors
+        roots: (24, 4) array of D₄ root vectors
+        J: spring constant
+
+    Returns:
+        (N, 4) array of eigenvalues at each k-point
+    """
+    N = k_batch.shape[0]
+    # k_batch: (N, 4), roots: (24, 4)
+    # k·δ for all k and all roots: (N, 24)
+    kdot = k_batch @ roots.T
+    # phase factors: 1 - cos(k·δ), shape (N, 24)
+    phases = 1 - np.cos(kdot)
+
+    norm_sq = np.sum(roots**2, axis=1)  # (24,)
+    eigenvalues = np.zeros((N, 4))
+
+    for idx in range(N):
+        D = np.zeros((4, 4))
+        for r, delta in enumerate(roots):
+            outer = np.outer(delta, delta) / norm_sq[r]
+            D += J * outer * phases[idx, r]
+        eigenvalues[idx] = np.linalg.eigvalsh(D)
+
+    return eigenvalues
+
+
 def compute_dispersion(k_path, k_labels, roots, J=1.0):
     """Compute eigenvalues along a k-path."""
     nk = len(k_path)
@@ -61,6 +99,15 @@ def compute_dispersion(k_path, k_labels, roots, J=1.0):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="D₄ phonon spectrum computation")
+    parser.add_argument("--samples", type=int, default=10000,
+                        help="Monte Carlo samples for spectral density (default: 10000)")
+    parser.add_argument("--strict", action="store_true",
+                        help="CI mode: exit non-zero if any invariant check fails")
+    args = parser.parse_args()
+
+    failures = []
+
     print("=" * 72)
     print("D₄ PHONON SPECTRUM COMPUTATION (v82.0)")
     print("=" * 72)
@@ -91,12 +138,17 @@ def main():
     # ===== Zone-boundary zero proof =====
     print("Zone-boundary zero analysis:")
     k_R = hsp['R']
+    D_R = dynamical_matrix(k_R, roots)
+    eigs_R = np.linalg.eigvalsh(D_R)
+    zone_zero = np.allclose(eigs_R, 0)
     for delta in roots[:3]:  # Show proof for first 3 roots
         kdot = np.dot(k_R, delta)
         print(f"  k·δ = {kdot:.4f} → cos(k·δ) = {np.cos(kdot):.6f}"
               f" → 1-cos = {1-np.cos(kdot):.2e}")
     print(f"  ... (all 24 roots give 1-cos = 0)")
-    print(f"  D(R) = 0 identically ✓")
+    print(f"  D(R) = 0 identically: {'PASS' if zone_zero else 'FAIL'}")
+    if not zone_zero:
+        failures.append("zone-boundary zero")
     print()
 
     # ===== Sound velocities =====
@@ -127,10 +179,13 @@ def main():
     eigs1 = np.linalg.eigvalsh(D1)
     eigs2 = np.linalg.eigvalsh(D2)
     max_diff = np.max(np.abs(eigs1 - eigs2))
+    is_isotropic = max_diff < 1e-10
     print(f"  k₁ = ({eps},0,0,0): ω² = {eigs1}")
     print(f"  k₂ ∝ (1,1,1,1):    ω² = {eigs2}")
     print(f"  Max difference: {max_diff:.2e}")
-    print(f"  Isotropic: {'PASS' if max_diff < 1e-10 else 'FAIL'}")
+    print(f"  Isotropic: {'PASS' if is_isotropic else 'FAIL'}")
+    if not is_isotropic:
+        failures.append("isotropy")
     print()
 
     # ===== Dispersion along Γ→X =====
@@ -146,18 +201,22 @@ def main():
               "  ".join(f"{e:>8.4f}" for e in eigs))
     print()
 
-    # ===== Spectral density partial computation =====
-    print("Vacuum energy spectral density (Monte Carlo):")
-    N = 500000
+    # ===== Spectral density computation =====
+    N = args.samples
+    print(f"Vacuum energy spectral density (Monte Carlo, N={N}):")
     np.random.seed(42)
-    k_samples = np.random.uniform(-np.pi, np.pi, size=(N, 4))
 
-    total_omega = 0
-    for i in range(N):
-        D = dynamical_matrix(k_samples[i], roots)
-        eigs = np.linalg.eigvalsh(D)
-        eigs = np.maximum(eigs, 0)  # ensure non-negative
-        total_omega += np.sum(np.sqrt(eigs))  # Σ ω(k)
+    # Process in batches to limit memory usage while staying vectorized
+    batch_size = min(N, 5000)
+    total_omega = 0.0
+    processed = 0
+    while processed < N:
+        this_batch = min(batch_size, N - processed)
+        k_batch = np.random.uniform(-np.pi, np.pi, size=(this_batch, 4))
+        eigs = dynamical_matrix_batch(k_batch, roots)
+        eigs = np.maximum(eigs, 0)
+        total_omega += np.sum(np.sqrt(eigs))
+        processed += this_batch
 
     avg_omega = total_omega / N  # average ω per k-point (sum of 4 branches)
     print(f"  ⟨Σ_b ω_b(k)⟩ = {avg_omega:.6f} (lattice units)")
@@ -173,17 +232,25 @@ def main():
     c_T_sq = c_sq[0]  # transverse
     c_L_sq = c_sq[3]  # longitudinal
     nu = (c_L_sq - 2*c_T_sq) / (2*c_L_sq - 2*c_T_sq)
+    poisson_ok = np.isclose(nu, 0.25, atol=1e-3)
     print(f"Elastic properties:")
     print(f"  c²_T = {c_T_sq:.6f}")
     print(f"  c²_L = {c_L_sq:.6f}")
     print(f"  c²_L / c²_T = {c_L_sq/c_T_sq:.6f}")
-    print(f"  Poisson ratio ν = {nu:.6f} (= 1/4 for isotropic 4D)")
+    print(f"  Poisson ratio ν = {nu:.6f} (= 1/4 for isotropic 4D): "
+          f"{'PASS' if poisson_ok else 'FAIL'}")
+    if not poisson_ok:
+        failures.append("Poisson ratio")
     print()
 
     print("=" * 72)
     print("PHONON SPECTRUM COMPUTATION COMPLETE")
     print("=" * 72)
 
+    if failures:
+        print(f"\nFailed checks: {', '.join(failures)}")
+        if args.strict:
+            return 1
     return 0
 
 
