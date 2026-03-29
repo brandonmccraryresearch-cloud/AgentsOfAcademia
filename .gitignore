@@ -6,3 +6,7 @@ __pycache__/
 *.pyc
 .lake/
 lake-packages/
+-e 
+# Environment files
+*.env
+*.env.*
