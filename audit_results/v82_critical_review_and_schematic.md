@@ -257,7 +257,7 @@ These are genuine mathematical facts, independently verified by the 5-design com
 
 ### Strength 2: The Multi-Channel BZ Integral Is Genuine Progress
 
-The BZ integral computation (§II.3.2, `scripts/bz_integral.py`) achieves 93.2% of the target $\alpha^{-1}$ fractional correction via 6 coordinate-pair channels. This is NOT trivial — a random lattice would not produce this result. The multi-channel structure naturally arises from the D₄ root geometry, and the 93.2% figure is robust (Monte Carlo with $2 \times 10^6$ samples).
+The BZ integral computation (§II.3.2, `scripts/bz_integral.py`) achieves 93.2% of the target $\alpha^{-1}$ fractional correction via 6 coordinate-pair channels. This is NOT trivial — a random lattice would not produce this result. The multi-channel structure naturally arises from the D₄ root geometry, and the 93.2% figure is robust: the manuscript reports $2 \times 10^6$ samples (§II.3.2); this review's independent verification at $5 \times 10^5$ samples yielded 93.4%, consistent within stochastic error.
 
 Whether the remaining 6.8% can be closed by SO(8) Cartan completion is an open question, but the partial result establishes that the D₄ BZ integral has real structure relevant to the fine-structure constant.
 
