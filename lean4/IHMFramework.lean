@@ -3,3 +3,5 @@
 import IHMFramework.Basic
 import IHMFramework.V2Basic
 import IHMFramework.V2Problems
+import IHMFramework.FiveDesign
+import IHMFramework.Circularity
