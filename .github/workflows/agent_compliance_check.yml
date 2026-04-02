@@ -304,22 +304,22 @@ jobs:
           echo "============================================================"
           echo "  AGENT COMPLIANCE CHECK — RESULTS"
           echo "============================================================"
-          echo "  Version consistency  : ${{ needs.version-consistency.result }}"
-          echo "  Lean registration    : ${{ needs.lean-registration.result }}"
-          echo "  Zero sorry           : ${{ needs.zero-sorry.result }}"
-          echo "  Script syntax        : ${{ needs.script-syntax.result }}"
-          echo "  Three-thing mandate  : ${{ needs.three-thing-check.result }}"
-          echo "  Manuscript integrity : ${{ needs.manuscript-integrity.result }}"
+          echo "  Version consistency  : ${{ needs['version-consistency'].result }}"
+          echo "  Lean registration    : ${{ needs['lean-registration'].result }}"
+          echo "  Zero sorry           : ${{ needs['zero-sorry'].result }}"
+          echo "  Script syntax        : ${{ needs['script-syntax'].result }}"
+          echo "  Three-thing mandate  : ${{ needs['three-thing-check'].result }}"
+          echo "  Manuscript integrity : ${{ needs['manuscript-integrity'].result }}"
           echo "============================================================"
           
           # Fail if any critical check failed
           CRITICAL_FAIL=false
           for result in \
-            "${{ needs.version-consistency.result }}" \
-            "${{ needs.lean-registration.result }}" \
-            "${{ needs.zero-sorry.result }}" \
-            "${{ needs.script-syntax.result }}" \
-            "${{ needs.manuscript-integrity.result }}"; do
+            "${{ needs['version-consistency'].result }}" \
+            "${{ needs['lean-registration'].result }}" \
+            "${{ needs['zero-sorry'].result }}" \
+            "${{ needs['script-syntax'].result }}" \
+            "${{ needs['manuscript-integrity'].result }}"; do
             if [ "$result" = "failure" ]; then
               CRITICAL_FAIL=true
             fi
