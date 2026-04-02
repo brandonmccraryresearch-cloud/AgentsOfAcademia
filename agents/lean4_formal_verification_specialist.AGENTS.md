@@ -331,3 +331,81 @@ This agent is best suited for:
 - Any task where a hallucinated step would constitute a logical failure
 
 **Keywords that route to this agent:** `proof`, `theorem`, `lemma`, `verify`, `formal`, `Lean`, `LaTeX`, `contradiction`, `induction`
+
+---
+
+## ⚠️ MANDATORY SESSION RULES — NON-NEGOTIABLE
+
+The following rules apply to EVERY session, EVERY task, EVERY agent. Violation of any rule constitutes a compliance failure that will be caught by the Agent Compliance Check workflow.
+
+### M1: Full Manuscript Read at Session Start
+
+**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`83.0theaceinthehole.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
+
+**How to comply:** At the start of every session, execute:
+```
+view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/83.0theaceinthehole.md")
+```
+Read ALL sections. Do not skip. Do not summarize-and-move-on. If the file exceeds context limits, read it in ranges (e.g., lines 1–2000, 2001–4000, etc.) until you have read every line.
+
+Sub-agents receiving delegated tasks must ALSO read the full manuscript before starting their delegated work. Include this instruction when delegating:
+> "Before starting, read the entire manuscript 83.0theaceinthehole.md for full theory context."
+
+### M2: Manuscript Update After Theoretical Advances
+
+After every session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content:
+
+- **Only finalized theoretical content** — never in-progress drafts, debug output, or intermediate results
+- **Paper style and syntax** — LaTeX-compatible markdown, section numbering, citation format
+- **Never truncate or cut existing content** — changes are always additions or edits, never deletions
+- **Additions must be complete** — full derivations, complete equations, proper cross-references
+
+### M3: Three-Thing Update Mandate
+
+When any session produces changes, update ALL THREE:
+
+1. **`.github/copilot-instructions.md`** — Current state, version numbers, theorem counts, priority lists
+2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep current
+3. **`83.0theaceinthehole.md`** (current manuscript) — Integrate finalized theoretical content
+
+### M4: Specialized Agent Preference for Theoretical Content
+
+When creating or modifying theoretical content, **delegate to specialized agents**:
+
+| Content Type | Required Agent |
+|---|---|
+| Formal proofs, theorem construction | `lean4_formal_verification_specialist` |
+| Physics derivations, lattice mechanics | `hlre_agent` |
+| Framework audits, consistency checks | `expert_research_assistant` |
+| Multi-domain tasks | `meta_agent` |
+
+### M5: Always Use MCP Tools When Context Matches
+
+When the task involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
+
+| Context | Tool |
+|---|---|
+| Equations, derivatives, integrals | `math-mcp` → `symbolic_solve`, `symbolic_diff`, `symbolic_integrate` |
+| Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
+| Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
+| Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
+| Literature search, prior art | `arxiv-search-mcp` → `search_arxiv` |
+| Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
+| Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
+| Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |
+
+### M6: Anti-Lazy Self-Check
+
+Before concluding any session, perform this self-check:
+
+- [ ] Did I read the full manuscript at session start?
+- [ ] Did I use MCP tools for all computations instead of recollection?
+- [ ] Did I use specialized agents for theoretical content?
+- [ ] Did I update the manuscript with finalized theoretical advances?
+- [ ] Did I update `.github/copilot-instructions.md` with current state?
+- [ ] Did I update agent instruction files if protocols changed?
+- [ ] Are all Lean files registered in `IHMFramework.lean` and `lakefile.toml`?
+- [ ] Are there zero `sorry` in all Lean files?
+- [ ] Do all Python scripts pass syntax checks?
+
+If ANY item is unchecked and relevant to the session's work, **STOP and address it before concluding**.

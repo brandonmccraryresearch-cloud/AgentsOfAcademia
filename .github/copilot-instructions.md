@@ -4,7 +4,11 @@
 
 ## ⚠️ MANDATORY SESSION RULES — READ BEFORE ANY WORK
 
-### Rule 1: Manuscript Update Reminder
+### Rule 1: Full Manuscript Read at Session Start
+
+**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`83.0theaceinthehole.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
+
+### Rule 2: Manuscript Update Reminder
 
 The current manuscript is **`83.0theaceinthehole.md`** (v83.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
 
@@ -14,7 +18,7 @@ The current manuscript is **`83.0theaceinthehole.md`** (v83.0). After every agen
 - **Additions must be complete** — full derivations, complete equations, proper cross-references. No placeholder text.
 - If the session work does not yet rise to publication-quality, record it in `audit_results/` instead and note the pending manuscript integration.
 
-### Rule 2: Three-Thing Update Mandate
+### Rule 3: Three-Thing Update Mandate
 
 When any session produces changes or advancements, agents **MUST** update all three of:
 
@@ -22,7 +26,7 @@ When any session produces changes or advancements, agents **MUST** update all th
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep MCP tool guides, constraint lists, and operational directives current.
 3. **`83.0theaceinthehole.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
 
-### Rule 3: Specialized Agent Preference
+### Rule 4: Specialized Agent Preference
 
 When creating or modifying **actual theoretical content** (derivations, proofs, physical arguments, numerical analyses), agents **MUST** prefer using specialized agents:
 
@@ -35,7 +39,7 @@ When creating or modifying **actual theoretical content** (derivations, proofs, 
 
 General-purpose agents should delegate theoretical work to specialized agents rather than attempting it themselves.
 
-### Rule 4: Always Prefer MCP Tools
+### Rule 5: Always Prefer MCP Tools
 
 When a session context involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool** rather than relying on recollection. See the full MCP Tool Command Guide below.
 

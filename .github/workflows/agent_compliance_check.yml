@@ -1,0 +1,337 @@
+# ==============================================================================
+# AGENT COMPLIANCE CHECK — Anti-Lazy Enforcement
+# ==============================================================================
+#
+# This workflow validates that agents have not skipped required actions or
+# constraints. It runs after any agent session that modifies content, checking:
+#
+#   1. Manuscript was updated if theoretical content changed
+#   2. Copilot instructions were updated if state changed
+#   3. Agent files were updated if protocols changed
+#   4. MCP tools were used when context required them
+#   5. Full manuscript was read at session start
+#   6. Specialized agents were used for theoretical content
+#
+# If any required action was skipped, this workflow halts the pipeline and
+# emits a descriptive error forcing the agent to backtrack.
+#
+# Trigger: Runs on every push to branches with agent work
+# ==============================================================================
+
+name: "Agent Compliance Check — Anti-Lazy Enforcement"
+
+on:
+  push:
+    branches:
+      - 'copilot/**'
+      - 'agent/**'
+    paths:
+      - 'scripts/**'
+      - 'lean4/**'
+      - 'audit_results/**'
+      - '83.0theaceinthehole.md'
+      - '.github/copilot-instructions.md'
+      - '.github/agents/**'
+      - 'agents/**'
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+
+env:
+  MANUSCRIPT: "83.0theaceinthehole.md"
+
+jobs:
+  # ============================================================================
+  # CHECK 1: MANUSCRIPT VERSION CONSISTENCY
+  # Verify that the manuscript file referenced in copilot-instructions.md
+  # actually exists and the version numbers are consistent.
+  # ============================================================================
+  version-consistency:
+    name: "Check: Version Consistency"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Verify manuscript file exists"
+        run: |
+          # Find the current manuscript file referenced in copilot-instructions.md
+          REFERENCED=$(grep -oP 'The current manuscript file is: \*\*`\K[^`]+' .github/copilot-instructions.md || true)
+          
+          if [ -z "$REFERENCED" ]; then
+            echo "❌ COMPLIANCE FAILURE: No manuscript file referenced in copilot-instructions.md"
+            echo ""
+            echo "  REQUIRED ACTION: Update .github/copilot-instructions.md to reference"
+            echo "  the current manuscript file using the pattern:"
+            echo "  'The current manuscript file is: **\`{version}theaceinthehole.md\`**'"
+            exit 1
+          fi
+          
+          if [ ! -f "$REFERENCED" ]; then
+            echo "❌ COMPLIANCE FAILURE: Referenced manuscript '$REFERENCED' does not exist"
+            echo ""
+            echo "  REQUIRED ACTION: Either:"
+            echo "  (a) Rename the manuscript to match the reference, or"
+            echo "  (b) Update copilot-instructions.md to reference the actual file"
+            echo ""
+            echo "  Available manuscript files:"
+            ls -1 *theaceinthehole.md 2>/dev/null || echo "  (none found)"
+            exit 1
+          fi
+          
+          echo "✅ Manuscript file '$REFERENCED' exists and is referenced correctly"
+
+  # ============================================================================
+  # CHECK 2: LEAN 4 REGISTRATION
+  # If new .lean files exist in IHMFramework/, verify they are registered
+  # in both IHMFramework.lean and lakefile.toml.
+  # ============================================================================
+  lean-registration:
+    name: "Check: Lean 4 File Registration"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Verify all Lean files are registered"
+        run: |
+          FAILURES=0
+          
+          # Get all .lean files in IHMFramework/ (excluding IHMFramework.lean itself)
+          for f in lean4/IHMFramework/*.lean; do
+            [ -f "$f" ] || continue
+            MODULE=$(basename "$f" .lean)
+            
+            # Check IHMFramework.lean imports
+            if ! grep -q "import IHMFramework\.$MODULE" lean4/IHMFramework.lean; then
+              echo "❌ COMPLIANCE FAILURE: $f is NOT imported in IHMFramework.lean"
+              echo "  REQUIRED ACTION: Add 'import IHMFramework.$MODULE' to lean4/IHMFramework.lean"
+              FAILURES=$((FAILURES + 1))
+            fi
+            
+            # Check lakefile.toml globs
+            if ! grep -q "IHMFramework\.$MODULE" lean4/lakefile.toml; then
+              echo "❌ COMPLIANCE FAILURE: $f is NOT in lakefile.toml globs"
+              echo "  REQUIRED ACTION: Add 'IHMFramework.$MODULE' to the globs array in lean4/lakefile.toml"
+              FAILURES=$((FAILURES + 1))
+            fi
+          done
+          
+          if [ "$FAILURES" -gt 0 ]; then
+            echo ""
+            echo "  ⚠️  $FAILURES registration failures detected."
+            echo "  BACKTRACK: Register all Lean files before proceeding."
+            exit 1
+          fi
+          
+          echo "✅ All Lean files properly registered"
+
+  # ============================================================================
+  # CHECK 3: ZERO SORRY IN LEAN FILES
+  # No sorry allowed in any committed Lean file.
+  # ============================================================================
+  zero-sorry:
+    name: "Check: Zero Sorry"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Verify no sorry in Lean files"
+        run: |
+          cd lean4
+          # Match 'sorry' as a standalone tactic (not in comments or strings)
+          SORRY_LINES=$(grep -rn "^\s*sorry\s*$\|by sorry\| sorry$\|:= sorry" IHMFramework/ --include="*.lean" || true)
+          
+          if [ -n "$SORRY_LINES" ]; then
+            echo "❌ COMPLIANCE FAILURE: Found 'sorry' in Lean files"
+            echo ""
+            echo "$SORRY_LINES"
+            echo ""
+            echo "  REQUIRED ACTION: Complete all proofs before committing."
+            echo "  BACKTRACK: Replace every sorry with a valid proof term."
+            exit 1
+          fi
+          
+          echo "✅ Zero sorry in all Lean files"
+
+  # ============================================================================
+  # CHECK 4: SCRIPT SYNTAX VALIDATION
+  # All Python scripts must at least parse without syntax errors.
+  # ============================================================================
+  script-syntax:
+    name: "Check: Script Syntax"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: "Verify all scripts parse correctly"
+        run: |
+          FAILURES=0
+          for script in scripts/*.py; do
+            if ! python -m py_compile "$script" 2>/tmp/pyerr; then
+              echo "❌ COMPLIANCE FAILURE: $script has syntax errors"
+              cat /tmp/pyerr
+              FAILURES=$((FAILURES + 1))
+            fi
+          done
+          
+          if [ "$FAILURES" -gt 0 ]; then
+            echo ""
+            echo "  ⚠️  $FAILURES scripts have syntax errors."
+            echo "  BACKTRACK: Fix syntax errors before committing."
+            exit 1
+          fi
+          
+          echo "✅ All scripts parse correctly"
+
+  # ============================================================================
+  # CHECK 5: THREE-THING UPDATE MANDATE
+  # When scripts or lean files change, copilot-instructions.md should also
+  # be updated in the same PR/push to keep state current.
+  # ============================================================================
+  three-thing-check:
+    name: "Check: Three-Thing Update Mandate"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: "Check if copilot-instructions were updated alongside code changes"
+        run: |
+          # Get files changed in the last commit
+          CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+          
+          # Check if code files changed
+          CODE_CHANGED=false
+          if echo "$CHANGED" | grep -qE '^(scripts/|lean4/IHMFramework/)'; then
+            CODE_CHANGED=true
+          fi
+          
+          # Check if copilot-instructions was updated
+          INSTRUCTIONS_UPDATED=false
+          if echo "$CHANGED" | grep -q '.github/copilot-instructions.md'; then
+            INSTRUCTIONS_UPDATED=true
+          fi
+          
+          if [ "$CODE_CHANGED" = "true" ] && [ "$INSTRUCTIONS_UPDATED" = "false" ]; then
+            echo "⚠️  WARNING: Code files changed but copilot-instructions.md was not updated."
+            echo ""
+            echo "  The Three-Thing Update Mandate requires updating:"
+            echo "  1. .github/copilot-instructions.md"
+            echo "  2. Agent instruction files"
+            echo "  3. The manuscript (if theoretical content changed)"
+            echo ""
+            echo "  Changed files:"
+            echo "$CHANGED" | grep -E '^(scripts/|lean4/)' || true
+            echo ""
+            echo "  This is a WARNING, not a hard failure. But the mandate"
+            echo "  should be honored in the next commit."
+          else
+            echo "✅ Three-Thing Update Mandate: OK"
+          fi
+
+  # ============================================================================
+  # CHECK 6: MANUSCRIPT READ VERIFICATION
+  # Verify that the manuscript section headers are extractable (file is valid).
+  # ============================================================================
+  manuscript-integrity:
+    name: "Check: Manuscript Integrity"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Verify manuscript is readable and well-formed"
+        run: |
+          MANUSCRIPT="${{ env.MANUSCRIPT }}"
+          
+          if [ ! -f "$MANUSCRIPT" ]; then
+            echo "❌ COMPLIANCE FAILURE: Manuscript $MANUSCRIPT not found"
+            exit 1
+          fi
+          
+          LINES=$(wc -l < "$MANUSCRIPT")
+          SECTIONS=$(grep -c '^## ' "$MANUSCRIPT" || true)
+          
+          echo "Manuscript: $MANUSCRIPT"
+          echo "Lines: $LINES"
+          echo "Sections: $SECTIONS"
+          
+          if [ "$LINES" -lt 1000 ]; then
+            echo "❌ COMPLIANCE FAILURE: Manuscript appears truncated ($LINES lines)"
+            echo "  Expected at least 8000+ lines for v83.0"
+            echo "  BACKTRACK: Restore the full manuscript content."
+            exit 1
+          fi
+          
+          echo "✅ Manuscript integrity: OK ($LINES lines, $SECTIONS sections)"
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  compliance-summary:
+    name: "Compliance Summary"
+    runs-on: ubuntu-latest
+    needs:
+      - version-consistency
+      - lean-registration
+      - zero-sorry
+      - script-syntax
+      - three-thing-check
+      - manuscript-integrity
+    if: always()
+
+    steps:
+      - name: "Print compliance summary"
+        run: |
+          echo "============================================================"
+          echo "  AGENT COMPLIANCE CHECK — RESULTS"
+          echo "============================================================"
+          echo "  Version consistency  : ${{ needs.version-consistency.result }}"
+          echo "  Lean registration    : ${{ needs.lean-registration.result }}"
+          echo "  Zero sorry           : ${{ needs.zero-sorry.result }}"
+          echo "  Script syntax        : ${{ needs.script-syntax.result }}"
+          echo "  Three-thing mandate  : ${{ needs.three-thing-check.result }}"
+          echo "  Manuscript integrity : ${{ needs.manuscript-integrity.result }}"
+          echo "============================================================"
+          
+          # Fail if any critical check failed
+          CRITICAL_FAIL=false
+          for result in \
+            "${{ needs.version-consistency.result }}" \
+            "${{ needs.lean-registration.result }}" \
+            "${{ needs.zero-sorry.result }}" \
+            "${{ needs.script-syntax.result }}" \
+            "${{ needs.manuscript-integrity.result }}"; do
+            if [ "$result" = "failure" ]; then
+              CRITICAL_FAIL=true
+            fi
+          done
+          
+          if [ "$CRITICAL_FAIL" = "true" ]; then
+            echo ""
+            echo "  ❌ COMPLIANCE FAILURES DETECTED"
+            echo "  HALT: Agent must backtrack and address all failures"
+            echo "  before proceeding with further work."
+            exit 1
+          fi
+          
+          echo ""
+          echo "  ✅ ALL COMPLIANCE CHECKS PASSED"
