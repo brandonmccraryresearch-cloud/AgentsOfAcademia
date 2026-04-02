@@ -230,6 +230,9 @@ def check_5_design(roots):
       ⟨x₁⁴⟩   = 3/(d(d+2)) = 3/24 = 1/8
       ⟨x₁²x₂²⟩ = 1/(d(d+2)) = 1/24
     Both conditions must hold for full 5-design verification.
+
+    Returns (passes, quartic_observed, quartic_expected) for backward
+    compatibility. The mixed moment is checked internally but not returned.
     """
     norms = np.linalg.norm(roots, axis=1)
     mask = norms > 1e-12

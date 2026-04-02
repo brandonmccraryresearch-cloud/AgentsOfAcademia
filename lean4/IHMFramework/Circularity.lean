@@ -85,7 +85,7 @@ theorem tautology_hbar (hL : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
     M_P * c * L_P := by
   simp [siteMass, planckFrequency, latticeSpacing]
   field_simp
-  rw [show Real.sqrt 24 ^ 2 = 24 from h24sq]
+  rw [h24sq]
   ring
 
 /-! ## Tautology T3: 24 · c² · a₀ / M* = c² · L_P / M_P
@@ -107,7 +107,7 @@ theorem tautology_G (hM : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
     c ^ 2 * L_P / M_P := by
   simp [latticeSpacing, siteMass]
   field_simp
-  rw [show Real.sqrt 24 ^ 2 = 24 from h24sq]
+  rw [h24sq]
   ring
 
 /-! ## Summary: All Three "Derivations" Are Tautologies
