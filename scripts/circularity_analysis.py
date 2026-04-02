@@ -367,7 +367,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 72)
-    print("CIRCULARITY ANALYSIS — TAUTOLOGICAL vs GENUINE PREDICTIONS (v82.0)")
+    print("CIRCULARITY ANALYSIS — TAUTOLOGICAL vs GENUINE PREDICTIONS (v83.0)")
     print("=" * 72)
     print()
     print("  Reference: audit_results/v82_critical_review_and_schematic.md")

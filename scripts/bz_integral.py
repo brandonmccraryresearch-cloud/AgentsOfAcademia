@@ -68,8 +68,8 @@ def bare_loop_integral(N_samples=2000000, seed=42):
 
     This is the simplest possible vacuum polarization diagram.
     """
-    np.random.seed(seed)
-    q_samples = np.random.uniform(-np.pi, np.pi, size=(N_samples, 4))
+    rng = np.random.default_rng(seed)
+    q_samples = rng.uniform(-np.pi, np.pi, size=(N_samples, 4))
 
     # Propagator and vertex
     Dinv = 4 * np.sum(np.sin(q_samples / 2)**2, axis=1)
@@ -101,8 +101,8 @@ def multi_channel_integral(N_samples=2000000, seed=42):
 
     where V_ij(q) is the vertex factor for the (i,j) channel.
     """
-    np.random.seed(seed)
-    q_samples = np.random.uniform(-np.pi, np.pi, size=(N_samples, 4))
+    rng = np.random.default_rng(seed)
+    q_samples = rng.uniform(-np.pi, np.pi, size=(N_samples, 4))
 
     Dinv = 4 * np.sum(np.sin(q_samples / 2)**2, axis=1)
     mask = Dinv > 1e-8
@@ -144,8 +144,8 @@ def cartan_channel_integral(N_samples=2000000, seed=42):
     momentum mode. The squared vertex is:
         V_i²(q) = 4 sin⁴(q_i)
     """
-    np.random.seed(seed)
-    q_samples = np.random.uniform(-np.pi, np.pi, size=(N_samples, 4))
+    rng = np.random.default_rng(seed)
+    q_samples = rng.uniform(-np.pi, np.pi, size=(N_samples, 4))
 
     Dinv = 4 * np.sum(np.sin(q_samples / 2)**2, axis=1)
     mask = Dinv > 1e-8
@@ -160,6 +160,12 @@ def cartan_channel_integral(N_samples=2000000, seed=42):
         total += Pi_ch
 
     return total, channel_results
+
+
+# 4 Cartan generators out of 28 adjoint dimensions of SO(8).
+# The Cartan subalgebra contributes 4/28 = 1/7 of the total adjoint
+# representation, setting the relative weight for Cartan vs root channels.
+CARTAN_KILLING_WEIGHT = 4.0 / 28.0
 
 
 def level3_full_so8(root_Pi, cartan_Pi):
@@ -178,8 +184,7 @@ def level3_full_so8(root_Pi, cartan_Pi):
     effective weight 1/7 = 4/28 corrects for this by matching the
     Cartan sector's share of the total adjoint dimension.
     """
-    killing_weight = 1.0 / 7.0
-    return root_Pi + killing_weight * cartan_Pi
+    return root_Pi + CARTAN_KILLING_WEIGHT * cartan_Pi
 
 
 def level4_ward_resummation(Pi_so8):
