@@ -274,7 +274,7 @@ jobs:
           echo "Lines: $LINES"
           echo "Sections: $SECTIONS"
           
-          if [ "$LINES" -lt 1000 ]; then
+          if [ "$LINES" -lt 7000 ]; then
             echo "❌ COMPLIANCE FAILURE: Manuscript appears truncated ($LINES lines)"
             echo "  Expected at least 8000+ lines for v83.0"
             echo "  BACKTRACK: Restore the full manuscript content."

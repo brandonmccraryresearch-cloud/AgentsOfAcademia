@@ -241,7 +241,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: ~44 verified theorems across 5 files (Basic.lean: 14, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 10, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
+Current state: 44 verified theorems across 5 files (Basic.lean: 14, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 10, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
 
 ## Agent Architecture
 
