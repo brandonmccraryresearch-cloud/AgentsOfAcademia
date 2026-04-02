@@ -397,7 +397,7 @@ The following schematic is organized by priority (P1 = highest), estimated diffi
    - Check if resummation closes the gap
 
 **Success Criteria:** BZ integral reaching $\geq 99\%$ of target, OR identification of the specific missing contribution  
-**Tools:** `math-mcp` (fft, create_array, matrix_multiply), Python numerical computation  
+**Tools:** `math-mcp` (fft, matrix_multiply), Python numerical computation  
 **Estimated Effort:** 2–4 weeks  
 **Depends On:** Nothing (start immediately, parallel with Tier 1)
 
