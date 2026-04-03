@@ -20,7 +20,6 @@
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Data.Fin.Basic
 
 open Real
 
@@ -94,39 +93,35 @@ theorem d4_mixed_sum :
   simp [d4RootsPerPair, d4RootNormSq]
   norm_num
 
-/-- The mixed-moment average (5-design condition 2):
+/-- The mixed fourth-moment average:
     ⟨x₁²x₂²⟩ = (1/24) Σᵣ (r₁/|r|)²(r₂/|r|)² = 1/24 -/
-theorem d4_five_design_mixed :
+theorem d4_fourth_moment_mixed :
     (d4RootsPerPair : ℝ) * (1 / d4RootNormSq) * (1 / d4RootNormSq) /
     (d4CoordinationNumber : ℝ) = 1 / 24 := by
   simp [d4RootsPerPair, d4RootNormSq, d4CoordinationNumber]
   norm_num
 
-/-! ## Combined 5-Design Statement
+/-! ## Combined Fourth-Moment Statement
 
-  A finite subset X ⊂ Sⁿ⁻¹ is a spherical t-design if for all polynomials
-  p of degree ≤ t:
-    (1/|X|) Σ_{x∈X} p(x) = ∫_{Sⁿ⁻¹} p(x) dσ(x)
+  The two quartic moment identities established above are:
+    ⟨x₁⁴⟩ = 1/8
+    ⟨x₁²x₂²⟩ = 1/24
 
-  For t = 5 on S³ (d = 4), the independent moment conditions are:
-    ⟨x₁⁴⟩ = 3/(d(d+2)) = 1/8
-    ⟨x₁²x₂²⟩ = 1/(d(d+2)) = 1/24
-
-  Both are verified above. Combined with the trivially satisfied lower-order
-  conditions (⟨x₁²⟩ = 1/d = 1/4 by isotropy, ⟨x₁⟩ = 0 by root symmetry),
-  this establishes that D₄ root vectors form a 5-design on S³.
+  These are the fourth-order moment equalities derived here from the counting
+  assumptions on D₄ roots. This theorem packages those two identities together;
+  it does not by itself formalize the full spherical 5-design definition.
 -/
 
-/-- The D₄ root system forms a 5-design: both quartic and mixed moments
-    match the spherical integral values. -/
-theorem d4_is_five_design :
+/-- The D₄ counting assumptions imply the two fourth-moment identities:
+    the quartic moment is 1/8 and the mixed quartic moment is 1/24. -/
+theorem d4_fourth_moment_identities :
     (d4RootsPerComponent : ℝ) * (1 / d4RootNormSq) ^ 2 /
     (d4CoordinationNumber : ℝ) = 1 / 8 ∧
     (d4RootsPerPair : ℝ) * (1 / d4RootNormSq) * (1 / d4RootNormSq) /
     (d4CoordinationNumber : ℝ) = 1 / 24 := by
   constructor
   · exact d4_five_design_quartic
-  · exact d4_five_design_mixed
+  · exact d4_fourth_moment_mixed
 
 /-! ## Elastic Isotropy Consequence
 
