@@ -25,6 +25,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.FieldSimp
+import IHMFramework.Basic
 
 open Real
 
@@ -38,12 +39,11 @@ open Real
     Ω_P = √z · c / L_P  (Planck angular frequency)
 
   where L_P = Planck length, M_P = Planck mass, c = speed of light.
+
+  Note: `latticeSpacing` is imported from IHMFramework.Basic.
 -/
 
 variable (c L_P M_P : ℝ)
-
-/-- Lattice spacing: a₀ = L_P / √24 -/
-noncomputable def latticeSpacing (L_P : ℝ) : ℝ := L_P / Real.sqrt 24
 
 /-- Site mass: M* = √24 · M_P -/
 noncomputable def siteMass (M_P : ℝ) : ℝ := Real.sqrt 24 * M_P
