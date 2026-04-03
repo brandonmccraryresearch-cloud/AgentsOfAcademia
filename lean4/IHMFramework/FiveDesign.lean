@@ -20,6 +20,7 @@
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+import IHMFramework.Basic
 
 open Real
 
@@ -32,10 +33,9 @@ open Real
   - Each root has norm √2
   - 12 roots have nonzero first component (3 partner indices × 4 signs)
   - 4 roots have nonzero first AND second components (4 sign combinations)
--/
 
-/-- The D₄ coordination number: 24 nearest neighbors. -/
-def d4CoordinationNumber : ℕ := 24
+  Note: `d4CoordinationNumber` is defined in `IHMFramework.Basic` and imported here.
+-/
 
 /-- The D₄ root norm squared: each root ±eᵢ ± eⱼ has |r|² = 2. -/
 def d4RootNormSq : ℝ := 2
