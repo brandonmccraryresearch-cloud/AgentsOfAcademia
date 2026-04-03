@@ -294,8 +294,8 @@ The manuscript is at v83.0. BZ integral now brackets the target (Level 3: 98.9%,
 The SO(8) full integral (Level 3) reaches 98.9% and the Dyson resummation (Level 4) overshoots to 102.6%. The target is bracketed. The Ward identity transversality is verified to < 10⁻¹⁰. The remaining 2.46% gap corresponds to the Killing-metric form factor. Three approaches to close exactly:
 
 1. **Vertex form-factor correction:** The raw Cartan vertex overestimates; a form factor from the Killing metric should provide the exact weight.
-2. **Ward identity constraint:** k_μ Π^μν(k) = 0 constrains the vertex normalization uniquely (verified satisfied; normalization still free).
-3. **Two-loop correction:** The O(α) correction to the one-loop diagram may close the residual.
+2. **Ward identity (transversality):** k_μ Π^μν(k) = 0 is verified to < 10⁻¹⁰ at all levels — confirming gauge invariance. Note: transversality constrains the *form* of Π^μν but does NOT fix the overall vertex normalization (separate degree of freedom from Killing metric).
+3. **Two-loop correction:** The O(α) correction to the one-loop diagram may close the residual normalization gap.
 
 **Action:** Compute the Killing-metric form factor F(k²/Λ²) explicitly in `scripts/ward_identity_closure.py`.
 

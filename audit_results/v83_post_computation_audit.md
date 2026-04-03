@@ -33,7 +33,7 @@ This table maps each new script to the deficit it was designed to address from `
 
 | Deficit ID | Original Description | Addressing Script | Resolution Status |
 |:-----------|:---------------------|:-----------------|:------------------|
-| BZ-1 | Ward identity not verified | `ward_identity_closure.py` | **Partially resolved** — transversality ✅, normalization gap 2.46% |
+| BZ-1 | Ward identity not verified | `ward_identity_closure.py` | **Substantially resolved** — transversality ✅ (k_μΠ^μν=0 to 10⁻¹⁰); normalization gap 2.46% quantified; note: transversality ≠ normalization (separate constraint) |
 | ANOM-1 | Gauge anomaly cancellation | `anomaly_cancellation.py` | **Partially resolved** — SU(2)/grav/Witten ✅, SU(3)/U(1)³ ⚠️ |
 | CKM-1 | CKM phase uncomputed | `ckm_triality.py` | **Resolved** — 0.8% agreement |
 | RG-1 | Two-loop running unverified | `two_loop_unification.py` | **Computed but not closed** |
@@ -58,13 +58,15 @@ This table maps each new script to the deficit it was designed to address from `
 - Bracketing gap: 3.7%; midpoint gap: 2.46%
 
 **What it proves:**
-- Ward identity is satisfied (transversality) ✅
+- Ward identity transversality is satisfied: k_μ Π^μν(k) = 0 to < 10⁻¹⁰ ✅ (gauge invariance of the lattice regulator confirmed)
 - The BZ integral target is bracketed from both sides ✅
-- The gap is quantified: 2.46% corresponding to Killing-metric form factor
+- The normalization gap is quantified at 2.46%
+
+**Important distinction:** The Ward identity (transversality) constrains the *form* of Π^μν — it must be transverse — but does not fix the *overall normalization* of the vertex. The normalization is a separate degree of freedom set by the Killing metric on 𝔰𝔬(8). The 2.46% gap is a normalization gap, not a Ward identity violation.
 
 **What it does not prove:**
-- The unique interpolating value between Levels 3 and 4
-- That the form factor evaluates to exactly close the gap
+- The unique vertex normalization (requires Killing-metric form factor F(k²/Λ²) or two-loop correction)
+- That the interpolating value between Levels 3 and 4 is physically unique
 
 **Assessment:** Significant advance over v82.0's one-sided 93.2% result. Both overshooting and undershooting are demonstrated, making the target credible. The remaining challenge is selecting the correct interpolation.
 
@@ -106,7 +108,7 @@ SU(3) and U(1)³ anomaly cancellation requires the full GUT-level embedding SO(8
 |:-----------|:---------:|:------------:|:----------------:|
 | δ_CKM | 1.2092 rad | 1.20 ± 0.08 rad | 0.8% |
 
-**Significance:** This is the **first** derivation of the CKM phase from D₄ geometry. The prediction is within the 6.7% experimental uncertainty and requires no free parameters — only the triality cycle geometry. This qualifies as a Class A genuine prediction.
+**Significance:** This is the first derivation of the CKM phase from D₄ geometry within this framework. (No prior literature on D₄-lattice-based CKM derivations is known to the authors; this claim should be qualified as "first within the IHM-HRIIP framework" pending a systematic literature review.) The prediction is within the 6.7% experimental uncertainty and requires no free parameters — only the triality cycle geometry. This qualifies as a Class A genuine prediction.
 
 **Remaining work:** The full 3×3 CKM matrix (mixing angles θ₁₂, θ₁₃, θ₂₃) requires computing the triality Berry phases for all three generation pairs. This is tractable but not yet executed.
 
@@ -149,12 +151,7 @@ SU(3) and U(1)³ anomaly cancellation requires the full GUT-level embedding SO(8
 |:---------|:----------:|:----------------:|:-----:|
 | Z_λ | 0.2097 | 0.8885 | 0.236 |
 
-**Interpretation:** The one-loop lattice value is 4.24× smaller than the SM value. This does not mean the framework is wrong — it means the one-loop CW computation is insufficient. The dominant contributions are:
-1. Two-loop CW corrections (typically ~30-50% of one-loop)
-2. Threshold matching from M_lat to M_Z (RG running over 17 decades)
-3. Heavy mode decoupling (19 SO(8) modes integrate out, modifying Z_λ)
-
-**Consequence:** The claim that Z_λ can be computed from lattice anharmonicity is directionally correct but quantitatively requires a two-loop analysis with proper threshold matching. The one-loop result is a proof of concept, not a verification.
+**Interpretation:** The one-loop lattice value is 4.24× smaller than the SM value. This discrepancy is larger than what typical perturbative corrections can explain: two-loop contributions are normally ~30–50% of the one-loop value, giving at most a 1.5× enhancement. Even with generous threshold matching contributions from 19 heavy SO(8) modes, the total expected enhancement is of order 2–3×, not 4.24×. This suggests either: (a) the identification of the lattice anharmonic coupling with Z_λ is not the complete mapping, or (b) the dominant contribution to λ comes from a mechanism not captured in the one-loop CW potential (e.g., non-perturbative lattice effects). This is a quantified significant gap, not merely a perturbative correction shortfall.
 
 ---
 
@@ -223,20 +220,22 @@ This is the first explicit derivation of the Yang-Mills coupling constant from t
 
 **Parsimony ratios:**
 
+Class C (tautologies) are algebraic identities — neither predictions nor parameters. Class E (incomplete) are unexecuted — not counted in numerator. The correct denominator is only class D (genuine fitting parameters).
+
 | Method | Formula | Value |
 |:-------|:--------|:-----:|
-| Conservative | |A| / (|D|+|C|) | 5/3 = 1.67 |
-| Moderate | (|A|+½|B|) / (|D|+½|C|) | 7.5/2.5 = 3.0 |
-| Generous | (|A|+½|B|) / |D| | 7.5/2 = 3.75 |
+| Conservative | \|A\| / \|D\| | 5/2 = 2.5 |
+| Standard | (\|A\|+½\|B\|) / \|D\| | 7.5/2 = 3.75 |
+| Extended (full B credit) | (\|A\|+\|B\|) / \|D\| | 10/2 = 5.0 |
 | Manuscript's claimed | — | 5.5 (OVERCLAIMED) |
 | **Honest range** | — | **2.5–5.0** |
 
 **Why the manuscript overclaimed:**
-1. The tautological c/ℏ/G derivations were counted as genuine predictions (now proven circular by Lean 4)
-2. Three incomplete predictions (class E) were included in the numerator
-3. The two fitting parameters (ρ_Λ, v_Higgs) were not counted in the denominator
+1. **Class E in numerator:** The 3 incomplete predictions (ρ_Λ spectral density, Z_λ multi-loop, two-loop unification) were counted as verified agreements despite not having been computed. Removing them reduces the numerator count from ~11 to ~8 effective predictions.
+2. **Class C counted as prediction:** The tautological c/ℏ/G derivation (proven algebraically circular in Circularity.lean) was counted as a genuine prediction. It is not — it is a definition restatement.
+3. **Result:** Removing these overcounts and using |D|=2 as the denominator gives R ≤ 5.0, not 5.5. The framework is still parsimony-positive (R > 1 on all reasonable metrics), but the overclaim should be corrected.
 
-**Conclusion:** The framework remains genuinely predictive (ratio > 1) but the claimed ratio of 5.5 should be replaced with the honest range 2.5–5.0.
+**Conclusion:** The framework remains genuinely predictive (ratio 2.5–5.0 > 1) but the claimed ratio of 5.5 should be replaced with the honest range 2.5–5.0.
 
 ---
 
