@@ -24,7 +24,7 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Field_simp
+import Mathlib.Tactic.FieldSimp
 
 open Real
 
