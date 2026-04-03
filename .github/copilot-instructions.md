@@ -278,7 +278,7 @@ The manuscript is at v83.0. BZ integral now brackets the target (Level 3: 98.9%,
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact (FiveDesign.lean) |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **Verified** | Lowest Gibbs free energy, gap=3.85 to next lattice |
-| Lean 4 | **~44 theorems, 0 sorry** | Build verified across 5 files |
+| Lean 4 | **~44 theorems, 0 sorry** | Build verified across 5 files; `latticeSpacing` naming conflict resolved (see IHMFramework.lean guard comment) |
 | Verification scripts | **5/5 pass** | All numerical predictions confirmed |
 
 ### Priority 1: Close the α BZ Integral (98.9% → 100%)
