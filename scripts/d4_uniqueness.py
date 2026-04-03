@@ -38,17 +38,16 @@ def roots_A4():
                 v[j] = -1
                 roots_5d.append(v)
     roots_5d = np.array(roots_5d)
-    # Project onto the 4D hyperplane Σx_i = 0 using an orthonormal basis
-    # Basis vectors for the hyperplane: Gram-Schmidt on (1,-1,0,0,0), etc.
-    basis = np.array([
+    # Project onto the 4D hyperplane Σx_i = 0 using an orthonormal basis.
+    # QR decomposition guarantees true orthonormalization (not just normalization).
+    spanning_basis = np.array([
         [1, -1, 0, 0, 0],
         [1, 1, -2, 0, 0],
         [1, 1, 1, -3, 0],
         [1, 1, 1, 1, -4],
     ], dtype=float)
-    # Normalize
-    for i in range(4):
-        basis[i] /= np.linalg.norm(basis[i])
+    q, _ = np.linalg.qr(spanning_basis.T)
+    basis = q.T
     roots_4d = roots_5d @ basis.T
     return roots_4d
 
@@ -225,16 +224,33 @@ def bz_phonon_energy(roots, N_samples, seed=42):
 
 def check_5_design(roots):
     """
-    Check if root vectors form a 5-design on S³.
+    Check 4th-order moment isotropy conditions for a root system on S³.
 
-    A 5-design satisfies ⟨x₁⁴⟩ = 3/(d(d+2)) for d=4.
+    For sign- and permutation-symmetric root systems in d=4, the two
+    independent 4th-order moment conditions required by a spherical
+    5-design are:
+      ⟨x₁⁴⟩   = 3/(d(d+2)) = 3/24 = 1/8
+      ⟨x₁²x₂²⟩ = 1/(d(d+2)) = 1/24
+
+    Note: This checks necessary conditions only — it does not verify
+    degree-5 moments or the full polynomial averaging condition. For the
+    D₄ root system these 4th-order checks are sufficient due to the
+    root system's sign/permutation symmetry, but for arbitrary point
+    sets they would not constitute a complete 5-design verification.
+
+    Returns (passes, quartic_observed, quartic_expected) for backward
+    compatibility. The mixed moment is checked internally but not returned.
     """
     norms = np.linalg.norm(roots, axis=1)
     mask = norms > 1e-12
     unit = roots[mask] / norms[mask, np.newaxis]
     quartic = np.mean(unit[:, 0]**4)
-    expected = 3.0 / (4 * 6)  # = 1/8
-    return np.isclose(quartic, expected, rtol=1e-6), quartic, expected
+    expected_quartic = 3.0 / (4 * 6)  # = 1/8
+    mixed = np.mean(unit[:, 0]**2 * unit[:, 1]**2)
+    expected_mixed = 1.0 / (4 * 6)    # = 1/24
+    ok_quartic = np.isclose(quartic, expected_quartic, rtol=1e-6)
+    ok_mixed = np.isclose(mixed, expected_mixed, rtol=1e-6)
+    return ok_quartic and ok_mixed, quartic, expected_quartic
 
 
 def isotropy_check(roots):
@@ -307,7 +323,7 @@ def main():
     N = args.samples
 
     print("=" * 72)
-    print("D₄ UNIQUENESS — GIBBS FREE ENERGY OF 4D ROOT LATTICES (v82.0)")
+    print("D₄ UNIQUENESS — GIBBS FREE ENERGY OF 4D ROOT LATTICES (v83.0)")
     print("=" * 72)
     print()
     print(f"  Monte Carlo samples: {N}")
