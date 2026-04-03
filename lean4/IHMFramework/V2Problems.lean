@@ -117,7 +117,7 @@ theorem standingWave_stability
     ∀ (γ : ℝ → ℝ → ℝ) (hγ : Continuous (fun p : ℝ × ℝ => γ p.1 p.2)),
       γ 0 = R → (∀ y, γ 1 y = 0) →
       ∃ t ∈ Set.Icc (0 : ℝ) 1, γ t x₀ = 0 := by
-  intro γ hγ h0 h1
+  intro γ _hγ h0 h1
   exact ⟨1, ⟨zero_le_one, le_rfl⟩, h1 x₀⟩
 
 /-! ## Problem 5: Dispersion Relation on D₄ Lattice

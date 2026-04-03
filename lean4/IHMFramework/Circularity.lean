@@ -64,7 +64,6 @@ theorem tautology_c (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
     latticeSpacing L_P * planckFrequency c L_P = c := by
   simp [latticeSpacing, planckFrequency]
   field_simp
-  ring
 
 /-! ## Tautology T2: M* · Ω_P · a₀² = M_P · c · L_P
 
@@ -85,8 +84,6 @@ theorem tautology_hbar (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
     M_P * c * L_P := by
   simp [siteMass, planckFrequency, latticeSpacing]
   field_simp
-  rw [h24sq]
-  ring
 
 /-! ## Tautology T3: 24 · c² · a₀ / M* = c² · L_P / M_P
 
@@ -160,4 +157,3 @@ def d4CoordNumber : ℕ := 24
 /-- The coordination number is positive (needed for √z ≠ 0). -/
 theorem d4CoordNumber_pos : (0 : ℝ) < d4CoordNumber := by
   simp [d4CoordNumber]
-  norm_num
