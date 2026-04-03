@@ -20,7 +20,6 @@
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
-import Mathlib.Data.Fin.Basic
 
 open Real
 
