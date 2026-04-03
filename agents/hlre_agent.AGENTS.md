@@ -235,15 +235,15 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 
 ---
 
-#### 6. `arxiv-search-mcp` — Scientific Literature Search
+#### 6. `scite` — Scientific Literature Search
 
 **When to use:** When the analysis requires checking whether a mechanical/geometric interpretation has precedent, or when locating papers on lattice gauge theory, topological defects, or condensed matter analogues.
 
 | Tool | Use Case |
 |---|---|
-| `search_arxiv` | Search by category (`hep-lat`, `cond-mat`, `hep-th`, `math-ph`) with configurable result count (1–100) |
+| `search` | Search scientific papers with citation context (supporting/contrasting/mentioning) by keyword or topic |
 
-**Example context:** The hyper-literal reconstruction maps quark charge ratios to D₄ lattice symmetry. Use `search_arxiv` on `hep-lat` to find existing work on dihedral lattice models.
+**Example context:** The hyper-literal reconstruction maps quark charge ratios to D₄ lattice symmetry. Use `search` with keywords like "dihedral lattice models" or "topological defect lattice gauge" to find existing work.
 
 ---
 
@@ -286,7 +286,7 @@ When processing a new prompt, apply this decision tree:
 2. **References lattice geometry or symmetry groups?** → `math-mcp` (solve constraints) + `quantum-mcp` (simulate lattice)
 3. **Claims about vacuum substrate structure?** → `quantum-mcp` (simulate potential) + `molecular-mcp` (test dynamics)
 4. **Involves standing wave modes or resonances?** → `quantum-mcp` + `psianimator-mcp`
-5. **References specific papers or claims novelty?** → `arxiv-search-mcp`
+5. **References specific papers or claims novelty?** → `scite`
 6. **Requires machine-checked proof of geometric claim?** → `lean-lsp-mcp`
 7. **Involves pattern recognition in empirical data?** → `neural-mcp`
 
@@ -362,7 +362,7 @@ When the task involves mathematical expressions, physical constants, particle da
 | Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
 | Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
 | Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
-| Literature search, prior art | `arxiv-search-mcp` → `search_arxiv` |
+| Literature search, prior art | `scite` → `search` |
 | Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
 | Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
 | Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |

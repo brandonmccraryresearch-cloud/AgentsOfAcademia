@@ -9,10 +9,10 @@
       },
       "tools": ["*"]
     },
-    "arxiv-search-mcp": {
+    "scite": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "arxiv-search-mcp"],
+      "args": ["-y", "mcp-remote", "https://api.scite.ai/mcp"],
       "tools": ["*"]
     },
     "particlephysics-mcp": {
