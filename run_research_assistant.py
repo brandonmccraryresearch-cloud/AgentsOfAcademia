@@ -97,7 +97,7 @@ class ResearchAssistant:
             info(f"✓ Node.js: {result.stdout.strip()}")
             checks.append(True)
         except:
-            warn("✗ Node.js not found (needed for arxiv-search-mcp, context7)")
+            warn("✗ Node.js not found (needed for scite, context7)")
             checks.append(False)
         
         # Check MCP configuration
