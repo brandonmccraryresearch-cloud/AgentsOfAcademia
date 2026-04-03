@@ -62,7 +62,7 @@ The research assistant integrates 9 MCP (Model Context Protocol) servers:
 5. **psianimator-mcp**: Quantum state simulation and animation
 
 ### Research Tools
-6. **arxiv-search-mcp**: Scientific literature search
+6. **scite**: Scientific literature search (citation intelligence)
 7. **particlephysics-mcp**: Particle Data Group (PDG) data access
 8. **lean-lsp-mcp**: Lean 4 theorem prover language server
 9. **context7-mcp**: Real-time library documentation (NEW!)
@@ -198,7 +198,7 @@ source $HOME/.elan/env
 # For uvx-based servers
 uvx --version  # Check uvx is installed
 
-# For npx-based servers (arxiv, context7)
+# For npx-based servers (scite, context7)
 npm --version  # Check npm is installed
 ```
 

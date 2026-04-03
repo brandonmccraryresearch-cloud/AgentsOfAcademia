@@ -331,76 +331,42 @@ Issues: Report bugs via GitHub issues
 
 -----
 
-ArXiv Search: Find Scientific Papers Quickly
-arXiv Search MCP Server
-An MCP server that provides tools to search and fetch papers from arXiv.org.
+Scite: Find Scientific Papers with Citation Intelligence
+scite MCP Server
+An MCP server that provides tools to search scientific literature via scite.ai, returning papers with citation context (supporting, contrasting, or mentioning citations).
 
 Features
-Search papers by category
-Get latest papers sorted by submission date
-Formatted output with title, authors, summary, and link
-Development
-Prerequisites
-Deno installed on your system
-MCP compatible environment
-Setup
-Clone the repository
-Install dependencies:
-deno cache --reload src/main.ts
-Running the Server
-Development mode with file watching:
-
-deno task dev
-Build executable:
-
-deno task compile
-Integration with Claude Desktop
-Add the following configuration to your claude_desktop_config.json:
+Search papers by keyword or topic
+Citation intelligence — see how each paper is cited (supporting/contrasting/mentioning)
+Formatted output with title, authors, abstract, and citation counts
+Integration
+Add the following configuration to your MCP client config:
 
 {
   "mcpServers": {
-    "arxiv-search-mcp": {
-      "command": "/path/to/dir/arxiv-search-mcp/bin/arxiv-search-mcp"
+    "scite": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://api.scite.ai/mcp"]
     }
   }
 }
-Replace /path/to/dir with the actual path to your compiled binary.
 
 Usage
-Example usage screenshot:Sample usage with Claude
-
-The server provides a tool named search_arxiv that accepts the following parameters:
+The server provides a tool named `search` that accepts a query string:
 
 {
-  "category": string,    // arXiv category (e.g., cs.AI, cs.LG, astro-ph)
-  "max_results": number  // Number of papers to fetch (1-100, default: 5)
+  "query": string  // Search terms, e.g. "D4 lattice phonon fine structure constant"
 }
 Example
 Request:
 
 {
-  "category": "cs.AI",
-  "max_results": 5
+  "query": "D4 root lattice phonon dispersion"
 }
-This will return the 5 most recent papers from the Artificial Intelligence category.
-
-Available Categories
-Some popular arXiv categories:
-
-cs.AI: Artificial Intelligence
-cs.LG: Machine Learning
-cs.CL: Computation and Language
-cs.CV: Computer Vision
-cs.NE: Neural and Evolutionary Computing
-cs.RO: Robotics
-astro-ph: Astrophysics
-physics: Physics
-math: Mathematics
-q-bio: Quantitative Biology
-For a complete list of categories, visit arXiv taxonomy.
+This will return matching papers with citation context indicating whether other works support, contrast, or merely mention each result.
 
 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+See the scite.ai terms of service at https://scite.ai
 
 ----
 
