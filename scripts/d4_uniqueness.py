@@ -224,17 +224,19 @@ def bz_phonon_energy(roots, N_samples, seed=42):
 
 def check_5_design(roots):
     """
-    Check 4th-order moment isotropy for a sign/permutation-symmetric root system.
+    Check 4th-order moment isotropy conditions for a root system on S³.
 
-    For root systems with full sign and permutation symmetry on S^{d-1} (d=4),
-    the 5-design moment conditions reduce to two necessary 4th-order checks:
+    For sign- and permutation-symmetric root systems in d=4, the two
+    independent 4th-order moment conditions required by a spherical
+    5-design are:
       ⟨x₁⁴⟩   = 3/(d(d+2)) = 3/24 = 1/8
       ⟨x₁²x₂²⟩ = 1/(d(d+2)) = 1/24
 
-    NOTE: These are necessary moment checks used here to verify isotropy of the
-    D₄ root system; they do not constitute a general 5-design test for
-    arbitrary point sets (which would require verifying all degree ≤5 moment
-    constraints).
+    Note: This checks necessary conditions only — it does not verify
+    degree-5 moments or the full polynomial averaging condition. For the
+    D₄ root system these 4th-order checks are sufficient due to the
+    root system's sign/permutation symmetry, but for arbitrary point
+    sets they would not constitute a complete 5-design verification.
 
     Returns (passes, quartic_observed, quartic_expected) for backward
     compatibility. The mixed moment is checked internally but not returned.

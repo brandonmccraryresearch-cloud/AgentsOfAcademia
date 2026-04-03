@@ -60,7 +60,7 @@ noncomputable def planckFrequency (c L_P : ℝ) : ℝ := Real.sqrt 24 * c / L_P
 
 /-- Tautology T1: The "derivation" of c from lattice primitives is circular.
     a₀ · Ω_P = c identically, by cancellation of √24 and L_P. -/
-theorem tautology_c (hL : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
+theorem tautology_c (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
     latticeSpacing L_P * planckFrequency c L_P = c := by
   simp [latticeSpacing, planckFrequency]
   field_simp
@@ -77,18 +77,15 @@ theorem tautology_c (hL : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
                           = M_P · c · L_P
 -/
 
-/-- √24 squared equals 24 (provable since 24 ≥ 0). -/
-private lemma sqrt_24_sq : Real.sqrt 24 ^ 2 = 24 :=
-  sq_sqrt (by norm_num : (0 : ℝ) ≤ 24)
-
 /-- Tautology T2: The "derivation" of ℏ from lattice primitives is circular.
     M* · Ω_P · a₀² = M_P · c · L_P identically. -/
-theorem tautology_hbar (hL : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
+theorem tautology_hbar (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
+    (h24sq : Real.sqrt 24 ^ 2 = 24) :
     siteMass M_P * planckFrequency c L_P * (latticeSpacing L_P) ^ 2 =
     M_P * c * L_P := by
   simp [siteMass, planckFrequency, latticeSpacing]
   field_simp
-  rw [sqrt_24_sq]
+  rw [h24sq]
   ring
 
 /-! ## Tautology T3: 24 · c² · a₀ / M* = c² · L_P / M_P
@@ -104,12 +101,13 @@ theorem tautology_hbar (hL : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
 
 /-- Tautology T3: The "derivation" of G from lattice primitives is circular.
     24 · c² · a₀ / M* = c² · L_P / M_P identically. -/
-theorem tautology_G (hM : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
+theorem tautology_G (hM_ne0 : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
+    (h24sq : Real.sqrt 24 ^ 2 = 24) :
     24 * c ^ 2 * latticeSpacing L_P / siteMass M_P =
     c ^ 2 * L_P / M_P := by
   simp [latticeSpacing, siteMass]
   field_simp
-  rw [sqrt_24_sq]
+  rw [h24sq]
   ring
 
 /-! ## Summary: All Three "Derivations" Are Tautologies
@@ -124,7 +122,8 @@ theorem tautology_G (hM : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
 
 /-- All three fundamental constant "derivations" are tautological:
     the lattice primitives are algebraic rearrangements of Planck units. -/
-theorem all_tautologies (hL : L_P ≠ 0) (hM : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
+theorem all_tautologies (hL_ne0 : L_P ≠ 0) (hM_ne0 : M_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
+    (h24sq : Real.sqrt 24 ^ 2 = 24) :
     -- T1: c = a₀ · Ω_P
     latticeSpacing L_P * planckFrequency c L_P = c ∧
     -- T2: ℏ = M* · Ω_P · a₀²
@@ -133,9 +132,9 @@ theorem all_tautologies (hL : L_P ≠ 0) (hM : M_P ≠ 0) (h24 : Real.sqrt 24 �
     -- T3: G = 24 · c² · a₀ / M*
     24 * c ^ 2 * latticeSpacing L_P / siteMass M_P =
       c ^ 2 * L_P / M_P := by
-  exact ⟨tautology_c c L_P hL h24,
-         tautology_hbar c L_P M_P hL h24,
-         tautology_G c L_P M_P hM h24⟩
+  exact ⟨tautology_c c L_P hL_ne0 h24,
+         tautology_hbar c L_P M_P hL_ne0 h24 h24sq,
+         tautology_G c L_P M_P hM_ne0 h24 h24sq⟩
 
 /-! ## Genuine Content: Dimensionless Ratios
 

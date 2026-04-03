@@ -1,26 +1,21 @@
 /-
-  IHM-HRIIP: 4th-Order Moment Identities for D₄ Root Vectors
+  IHM-HRIIP: Moment Equalities for D₄ Root Vectors
 
-  Derives the required moment equalities from known root counting facts for the
-  24 D₄ root vectors (±eᵢ ± eⱼ for i<j in ℝ⁴). Specifically, we prove:
+  Derives the required 4th-order moment equalities from known D₄ root
+  counting facts. The 24 D₄ root vectors (±eᵢ ± eⱼ for i<j in ℝ⁴) satisfy:
 
-    (1) ⟨x₁⁴⟩ = (1/24) Σᵣ (r₁/|r|)⁴ = 1/8
-    (2) ⟨x₁²x₂²⟩ = (1/24) Σᵣ (r₁/|r|)²(r₂/|r|)² = 1/24
+    (1) ⟨x₁⁴⟩ = (1/24) Σᵣ (r₁/|r|)⁴ = 1/8 = 3/(d(d+2)) for d=4
+    (2) ⟨x₁²x₂²⟩ = (1/24) Σᵣ (r₁/|r|)²(r₂/|r|)² = 1/24 = 1/(d(d+2))
 
-  These are the 4th-order moment conditions necessary for a spherical 5-design.
-  The proofs here verify these identities from counting assumptions
-  (d4RootsPerComponent, d4RootsPerPair) without explicitly constructing the
-  root set as a finite subset of S³ or invoking a formal `spherical_design`
-  definition. A full 5-design formalization would additionally require defining
-  the root set and verifying all degree ≤5 moment constraints.
+  These are the independent 4th-order moment conditions required for a
+  spherical 5-design on S³. The proofs here verify these identities from
+  hard-coded root counts (d4RootsPerComponent, d4RootsPerPair), not from
+  an explicit enumeration of the root set in ℝ⁴. A full formalization
+  would define the 24 roots as a finite subset of S³ and prove the moment
+  sums over that set directly.
 
-  These moment equalities guarantee elastic isotropy of the D₄ lattice and are
+  These identities guarantee elastic isotropy of the D₄ lattice and are
   essential for emergent Lorentz invariance in the continuum limit.
-
-  The proof strategy uses direct enumeration: each D₄ root has exactly 2
-  nonzero components of ±1, giving norm √2. Unit-normalized components are
-  ±1/√2, so fourth powers are 1/4. The counting argument then reduces to
-  combinatorics of the index pairs.
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
