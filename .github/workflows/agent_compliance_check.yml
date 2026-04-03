@@ -2,18 +2,19 @@
 # AGENT COMPLIANCE CHECK — Anti-Lazy Enforcement
 # ==============================================================================
 #
-# This workflow validates that agents have not skipped required actions or
-# constraints. It runs after any agent session that modifies content, checking:
+# This workflow validates the specific compliance checks implemented below.
+# It runs after agent work that modifies relevant content, checking:
 #
-#   1. Manuscript was updated if theoretical content changed
-#   2. Copilot instructions were updated if state changed
-#   3. Agent files were updated if protocols changed
-#   4. MCP tools were used when context required them
-#   5. Full manuscript was read at session start
-#   6. Specialized agents were used for theoretical content
+#   1. Manuscript/version consistency for the tracked manuscript file
+#   2. Lean theorem registration consistency
+#   3. Zero `sorry` in Lean files
+#   4. Python script syntax validation
+#   5. Three-thing mandate reporting (warning-level signal)
+#   6. Manuscript integrity checks
 #
-# If any required action was skipped, this workflow halts the pipeline and
-# emits a descriptive error forcing the agent to backtrack.
+# Checks not implemented in this workflow are not enforced here. If an enforced
+# check fails, this workflow halts the pipeline and emits a descriptive error;
+# warning-only checks report issues without claiming hard enforcement.
 #
 # Trigger: Runs on every push to branches with agent work
 # ==============================================================================

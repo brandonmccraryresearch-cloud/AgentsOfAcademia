@@ -1,13 +1,20 @@
 /-
-  IHM-HRIIP: 5-Design Property of D₄ Root Vectors
+  IHM-HRIIP: 4th-Order Moment Identities for D₄ Root Vectors
 
-  Formalizes the key result that the 24 D₄ root vectors (±eᵢ ± eⱼ for i<j
-  in ℝ⁴) form a spherical 5-design on S³. This means:
+  Derives the required moment equalities from known root counting facts for the
+  24 D₄ root vectors (±eᵢ ± eⱼ for i<j in ℝ⁴). Specifically, we prove:
 
     (1) ⟨x₁⁴⟩ = (1/24) Σᵣ (r₁/|r|)⁴ = 1/8
     (2) ⟨x₁²x₂²⟩ = (1/24) Σᵣ (r₁/|r|)²(r₂/|r|)² = 1/24
 
-  These identities guarantee elastic isotropy of the D₄ lattice and are
+  These are the 4th-order moment conditions necessary for a spherical 5-design.
+  The proofs here verify these identities from counting assumptions
+  (d4RootsPerComponent, d4RootsPerPair) without explicitly constructing the
+  root set as a finite subset of S³ or invoking a formal `spherical_design`
+  definition. A full 5-design formalization would additionally require defining
+  the root set and verifying all degree ≤5 moment constraints.
+
+  These moment equalities guarantee elastic isotropy of the D₄ lattice and are
   essential for emergent Lorentz invariance in the continuum limit.
 
   The proof strategy uses direct enumeration: each D₄ root has exactly 2

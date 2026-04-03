@@ -224,12 +224,17 @@ def bz_phonon_energy(roots, N_samples, seed=42):
 
 def check_5_design(roots):
     """
-    Check if root vectors form a 5-design on S³.
+    Check 4th-order moment isotropy for a sign/permutation-symmetric root system.
 
-    A 5-design on S^{d-1} (d=4) requires both:
+    For root systems with full sign and permutation symmetry on S^{d-1} (d=4),
+    the 5-design moment conditions reduce to two necessary 4th-order checks:
       ⟨x₁⁴⟩   = 3/(d(d+2)) = 3/24 = 1/8
       ⟨x₁²x₂²⟩ = 1/(d(d+2)) = 1/24
-    Both conditions must hold for full 5-design verification.
+
+    NOTE: These are necessary moment checks used here to verify isotropy of the
+    D₄ root system; they do not constitute a general 5-design test for
+    arbitrary point sets (which would require verifying all degree ≤5 moment
+    constraints).
 
     Returns (passes, quartic_observed, quartic_expected) for backward
     compatibility. The mixed moment is checked internally but not returned.

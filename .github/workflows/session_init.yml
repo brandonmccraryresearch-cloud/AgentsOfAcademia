@@ -165,7 +165,7 @@ jobs:
       # STEP 4: RUN ALL VERIFICATION SCRIPTS
       # ------------------------------------------------------------------
       - name: "Phase 4 — Run verification scripts"
-        if: ${{ github.event.inputs.run_computations != 'false' }}
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_computations != 'false' }}
         run: |
           eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
           
@@ -189,7 +189,7 @@ jobs:
           python scripts/d4_uniqueness.py --strict
 
       - name: "Phase 4b — Full sample-count computations (optional)"
-        if: ${{ github.event.inputs.full_samples == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.full_samples == 'true' }}
         run: |
           eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
           python scripts/d4_phonon_spectrum.py --samples 500000
@@ -201,7 +201,7 @@ jobs:
   lean4-environment:
     name: "Lean 4 Formal Verification"
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run_lean_build != 'false' }}
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_lean_build != 'false' }}
 
     steps:
       - name: Checkout repository
