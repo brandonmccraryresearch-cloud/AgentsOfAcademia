@@ -222,7 +222,7 @@ def bz_phonon_energy(roots, N_samples, seed=42):
     return total / N_samples
 
 
-def check_5_design(roots):
+def check_4th_moment_isotropy(roots):
     """
     Check 4th-order moment isotropy conditions for a root system on S³.
 
@@ -256,7 +256,7 @@ def check_5_design(roots):
 def isotropy_check(roots):
     """
     Check elastic isotropy: eigenvalues at small |k| should be
-    direction-independent (hallmark of a 5-design).
+    direction-independent (hallmark of 4th-moment isotropy).
     """
     eps = 0.01
     k1 = np.array([eps, 0, 0, 0])
@@ -342,15 +342,15 @@ def main():
         # Project to 4D if needed (A₄ roots already projected)
         dim = roots.shape[1]
 
-        is_5design, q_val, q_exp = check_5_design(roots)
+        is_5design, q_val, q_exp = check_4th_moment_isotropy(roots)
         iso_ok, iso_diff = isotropy_check(roots)
 
         print(f"  {name}: {n_roots} roots in R^{dim}, "
-              f"5-design={'YES' if is_5design else 'no '}, "
+              f"4th-moment={'YES' if is_5design else 'no '}, "
               f"isotropic={'YES' if iso_ok else 'no '}")
         results[name] = {
             'roots': roots, 'n_roots': n_roots,
-            '5_design': is_5design, 'isotropic': iso_ok,
+            '4th_moment': is_5design, 'isotropic': iso_ok,
         }
     print()
 
@@ -416,15 +416,15 @@ def main():
     print()
 
     # ===== Isotropy comparison =====
-    print("Isotropy & 5-Design Summary:")
+    print("4th-Moment Isotropy & Elastic Isotropy Summary:")
     print("-" * 50)
     for name in LATTICE_DATA:
         r = results[name]
-        print(f"  {name}: 5-design={'PASS' if r['5_design'] else 'FAIL'}, "
+        print(f"  {name}: 4th-moment={'PASS' if r['4th_moment'] else 'FAIL'}, "
               f"isotropic={'PASS' if r['isotropic'] else 'FAIL'}")
     print()
-    print("  Only D₄ satisfies the 5-design property, ensuring exact elastic")
-    print("  isotropy. This is the geometric foundation for emergent Lorentz")
+    print("  Only D₄ satisfies the 4th-moment isotropy conditions, ensuring exact")
+    print("  elastic isotropy. This is the geometric foundation for emergent Lorentz")
     print("  invariance in the continuum limit.")
     print()
 
@@ -436,13 +436,13 @@ def main():
     print(f"  Minimum energy lattice: {winner}")
     print(f"  D₄ is unique minimum:  {'YES' if d4_is_min else 'NO'}")
     print(f"  D₄ has triality:       YES (S₃, order 6)")
-    print(f"  D₄ is 5-design:        YES (⟨x₁⁴⟩ = 1/8 exact)")
+    print(f"  D₄ is 4th-moment iso:   YES (⟨x₁⁴⟩ = 1/8 exact)")
     print()
     if d4_is_min:
         print("  D₄ uniqueness is supported by THREE independent criteria:")
         print("    1. Lowest Gibbs free energy among 4D root lattices")
         print("    2. Unique lattice with S₃ triality (outer automorphism)")
-        print("    3. Unique 4D root lattice forming a 5-design on S³")
+        print("    3. Unique 4D root lattice satisfying 4th-moment isotropy on S³")
     print()
 
     if args.strict and not d4_is_min:
