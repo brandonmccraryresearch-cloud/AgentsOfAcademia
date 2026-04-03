@@ -1,12 +1,16 @@
 # ==============================================================================
-# SESSION ENVIRONMENT SETUP — Lean 4, Python Scientific Stack, Verification
+# SESSION ENVIRONMENT SETUP — LEGACY (Superseded by session_init.yml)
 # ==============================================================================
 #
-# This workflow activates at the onset of any new agent session to install:
-#   - Lean 4 (via elan) at the version specified in lean4/lean-toolchain
+# NOTE: This workflow is superseded by session_init.yml which provides the
+# full Anaconda-based scientific stack. This file is retained for backward
+# compatibility and lightweight CI runs. For full session initialization,
+# use session_init.yml instead.
+#
+# This workflow installs:
 #   - Python scientific computing stack (NumPy, SciPy, SymPy, Matplotlib)
-#   - Lean 4 project dependencies (Mathlib) and build verification
-#   - Computational scripts for open problem resolution
+#   - Lean 4 (via elan) with Mathlib
+#   - Runs verification scripts
 #
 # Trigger: workflow_dispatch (manual), push to main, or on schedule
 # ==============================================================================

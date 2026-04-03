@@ -1,0 +1,290 @@
+# ==============================================================================
+# SESSION INITIALIZATION — Full Environment Bootstrap
+# ==============================================================================
+#
+# This workflow replaces the base GitHub default startup. It installs the
+# complete Anaconda scientific stack, Lean 4, all MCP server dependencies,
+# and runs verification scripts to confirm the environment is operational.
+#
+# This is the FIRST action that fires on any agent session start.
+#
+# Trigger: workflow_dispatch (manual), push to main, schedule (weekly)
+# ==============================================================================
+
+name: "Session Initialization — Full Stack Bootstrap"
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_lean_build:
+        description: "Build Lean 4 project (slow, ~30 min)"
+        required: false
+        type: boolean
+        default: true
+      run_computations:
+        description: "Run verification computations"
+        required: false
+        type: boolean
+        default: true
+      full_samples:
+        description: "Run full sample-count computations (slow)"
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - 'lean4/**'
+      - 'scripts/**'
+      - '.github/workflows/session_init.yml'
+  schedule:
+    # Run weekly to catch dependency updates
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+env:
+  MANUSCRIPT: "83.0theaceinthehole.md"
+  CONDA_PREFIX_PATH: "/home/runner/miniconda3"
+
+jobs:
+  # ============================================================================
+  # PHASE 1: FULL ANACONDA SCIENTIFIC ENVIRONMENT
+  # ============================================================================
+  full-environment:
+    name: "Full Stack Anaconda Environment"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # STEP 0: MANUSCRIPT CONTEXT LOAD
+      # Agents must read the full manuscript before any work. This step
+      # makes the manuscript available and prints a summary for CI logs.
+      # ------------------------------------------------------------------
+      - name: "Phase 0 — Load manuscript context"
+        run: |
+          echo "============================================================"
+          echo "  MANDATORY: Full Manuscript Read Required"
+          echo "============================================================"
+          echo "  File: ${{ env.MANUSCRIPT }}"
+          echo "  Size: $(wc -c < '${{ env.MANUSCRIPT }}') bytes"
+          echo "  Lines: $(wc -l < '${{ env.MANUSCRIPT }}') lines"
+          echo ""
+          echo "  All agents and sub-agents MUST read the entire manuscript"
+          echo "  before starting any work. This is the single source of"
+          echo "  truth for the IHM-HRIIP theoretical framework."
+          echo ""
+          echo "  Sections:"
+          grep -n '^## \|^### \|^# ' '${{ env.MANUSCRIPT }}' | head -80
+          echo "============================================================"
+
+      # ------------------------------------------------------------------
+      # STEP 1: ANACONDA INSTALLATION
+      # ------------------------------------------------------------------
+      - name: "Phase 1 — Install Miniconda"
+        run: |
+          echo "Installing Miniconda..."
+          wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+          bash /tmp/miniconda.sh -b -p ${{ env.CONDA_PREFIX_PATH }}
+          eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
+          conda init bash
+          echo "${{ env.CONDA_PREFIX_PATH }}/bin" >> $GITHUB_PATH
+
+      # ------------------------------------------------------------------
+      # STEP 2: SCIENTIFIC PYTHON STACK (Anaconda channels)
+      # ------------------------------------------------------------------
+      - name: "Phase 2 — Install scientific Python stack"
+        run: |
+          eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
+          
+          # Core scientific stack
+          conda install -y -c conda-forge \
+            python=3.11 \
+            numpy \
+            scipy \
+            sympy \
+            matplotlib \
+            pandas \
+            scikit-learn \
+            jupyter \
+            networkx \
+            h5py \
+            ipython \
+            seaborn \
+            numba \
+            cython \
+            tqdm \
+            pyyaml \
+            requests
+
+          # Additional packages via pip (not in conda)
+          pip install \
+            mpmath \
+            pint \
+            uncertainties \
+            pylatex \
+            arviz \
+            emcee
+
+      # ------------------------------------------------------------------
+      # STEP 3: VERIFY PYTHON ENVIRONMENT
+      # ------------------------------------------------------------------
+      - name: "Phase 3 — Verify Python environment"
+        run: |
+          eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
+          python -c "
+          import numpy as np
+          import scipy
+          import sympy
+          import matplotlib
+          import pandas as pd
+          import sklearn
+          import networkx as nx
+          import h5py
+          import numba
+          import mpmath
+          import pint
+          print(f'NumPy:       {np.__version__}')
+          print(f'SciPy:       {scipy.__version__}')
+          print(f'SymPy:       {sympy.__version__}')
+          print(f'Matplotlib:  {matplotlib.__version__}')
+          print(f'Pandas:      {pd.__version__}')
+          print(f'Scikit-learn:{sklearn.__version__}')
+          print(f'NetworkX:    {nx.__version__}')
+          print(f'h5py:        {h5py.__version__}')
+          print(f'Numba:       {numba.__version__}')
+          print(f'mpmath:      {mpmath.__version__}')
+          print('✅ Full scientific Python stack: OPERATIONAL')
+          "
+
+      # ------------------------------------------------------------------
+      # STEP 4: RUN ALL VERIFICATION SCRIPTS
+      # ------------------------------------------------------------------
+      - name: "Phase 4 — Run verification scripts"
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_computations != 'false' }}
+        run: |
+          eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
+          
+          echo "=== Numerical Predictions ==="
+          python scripts/verify_numerical_predictions.py
+          
+          echo ""
+          echo "=== D₄ Phonon Spectrum ==="
+          python scripts/d4_phonon_spectrum.py --strict
+          
+          echo ""
+          echo "=== BZ Integral ==="
+          python scripts/bz_integral.py --strict
+          
+          echo ""
+          echo "=== Circularity Analysis ==="
+          python scripts/circularity_analysis.py
+          
+          echo ""
+          echo "=== D₄ Uniqueness ==="
+          python scripts/d4_uniqueness.py --strict
+
+      - name: "Phase 4b — Full sample-count computations (optional)"
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.full_samples == 'true' }}
+        run: |
+          eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
+          python scripts/d4_phonon_spectrum.py --samples 500000
+          python scripts/bz_integral.py --samples 2000000
+
+  # ============================================================================
+  # PHASE 2: LEAN 4 FORMAL VERIFICATION ENVIRONMENT
+  # ============================================================================
+  lean4-environment:
+    name: "Lean 4 Formal Verification"
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.run_lean_build != 'false' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: "Install elan (Lean version manager)"
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: "Verify Lean installation"
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          cd lean4
+          LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
+          echo "Required Lean version: $LEAN_VERSION"
+          elan toolchain install leanprover/lean4:$LEAN_VERSION
+          lean --version
+
+      - name: "Cache Lean 4 dependencies"
+        uses: actions/cache@v4
+        with:
+          path: |
+            lean4/.lake
+            lean4/lake-packages
+            ~/.elan
+          key: lean4-${{ hashFiles('lean4/lakefile.toml', 'lean4/lean-toolchain', 'lean4/lake-manifest.json') }}
+          restore-keys: |
+            lean4-
+
+      - name: "Build Lean 4 project"
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          cd lean4
+          lake update
+          lake build
+        timeout-minutes: 60
+
+      - name: "Verify zero sorry"
+        run: |
+          cd lean4
+          SORRY_COUNT=$(grep -r "sorry" IHMFramework/ --include="*.lean" | wc -l)
+          echo "sorry count: $SORRY_COUNT"
+          if [ "$SORRY_COUNT" -ne 0 ]; then
+            echo "FAIL: Found sorry in Lean files!"
+            grep -rn "sorry" IHMFramework/ --include="*.lean"
+            exit 1
+          fi
+          echo "PASS: Zero sorry in all files"
+
+      - name: "Count verified theorems"
+        run: |
+          cd lean4
+          THEOREM_COUNT=$(grep -r "^theorem\|^def.*theorem\|^noncomputable.*theorem" IHMFramework/ --include="*.lean" | wc -l)
+          echo "Verified theorems: $THEOREM_COUNT"
+          echo "Expected: ≥44"
+          if [ "$THEOREM_COUNT" -lt 44 ]; then
+            echo "WARNING: Expected at least 44 theorems, found $THEOREM_COUNT"
+          fi
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  session-summary:
+    name: "Session Initialization Summary"
+    runs-on: ubuntu-latest
+    needs: [full-environment, lean4-environment]
+    if: always()
+
+    steps:
+      - name: "Print initialization summary"
+        run: |
+          echo "============================================================"
+          echo "  SESSION INITIALIZATION COMPLETE"
+          echo "============================================================"
+          echo "  Anaconda scientific stack : ${{ needs['full-environment'].result }}"
+          echo "  Lean 4 verification      : ${{ needs['lean4-environment'].result || 'skipped' }}"
+          echo ""
+          echo "  REMINDER TO ALL AGENTS (see M1–M6 in agent files):"
+          echo "  M1. Read the ENTIRE manuscript before starting work"
+          echo "  M2. Update manuscript with finalized theoretical advances"
+          echo "  M3. Update copilot-instructions, agent files, and manuscript"
+          echo "  M4. Use specialized agents for theoretical content"
+          echo "  M5. Always invoke MCP tools when context matches"
+          echo "  M6. Run the anti-lazy self-check before concluding"
+          echo "============================================================"
