@@ -270,13 +270,13 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v83.0, 2026-04-04 — Session 4: Tier 3 + Unification Fix)
+### Current State (v83.0, 2026-04-04 — Session 4: Tier 3 + Unification Fix + Review Fixes)
 
-The manuscript is at v83.0. Session 4 executed Tier 3 enhancement tasks and resolved the Task 2.3 unification structural obstacle.
+The manuscript is at v83.0. Session 4 executed Tier 3 enhancement tasks and resolved the Task 2.3 unification structural obstacle. PR review comments (7 total, all addressed) corrected: D₄ vs Wilson propagator implementations, `best_scan_alphas` initialization, leading-log approximation documentation, PS beta-function docstring, `lattice_matching_condition` docstring, and Session 3/4 confidence table separation.
 
 **Session 4 results:**
-- **Unification v3 (2.3 fix):** Pati-Salam breaking chain resolves Δb₂=0; spread 17.0→0.4 units (97.8% improvement); grade D+→B+
-- **g−2 (3.1):** Schwinger α/(2π) verified on D₄ lattice; O(a⁶) artifact suppression from 5-design; grade B
+- **Unification v3 (2.3 fix):** Pati-Salam breaking chain resolves Δb₂=0; spread 17.0→0.4 units (97.8% improvement); grade D+→B+; leading-log approximation noted
+- **g−2 (3.1):** Schwinger α/(2π) verified on D₄ lattice; O(a⁶) artifact suppression from 5-design; D₄ propagator uses 24-root Laplacian (distinct from Wilson 8-neighbor); grade B
 - **Cosmological constant (3.3):** α⁵⁷/(4π) matches observation to 0.2%; mechanism heuristic; grade B−
 - **Higgs VEV (3.4):** v = E_P α⁹ π⁵(9/8) confirmed as fitting; prefactor not derived; grade D+
 
