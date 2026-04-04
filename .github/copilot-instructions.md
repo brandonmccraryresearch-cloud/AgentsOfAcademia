@@ -241,7 +241,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 44 verified theorems across 5 files (Basic.lean: 14, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 10, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
+Current state: 46 verified theorems across 5 files (Basic.lean: 17, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 9, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
 
 ## Agent Architecture
 
@@ -266,28 +266,29 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v83.0, 2026-04-02 — Session 2 updated)
+### Current State (v83.0, 2026-04-04 — Session 3: Audit Plan Execution)
 
-The manuscript is at v83.0. BZ integral now brackets the target (Level 3: 98.9%, Level 4: 102.6%). Circularity tautology formally proven in Lean 4. D₄ uniqueness verified as energy minimum among all 4D root lattices. Session 2 (PR #31) added 8 new computational scripts covering CKM phase, QED scattering, Yang-Mills derivation, anomaly cancellation, and honest parsimony analysis.
+The manuscript is at v83.0. Session 3 executed the v83 audit plan (`audit_results/v83_next_pr_audit_plan.md`), addressing all Tier 1 critical findings and Tier 2 easy tasks. Key changes: confidence scores propagated consistently (92/92/52/47/88%), parsimony ratio corrected to 2.5–5.0 throughout, D₄ uniqueness claim refined (F₄ also passes isotropy but lacks triality), anomaly table updated (B→A−), CW negative Z_λ diagnosed, theorem count updated to 46, and stale v82.0 labels removed.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
 | Multi-channel BZ integral | **Level 3: 98.9%, Level 4: 102.6%** | SO(8) Cartan completion brackets target; Ward gap = 2.46% |
 | D₄ phonon spectrum | **Computed** | 4 branches, zone-boundary zero at R=(π,π,π,π), ν=1/4 |
 | Koide formula | **Verified** | m_e: 0.01%, m_μ: 0.006%, θ₀=2/9 from Berry phase |
-| 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact (FiveDesign.lean) |
+| 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
-| D₄ uniqueness | **Verified** | Lowest Gibbs free energy, gap=3.85 to next lattice |
+| D₄ uniqueness | **Verified (refined)** | Lowest Gibbs free energy + unique with triality; F₄ acknowledged as isotropy peer |
 | Lean 4 | **46 theorems, 0 sorry** | Build verified across 5 files |
 | Verification scripts | **13/13 pass** | 5 original + 8 new; all numerical predictions confirmed |
-| CKM phase derived | **δ = 2π/(3√3) = 1.2092 rad** | 0.8% agreement with experiment 1.20±0.08 rad; from triality Berry holonomy |
+| CKM phase derived | **δ = 2π/(3√3) = 1.2092 rad** | 0.8% agreement; Cabibbo angle 93.7% off (topology ok, magnitudes not) |
 | Lattice QED scattering | **σ = 4πα²/(3s) verified ✅** | Propagator, angular distribution, artifact suppression all confirmed |
 | Yang-Mills action | **g² = 2/(Ja₀⁴) derived** | From D₄ phonon stress tensor; sin²θ_W = 3/13 (0.19%) |
-| Anomaly cancellation | **SU(2)²U(1)=0, grav²U(1)=0, Witten=0 ✅** | SU(3) and U(1)³ require GUT-level completion |
-| Higgs quartic Z_λ | **Lattice CW: 0.2097 vs SM 0.8885** | One-loop undershoots by ×4.24; multi-loop required |
-| Two-loop unification | **Spread ~15.9 units after threshold corrections** | Gap not closed; heavy-mode corrections needed |
-| Honest parsimony ratio | **2.5–5.0 (corrected from claimed 5.5)** | 5A genuine + 5B partial + 1C tautological + 2D fitting + 3E incomplete |
-| Overall confidence | **88%** (down 3% from Session 1's 91%) | Reduced for honest parsimony + Higgs quartic gap |
+| Anomaly cancellation | **All 6/6 SM conditions cancel ✅ (A−)** | Corrected LH Weyl basis; stale "B" grade removed |
+| Higgs quartic Z_λ | **Lattice: 0.2097 vs SM: 0.8885; CW: −7.12 (unphysical)** | One-loop CW fails across 17-decade hierarchy; RG improvement needed |
+| Two-loop unification | **Spread ~16.9 units; thresholds help only 0.1 units** | Mechanism insufficient as formulated |
+| Honest parsimony ratio | **2.5–5.0 (propagated throughout manuscript)** | All "5.5" references corrected |
+| Confidence scores | **92/92/52/47/88% (propagated throughout)** | All 6+ blocks now consistent |
+| Overall confidence | **88%** | Session 2 scores now reflected everywhere |
 
 ### Priority 1: Close the α BZ Integral (98.9% → 100%)
 
