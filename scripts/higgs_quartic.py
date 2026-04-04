@@ -203,6 +203,27 @@ def main():
     print(f"  Z_λ(CW) = {Z_lambda_CW:.4f}")
     print()
     
+    # Diagnosis of negative Z_λ(CW)
+    if lambda_CW < 0:
+        print("  ❌ UNPHYSICAL: Z_λ(CW) < 0 — negative quartic coupling")
+        print("  Diagnosis:")
+        print(f"    The CW log factor ln(v²/Λ²) = {log_hierarchy:.1f} is enormous because")
+        print(f"    the hierarchy v/Λ = {v/a0_inv:.2e} spans ~17 orders of magnitude.")
+        print(f"    The naive one-loop CW correction ({delta_lambda_CW:.2f}) overwhelms")
+        print(f"    the bare quartic ({lambda_bare:.4f}) by a factor of {abs(delta_lambda_CW/lambda_bare):.0f}×.")
+        print()
+        print("    This is the hierarchy problem in disguise: a single-step CW computation")
+        print("    across 17 decades is not RG-improved and cannot be trusted. A proper")
+        print("    calculation requires:")
+        print("      (a) Threshold matching at each mass scale (SO(8) → G₂ → SM)")
+        print("      (b) RG running between thresholds using appropriate beta functions")
+        print("      (c) Resummation of large logarithms via RG improvement")
+        print()
+        print("    The one-loop CW result is not wrong per se — it correctly indicates")
+        print("    that quantum corrections are DOMINANT, not perturbative. The physical")
+        print("    quartic coupling is determined by the full RG flow, not a single-step CW.")
+    print()
+    
     # Part 6: Higgs mass prediction
     print("Part 6: Higgs Mass Prediction")
     print("-" * 50)
