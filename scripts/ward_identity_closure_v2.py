@@ -424,7 +424,7 @@ def main():
     else:
         print(f"  ⚠️ Not improved (still {best_gap:.3f}%)")
 
-    if args.strict and best_gap > 5.0:
+    if args.strict and best_gap > 2.0:
         return 1
     return 0
 
