@@ -371,6 +371,8 @@ def main():
     # Attempt 2: From dimensional transmutation
     # v = Λ × exp(-8π²/(b₀ g²)) where Λ is the cutoff
     # With Λ = M_lat, g² = α × 4π, b₀ = -7 (QCD):
+    # QCD one-loop beta coefficient: b₀ = -11 + 2n_f/3 = -11 + 4 = -7
+    # for SU(3) with n_f = 6 flavors (MS-bar scheme)
     b0_QCD = -7.0
     g2_lat = alpha * 4 * np.pi
     v_DT = E_P / np.sqrt(24) * np.exp(8 * np.pi**2 / (b0_QCD * g2_lat))

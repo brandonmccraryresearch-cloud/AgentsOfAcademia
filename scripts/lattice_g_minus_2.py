@@ -239,6 +239,7 @@ def main():
     m_e_GeV = 0.000511  # GeV
     L_P = 1.616e-35  # m (Planck length)
     a0_m = L_P / np.sqrt(24)  # lattice spacing in meters
+    # ℏc ≈ 1.97e-16 GeV·m in natural units → 1 m = 1/(1.97e-16) GeV⁻¹
     a0_GeV_inv = a0_m / (1.97e-16)  # convert m to GeV⁻¹
     m_e_lattice = m_e_GeV * a0_GeV_inv  # dimensionless
 

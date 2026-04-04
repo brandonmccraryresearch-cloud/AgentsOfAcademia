@@ -142,6 +142,11 @@ def triality_suppression_factor(k, roots):
     #                          ½(k₁-k₂+k₃-k₄), ½(k₁-k₂-k₃+k₄))
     # This is the triality matrix from the D₄ outer automorphism.
 
+    # D₄ triality acts on the root system via the outer automorphisms
+    # of the D₄ Dynkin diagram (S₃ permuting the three 'legs').
+    # In the standard basis, one generator of the Z₃ cyclic triality
+    # is represented by the Hadamard-like matrix below, which maps
+    # (e₁±e₂) ↔ ½(e₁±e₂±e₃±e₄) while preserving the root lattice.
     T1 = 0.5 * np.array([
         [1,  1,  1,  1],
         [1,  1, -1, -1],
