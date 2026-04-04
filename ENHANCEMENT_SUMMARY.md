@@ -115,7 +115,7 @@
 5. **psianimator-mcp** - Quantum state simulation
 
 ### Research Tools
-6. **arxiv-search-mcp** - Scientific literature search
+6. **scite** - Scientific literature search (citation intelligence)
 7. **particlephysics-mcp** - Particle Data Group data
 8. **lean-lsp-mcp** - Lean 4 theorem prover
 9. **context7-mcp** - Real-time library documentation (**NEW**)

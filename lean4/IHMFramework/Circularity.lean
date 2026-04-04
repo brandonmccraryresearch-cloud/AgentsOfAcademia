@@ -24,7 +24,8 @@
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Field_simp
+import Mathlib.Tactic.FieldSimp
+import IHMFramework.Basic
 
 open Real
 
@@ -38,12 +39,11 @@ open Real
     Ω_P = √z · c / L_P  (Planck angular frequency)
 
   where L_P = Planck length, M_P = Planck mass, c = speed of light.
+
+  Note: `latticeSpacing` is imported from IHMFramework.Basic.
 -/
 
 variable (c L_P M_P : ℝ)
-
-/-- Lattice spacing: a₀ = L_P / √24 -/
-noncomputable def latticeSpacing (L_P : ℝ) : ℝ := L_P / Real.sqrt 24
 
 /-- Site mass: M* = √24 · M_P -/
 noncomputable def siteMass (M_P : ℝ) : ℝ := Real.sqrt 24 * M_P
@@ -64,7 +64,6 @@ theorem tautology_c (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0) :
     latticeSpacing L_P * planckFrequency c L_P = c := by
   simp [latticeSpacing, planckFrequency]
   field_simp
-  ring
 
 /-! ## Tautology T2: M* · Ω_P · a₀² = M_P · c · L_P
 
@@ -85,8 +84,6 @@ theorem tautology_hbar (hL_ne0 : L_P ≠ 0) (h24 : Real.sqrt 24 ≠ 0)
     M_P * c * L_P := by
   simp [siteMass, planckFrequency, latticeSpacing]
   field_simp
-  rw [h24sq]
-  ring
 
 /-! ## Tautology T3: 24 · c² · a₀ / M* = c² · L_P / M_P
 
@@ -160,4 +157,3 @@ def d4CoordNumber : ℕ := 24
 /-- The coordination number is positive (needed for √z ≠ 0). -/
 theorem d4CoordNumber_pos : (0 : ℝ) < d4CoordNumber := by
   simp [d4CoordNumber]
-  norm_num

@@ -280,11 +280,11 @@ You have access to all 8 MCP (Model Context Protocol) tool servers. These are yo
 
 ---
 
-#### 6. `arxiv-search-mcp` — Scientific Literature Search
+#### 6. `scite` — Scientific Literature Search
 
 | Tool | Use Case |
 |---|---|
-| `search_arxiv` | Search arXiv by category (e.g., `hep-th`, `math-ph`, `quant-ph`) with configurable result count (1–100) |
+| `search` | Search scientific papers with citation context (supporting/contrasting/mentioning) by keyword or topic |
 
 ---
 
@@ -337,7 +337,7 @@ When processing a new prompt, apply this decision tree:
 2. **References particle data or physical constants?** → `particlephysics-mcp` (look up PDG values)
 3. **Claims about quantum states or tunneling?** → `quantum-mcp` or `psianimator-mcp`
 4. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
-5. **References specific papers or claims novelty?** → `arxiv-search-mcp`
+5. **References specific papers or claims novelty?** → `scite`
 6. **Requires formal proof?** → `lean-lsp-mcp` **ALWAYS** as primary tool
 7. **Involves ML models or data fitting?** → `neural-mcp`
 8. **Contains dimensionless constants or mass ratios?** → `particlephysics-mcp` + `math-mcp`
@@ -419,7 +419,7 @@ When the task involves mathematical expressions, physical constants, particle da
 | Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
 | Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
 | Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
-| Literature search, prior art | `arxiv-search-mcp` → `search_arxiv` |
+| Literature search, prior art | `scite` → `search` |
 | Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
 | Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
 | Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |

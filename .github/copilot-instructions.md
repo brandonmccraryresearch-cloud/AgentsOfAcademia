@@ -70,7 +70,7 @@ eval "$($HOME/miniconda3/bin/conda shell.bash hook)"
 conda install -y numpy scipy sympy matplotlib pandas scikit-learn jupyter networkx h5py
 
 # Additional Python packages
-pip install lean4-mcp arxiv-mcp pint uncertainties mpmath
+pip install lean4-mcp pint uncertainties mpmath
 
 # Lean 4 (if elan not installed)
 curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
@@ -199,13 +199,13 @@ This repository uses multiple Model Context Protocol (MCP) servers for scientifi
 | `quantum_gate_sequence` | Apply single- and multi-qubit gates | Gate operations | Circuit design |
 | `calculate_entanglement` | Von Neumann entropy, concurrence, negativity | Entanglement | Quantify correlations |
 
-#### 7. `arxiv-search-mcp` — Scientific Literature Search
+#### 7. `scite` — Scientific Literature Search
 
-**When to use:** Checking prior art, locating referenced papers, verifying novelty claims.
+**When to use:** Checking prior art, locating referenced papers, verifying novelty claims, finding citation context (supporting/contrasting/mentioning).
 
 | Tool | Command Pattern | Use Case | Example |
 |---|---|---|---|
-| `search_arxiv` | `search_arxiv(query="D4 lattice phonon", category="hep-th", max_results=10)` | Search arXiv | Find related work |
+| `search` | `search(query="D4 lattice phonon fine structure constant")` | Search scientific papers | Find related work with citation context |
 
 #### 8. `particlephysics-mcp` — Particle Data Group (PDG) Data
 
@@ -226,7 +226,7 @@ When processing a new prompt, apply this decision tree:
 2. **References particle data or physical constants?** → `particlephysics-mcp`
 3. **Claims about quantum states or tunneling?** → `quantum-mcp` or `psianimator-mcp`
 4. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
-5. **References specific papers or claims novelty?** → `arxiv-search-mcp`
+5. **References specific papers or claims novelty?** → `scite`
 6. **Requires machine-checked proof?** → `lean-lsp-mcp`
 7. **Involves ML models or data fitting?** → `neural-mcp`
 
