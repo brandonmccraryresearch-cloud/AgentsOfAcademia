@@ -58,9 +58,9 @@ def lattice_propagator_inv_d4(q, m, a0=1.0):
     artifacts vanishes through O(a⁴), making the leading correction O(a⁶).
     """
     roots = d4_roots()
-    result = 0.0
-    for delta in roots:
-        result += 1.0 - np.cos(np.dot(q, delta) * a0)
+    # Vectorized: compute all 24 dot products at once
+    phases = np.dot(roots, q) * a0
+    result = np.sum(1.0 - np.cos(phases))
     return result / a0**2 + m**2
 
 
