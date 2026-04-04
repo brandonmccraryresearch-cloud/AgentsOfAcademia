@@ -63,7 +63,9 @@ def hidden_sector_beta_coefficients():
     delta_b = {"M_G2": np.zeros(3), "M_EW": np.zeros(3)}
     
     for name, su3, su2, Y, N, mass_label in multiplets:
-        # SU(3) contribution: (2/3) × T(R) × d(SU2) × N for real scalars
+        # For real scalars, the one-loop beta coefficient contribution is:
+        #   Δb = (1/6) × T(R) × d(other) × N  (real scalar prefactor)
+        # NOT the (2/3) Weyl-fermion prefactor used previously.
         if su3 == 8:
             T3 = 3.0  # Dynkin index of adjoint
         elif su3 == 3:
@@ -77,10 +79,10 @@ def hidden_sector_beta_coefficients():
         else:
             T2 = 0.0
         
-        # U(1) contribution: (2/3) × Y² × d(SU3) × d(SU2) × N for real scalars
-        db1 = (2.0/3) * Y**2 * su3 * su2 * N
-        db2 = (2.0/3) * T2 * su3 * N
-        db3 = (2.0/3) * T3 * su2 * N
+        # Real scalar contributions: prefactor 1/6 (not 2/3 for Weyl fermions)
+        db1 = (1.0/6) * Y**2 * su3 * su2 * N
+        db2 = (1.0/6) * T2 * su3 * N
+        db3 = (1.0/6) * T3 * su2 * N
         
         delta_b[mass_label] += np.array([db1, db2, db3])
     
@@ -145,7 +147,8 @@ def main():
     alpha_s_MZ = 0.1179
     
     # GUT-normalized couplings
-    alpha1_inv = alpha_em_inv_MZ * (1 - sin2_theta_W) * 5.0/3
+    # α₁ = (5/3)α_Y, so α₁⁻¹ = (3/5)α_Y⁻¹ = (3/5)(α_em⁻¹ cos²θ_W)
+    alpha1_inv = alpha_em_inv_MZ * (1 - sin2_theta_W) * 3.0/5
     alpha2_inv = alpha_em_inv_MZ * sin2_theta_W
     alpha3_inv = 1.0 / alpha_s_MZ
     

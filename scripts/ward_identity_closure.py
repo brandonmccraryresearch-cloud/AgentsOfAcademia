@@ -12,6 +12,7 @@ The two-loop estimate closes the 1.1% gap.
 """
 import numpy as np
 import sys
+import argparse
 
 def d4_root_vectors():
     roots = []
@@ -43,8 +44,15 @@ def run_level3(N, seed):
     return root_Pi + (4.0 / 28.0) * cartan_Pi
 
 def main():
+    parser = argparse.ArgumentParser(description='Ward identity α BZ integral analysis')
+    parser.add_argument('--samples', type=int, default=1000000,
+                        help='Number of MC samples per seed (default: 1000000)')
+    parser.add_argument('--strict', action='store_true',
+                        help='Exit non-zero if gap > threshold')
+    args = parser.parse_args()
+
     target = 1.0 / (28 - np.pi / 14)
-    N = 1000000
+    N = args.samples
 
     print("=" * 72)
     print("WARD IDENTITY ANALYSIS — α BZ INTEGRAL CLOSURE (v83.0)")
@@ -98,7 +106,7 @@ def main():
     # The two-loop correction adds f_bare³ with coefficient from the lattice
     # β-function. For SO(8) on D₄: β₂ = -11C₂(G)/(48π²) = -11×6/(48π²)
     C2_G = 6  # Casimir of SO(8) adjoint
-    beta2_coeff = 11 * C2_G / (48 * np.pi**2)
+    beta2_coeff = -11 * C2_G / (48 * np.pi**2)  # Note: negative sign per β₂ = -11C₂(G)/(48π²)
     delta_2loop = f_bare**2 * beta2_coeff
     f_2loop = f_bare * (1 + delta_vertex + delta_2loop)
     r_2loop = f_2loop / target
@@ -132,18 +140,23 @@ def main():
     print(f"  Level 5 (NLO Dyson):         {r_nlo*100:.2f}%")
     print(f"  Level 5 (WTI + 2-loop):      {r_2loop*100:.2f}%")
     print()
-    print("  CONCLUSION: Bare integral (98.9%) + WTI vertex correction (1.1%)")
-    print("  closes the gap to >100%. The target 1/(28-π/14) is RECOVERED")
-    print("  as a OUTPUT of the D₄ BZ integration with Ward identity constraint.")
+    print("  CONCLUSION: The D₄ BZ analysis presently brackets the target:")
+    print("  the bare 1-loop result remains slightly below 100%, while the")
+    print("  Dyson/WTI-improved estimates slightly overshoot it. This supports")
+    print("  the normalization scale but does not yet demonstrate exact closure.")
     print()
 
     best = r_nlo
     gap = abs(1.0 - best) * 100
     if gap < 2.0:
-        print(f"  ✅ α CLOSURE ACHIEVED (NLO): {best*100:.2f}% (gap: {gap:.2f}%)")
+        print(f"  ⚠️ Best current estimate (NLO Dyson): {best*100:.2f}%")
+        print(f"     Residual normalization gap: {gap:.2f}% (target is bracketed, not closed)")
     else:
-        print(f"  ⚠️ Gap remaining: {gap:.2f}%")
+        print(f"  ⚠️ Best current estimate (NLO Dyson): {best*100:.2f}%")
+        print(f"     Residual normalization gap: {gap:.2f}%")
 
+    if args.strict and gap > 5.0:
+        return 1
     return 0
 
 if __name__ == "__main__":

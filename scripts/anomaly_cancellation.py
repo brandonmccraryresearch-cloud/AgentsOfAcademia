@@ -28,16 +28,29 @@ from fractions import Fraction
 
 def sm_fermion_content():
     """
-    Standard Model fermion content per generation.
+    Standard Model fermion content per generation in the LEFT-HANDED Weyl basis.
+
+    All fields are expressed as left-handed Weyl spinors. Right-handed fields
+    are converted to their charge-conjugates:
+      u_R  → u_R^c  with (3̄, 1, -2/3)
+      d_R  → d_R^c  with (3̄, 1, +1/3)
+      e_R  → e_R^c  with (1, 1, +1)
+      ν_R  → ν_R^c  with (1, 1, 0)
+
     Returns list of (name, SU3_dim, SU2_dim, Y_hypercharge, multiplicity).
+    SU3_dim uses positive integers; the sign convention for conjugate reps
+    is tracked via the 'is_conjugate' flag in comments only — the anomaly
+    coefficients are computed using the correct Dynkin indices.
     """
     fermions = [
-        ("Q_L", 3, 2, Fraction(1, 6), 1),    # Left-handed quark doublet
-        ("u_R", 3, 1, Fraction(2, 3), 1),     # Right-handed up-type
-        ("d_R", 3, 1, Fraction(-1, 3), 1),    # Right-handed down-type
-        ("L_L", 1, 2, Fraction(-1, 2), 1),    # Left-handed lepton doublet
-        ("e_R", 1, 1, Fraction(-1, 1), 1),    # Right-handed electron
-        ("nu_R", 1, 1, Fraction(0, 1), 1),    # Right-handed neutrino (D₄ hidden)
+        # Left-handed fields
+        ("Q_L",    3, 2, Fraction(1, 6), 1),     # Left-handed quark doublet
+        ("L_L",    1, 2, Fraction(-1, 2), 1),     # Left-handed lepton doublet
+        # Right-handed fields as LH charge-conjugates (conjugate rep, negated Y)
+        ("u_R^c",  3, 1, Fraction(-2, 3), 1),    # u_R → ū_L: (3̄, 1, -2/3)
+        ("d_R^c",  3, 1, Fraction(1, 3), 1),     # d_R → d̄_L: (3̄, 1, +1/3)
+        ("e_R^c",  1, 1, Fraction(1, 1), 1),     # e_R → ē_L: (1, 1, +1)
+        ("nu_R^c", 1, 1, Fraction(0, 1), 1),     # ν_R → ν̄_L: (1, 1, 0) [D₄ hidden]
     ]
     return fermions
 
@@ -86,8 +99,22 @@ def check_anomalies(fermions, verbose=True):
     results["Witten_SU2_doublets"] = n_doublets
     results["Witten_SU2_even"] = (n_doublets % 2 == 0)
 
-    # [SU(3)]³: vanishes for fundamental representation (traceless generators)
-    results["[SU(3)]³"] = Fraction(0)  # Always zero for SU(3) fundamentals
+    # [SU(3)]³: For SU(N), the cubic Casimir d(R) is nonzero for fundamental reps.
+    # The anomaly cancels because the colored sector is vectorlike when expressed
+    # in the LH Weyl basis: Q_L contributes d(3) and u_R^c, d_R^c contribute d(3̄) = -d(3).
+    # Coefficient: Σ d(R_3) × dim(R_2) for all LH Weyl fermions with SU(3) charge.
+    # d(3) = +1/2, d(3̄) = -1/2 (conventional normalization).
+    su3_cubed = Fraction(0)
+    for name, su3, su2, Y, mult in fermions:
+        if su3 == 3:
+            # Q_L is a 3, u_R^c and d_R^c are 3̄ (conjugate).
+            # In the LH basis: Q_L → d(3)=+1/2, u_R^c/d_R^c → d(3̄)=-1/2
+            if "^c" in name:
+                d3 = Fraction(-1, 2)  # Conjugate rep
+            else:
+                d3 = Fraction(1, 2)   # Fundamental rep
+            su3_cubed += mult * d3 * su2
+    results["[SU(3)]³"] = su3_cubed
 
     if verbose:
         for key, val in results.items():

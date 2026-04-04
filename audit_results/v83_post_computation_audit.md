@@ -74,21 +74,21 @@ This table maps each new script to the deficit it was designed to address from `
 
 ### 3.2 `anomaly_cancellation.py` — SM Gauge Anomaly Cancellation
 
-**Grade: B**
+**Grade: A−**
 
 **What was computed:**
+- All fermion fields expressed in consistent LH Weyl basis (RH → charge-conjugate)
 - [SU(2)]²U(1)_Y anomaly coefficient from 4 SU(2) doublets per generation: = 0 ✅
 - [grav]²U(1)_Y anomaly from hypercharge sum: = 0 ✅  
 - Witten ℤ₂ anomaly: 4 doublets mod 2 = 0 ✅
-- [SU(2)]³: identically zero (SU(2) adjoint traceless) ✅
-- [SU(3)]²U(1)_Y: non-zero at partial embedding ⚠️
-- U(1)_Y³: non-zero at partial embedding ⚠️
+- [SU(3)]³: cancels because colored sector is vectorlike in LH basis ✅
+- [SU(3)]²U(1)_Y: = 0 in chirally consistent LH Weyl basis ✅
+- U(1)_Y³: = 0 in chirally consistent LH Weyl basis ✅
 
 **D₄ origin of the result:**
-The triality decomposition assigns exactly 4 SU(2) doublets per generation (3 quark doublets colored under SU(3) + 1 lepton doublet). The Witten anomaly vanishing follows from the triality ℤ₃ structure constraining doublet count to multiples of 4.
+The triality decomposition assigns exactly 4 SU(2) doublets per generation (3 quark doublets colored under SU(3) + 1 lepton doublet). The Witten anomaly vanishing follows from the triality ℤ₃ structure constraining doublet count to multiples of 4. All anomalies cancel because the D₄ triality branching produces a vectorlike colored sector when expressed in the consistent LH Weyl basis.
 
-**Remaining deficit:**
-SU(3) and U(1)³ anomaly cancellation requires the full GUT-level embedding SO(8) ⊃ SU(5) ⊃ G_SM with all 16 Weyl fermion charges correctly assigned. This is a genuine outstanding calculation.
+**Note:** An earlier version of the script used inconsistent chirality conventions (raw RH hypercharges without conjugation), producing spurious non-cancellation for [SU(3)]²U(1) and U(1)³. This has been corrected.
 
 ---
 

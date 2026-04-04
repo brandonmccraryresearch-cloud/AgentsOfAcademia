@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """
-Priority 5: Higgs Quartic Z_λ from Lattice Anharmonicity (First-Principles)
+Priority 5: Higgs Quartic Z_λ — Lattice vs SM RG Comparison
 
-Computes the Higgs quartic coupling λ and renormalization factor Z_λ from
-the D₄ lattice anharmonicity, using the Coleman-Weinberg effective potential.
+Computes the Higgs quartic coupling λ and renormalization factor Z_λ,
+comparing the D₄ lattice geometric prediction with SM RG running.
+
+IMPORTANT: This is a calibration/comparison exercise, NOT a first-principles
+derivation. The physical λ_phys is obtained from the experimental Higgs mass
+(m_h = 125.25 GeV), and the lattice anharmonicity parameter κ₄ is set by
+assumption (κ₄ ~ y_t). The CW effective potential calculation demonstrates
+the *structure* of the lattice-to-SM matching but does not independently
+predict the Higgs mass.
 
 The D₄ bond potential expanded to fourth order:
   U(r) = J(r - a₀)²/2 + κ₄(r - a₀)⁴/4!
 
 The one-loop effective potential for the Higgs breathing mode φ_H:
   V_eff(φ) = λ_geom φ⁴/4 + (20κ₄²)/(64π²) φ⁴ [ln(φ²/a₀⁻²) - 3/2]
-
-The ratio Z_λ = λ_eff/λ_geom matches SM RG running to 0.2%.
 """
 import numpy as np
 import sys
@@ -130,7 +135,7 @@ def phonon_bath_renormalization():
 
 def main():
     print("=" * 72)
-    print("HIGGS QUARTIC Z_λ FROM LATTICE ANHARMONICITY (v83.0)")
+    print("HIGGS QUARTIC Z_λ — LATTICE vs SM RG COMPARISON (v83.0)")
     print("=" * 72)
     print()
     
@@ -180,9 +185,10 @@ def main():
     print("Part 5: Coleman-Weinberg Effective Potential on D₄")
     print("-" * 50)
     # The anharmonicity parameter κ₄ is related to top Yukawa
-    # κ₄ ~ y_t (maximum phase-friction interpretation)
+    # κ₄ ~ y_t (assumed identification — not derived from first principles)
+    # This makes the CW calculation a consistency check, not a prediction
     y_t = 0.994
-    kappa4_eff = y_t  # Dimensionless anharmonicity
+    kappa4_eff = y_t  # Dimensionless anharmonicity (assumed, not derived)
     
     log_hierarchy = np.log(v**2 / a0_inv**2)
     print(f"  ln(v²/Λ²) = {log_hierarchy:.2f}")

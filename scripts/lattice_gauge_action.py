@@ -168,21 +168,26 @@ def sm_embedding_indices():
       28 → (8,1)₀ + (1,3)₀ + (1,1)₀ + (3,2)_{5/6} + (3̄,2)_{-5/6} + (3,1)_{-1/3} + (3̄,1)_{1/3}
     
     Embedding indices I_G for each subgroup:
-      I_{SU(3)} = 3 (adjoint index)
-      I_{SU(2)} = 4 
-      I_{U(1)} = 6/5 (with GUT normalization)
+      I_{SU(3)} = 3
+      I_{SU(2)} = 4
+      I_{U(1)} = 6 in the raw SO(8) embedding convention used here
+
+    Note:
+      The U(1) value above is not pre-GUT-normalized. GUT normalization
+      is applied separately in the weak-mixing-angle formula through the
+      explicit 5/3 factor multiplying I_{U(1)}.
     """
-    # From SO(8) branching rules
-    # The coupling ratios at unification are:
-    # g₃² : g₂² : g₁² = 1/I₃ : 1/I₂ : 1/I₁
+    # From SO(8) branching rules, using the raw SO(8) embedding indices.
+    # GUT normalization for hypercharge is introduced separately via the
+    # explicit 5/3 factor in the sin²θ_W formula below.
     
     I_SU3 = 3  # Embedding index for SU(3) in SO(8)
     I_SU2 = 4  # Embedding index for SU(2) in SO(8)
-    I_U1 = 6   # Embedding index for U(1) in SO(8)
+    I_U1 = 6   # Raw U(1) embedding index in SO(8), before GUT normalization
     
-    # At unification scale, α_i⁻¹ = I_i × α_SO8⁻¹
-    # This gives sin²θ_W = I_SU2/(I_SU2 + (5/3)I_U1)
-    # With GUT normalization: sin²θ_W(tree) = 3/(3 + 5×6/I_SU2×I_U1)
+    # At unification scale, α_i⁻¹ = I_i × α_SO8⁻¹ in this convention.
+    # The hypercharge GUT normalization is accounted for by the 5/3 factor,
+    # giving sin²θ_W = I_SU2 / (I_SU2 + (5/3) * I_U1).
     sin2_tree = I_SU2 / (I_SU2 + (5.0/3) * I_U1)
     
     # D₄ lattice prediction: sin²θ_W = 3/13 ≈ 0.2308

@@ -215,13 +215,13 @@ def main():
         print(f"    {labels[i]:2s}: {V_abs[i,0]:10.4f} {V_abs[i,1]:10.4f} {V_abs[i,2]:10.4f}")
     print()
 
-    # Experimental CKM magnitudes
+    # Experimental CKM magnitudes (approximate PDG central values; all entries satisfy |V_ij| <= 1)
     V_exp = np.array([
         [0.97370, 0.2245, 0.00382],
-        [0.2210, 0.987, 0.0410],
-        [0.00800, 0.0388, 1.013]
+        [0.2244, 0.9730, 0.0422],
+        [0.0086, 0.0414, 0.9991]
     ])
-    print("  |V_CKM| (experimental, PDG 2024):")
+    print("  |V_CKM| (experimental, approximate PDG central values):")
     print(f"         {'d':>10s} {'s':>10s} {'b':>10s}")
     for i in range(3):
         print(f"    {labels[i]:2s}: {V_exp[i,0]:10.4f} {V_exp[i,1]:10.4f} {V_exp[i,2]:10.4f}")
@@ -244,8 +244,9 @@ def main():
     for i in range(3):
         print(f"    [{abs(VVdag[i,0]):.6f}  {abs(VVdag[i,1]):.6f}  {abs(VVdag[i,2]):.6f}]")
     unitarity_dev = np.max(np.abs(VVdag - np.eye(3)))
+    unitarity_tol = 1e-12
     print(f"  Max deviation from unitarity: {unitarity_dev:.2e}")
-    print(f"  Unitarity: {'PASS ✅' if unitarity_dev < 0.1 else 'APPROXIMATE'}")
+    print(f"  Unitarity: {'PASS ✅' if unitarity_dev < unitarity_tol else 'APPROXIMATE'}")
     print()
 
     # Summary

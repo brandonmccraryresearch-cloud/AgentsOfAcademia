@@ -77,17 +77,24 @@ def lattice_cross_section(s, alpha, a0):
     σ_lattice = σ_continuum × (1 + c₂(a₀√s)² + c₆(a₀√s)⁶ + ...)
     
     For D₄ 5-design: c₂ = 0 (!) and leading correction is c₆.
+    
+    NOTE: The coefficients below (0.1 for Wilson, 0.01 for D₄) are
+    illustrative order-of-magnitude estimates, not derived from lattice
+    Feynman rules. They demonstrate the expected scaling behavior
+    (O(a²) vs O(a⁶)) but should not be taken as quantitative predictions.
+    A rigorous determination requires computing lattice vertex corrections
+    from the D₄ dispersion relation.
     """
     sigma_cont = tree_amplitude_continuum(s, alpha)
     
     # Momentum scale
     q_scale = np.sqrt(s)
     
-    # Standard Wilson lattice: O(a²) corrections
-    wilson_corr = 1.0 + 0.1 * (a0 * q_scale)**2  # Typical coefficient ~0.1
+    # Standard Wilson lattice: O(a²) corrections (illustrative coefficient ~0.1)
+    wilson_corr = 1.0 + 0.1 * (a0 * q_scale)**2
     
-    # D₄ lattice: O(a⁶) corrections due to 5-design
-    d4_corr = 1.0 + 0.01 * (a0 * q_scale)**6  # Suppressed coefficient
+    # D₄ lattice: O(a⁶) corrections due to 5-design (illustrative coefficient ~0.01)
+    d4_corr = 1.0 + 0.01 * (a0 * q_scale)**6
     
     sigma_wilson = sigma_cont * wilson_corr
     sigma_d4 = sigma_cont * d4_corr
@@ -202,6 +209,8 @@ def main():
     print()
     print("  The D₄ 5-design suppresses lattice artifacts by factors of")
     print("  10²-10⁸ compared to standard Wilson gauge action.")
+    print("  (Note: artifact coefficients are illustrative estimates;")
+    print("  rigorous values require lattice Feynman rule derivation.)")
     print()
     
     # Summary
