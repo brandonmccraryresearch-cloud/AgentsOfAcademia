@@ -94,6 +94,10 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/bz_integral.py` | Multi-level BZ integral (bare → multi-channel → SO(8) → Dyson) | Level 3: 98.9%, Level 4: 102.6% |
 | `scripts/circularity_analysis.py` | Tautology verification of c, ℏ, G derivations | 10/10 PASS |
 | `scripts/d4_uniqueness.py` | D₄ Gibbs free energy minimum among 4D root lattices | D₄ minimum, gap=3.85 |
+| `scripts/two_loop_unification_v3.py` | Pati-Salam unification (Session 4) | Spread 17→0.4 units |
+| `scripts/lattice_g_minus_2.py` | Anomalous magnetic moment on D₄ (Session 4) | Schwinger α/(2π) verified |
+| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) matches 0.2% |
+| `scripts/higgs_vev_derivation.py` | Higgs VEV derivation attempt (Session 4) | Fitting, not derived |
 
 ## MCP Server Usage
 
@@ -266,36 +270,46 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v83.0, 2026-04-04 — Session 3: Audit Plan Tiers 1+2)
+### Current State (v83.0, 2026-04-04 — Session 4: Tier 3 + Unification Fix)
 
-The manuscript is at v83.0. Session 3 executed the v83 audit plan (`audit_results/v83_next_pr_audit_plan.md`), addressing all Tier 1 critical findings, all Tier 2 tasks (easy and hard). Key results:
+The manuscript is at v83.0. Session 4 executed Tier 3 enhancement tasks and resolved the Task 2.3 unification structural obstacle.
 
-**Tier 1 (completed):** Confidence scores propagated (92/92/52/47/88→85%), parsimony ratio corrected to 2.5–5.0, D₄ uniqueness refined (F₄ also passes isotropy), anomaly table A−, CW Z_λ diagnosed, theorem count 46, v82→v83 labels fixed.
+**Session 4 results:**
+- **Unification v3 (2.3 fix):** Pati-Salam breaking chain resolves Δb₂=0; spread 17.0→0.4 units (97.8% improvement); grade D+→B+
+- **g−2 (3.1):** Schwinger α/(2π) verified on D₄ lattice; O(a⁶) artifact suppression from 5-design; grade B
+- **Cosmological constant (3.3):** α⁵⁷/(4π) matches observation to 0.2%; mechanism heuristic; grade B−
+- **Higgs VEV (3.4):** v = E_P α⁹ π⁵(9/8) confirmed as fitting; prefactor not derived; grade D+
 
-**Tier 2 (completed):**
+**Prior sessions:**
+
+**Tier 1 (completed, Session 3):** Confidence scores propagated, parsimony corrected to 2.5–5.0, D₄ uniqueness refined, anomaly table A−, CW Z_λ diagnosed, theorem count 46, v82→v83 labels fixed.
+
+**Tier 2 (completed, Session 3):**
 - **Ward identity (2.1):** Gap reduced from 2.46% to **0.89%** via Z₃ wave-function renormalization + geometric mean interpolant (v2 script)
 - **CKM Cabibbo (2.2):** Diagnosed as topology (phase ✅ 0.8%) vs dynamics (magnitudes ❌ 93.7%); GST relation works at 1% with mass ratios
-- **Unification (2.3):** Fundamental obstacle identified: Δb₂=0 for SU(2) singlets; 4 scenarios tested, best improvement 0.9/17 units; mechanism insufficient
+- **Unification (2.3):** Resolved in Session 4 — Pati-Salam gives Δb₂ ≠ 0; spread 0.4 units
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
-| α BZ integral | **Gap 0.89% (Session 3, improved from 2.46%)** | Geometric mean of L3 × L4; Z₃ = 0.998 |
+| α BZ integral | **Gap 0.89% (Session 3)** | Geometric mean of L3 × L4; Z₃ = 0.998 |
 | D₄ phonon spectrum | **Computed** | 4 branches, zone-boundary zero at R=(π,π,π,π), ν=1/4 |
 | Koide formula | **Verified** | m_e: 0.01%, m_μ: 0.006%, θ₀=2/9 from Berry phase |
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **Verified (refined)** | Lowest Gibbs free energy + unique with triality; F₄ acknowledged |
 | Lean 4 | **46 theorems, 0 sorry** | Build verified across 5 files |
-| Scripts | **16/16 pass** | 5 original + 8 Session 2 + 3 Session 3 |
+| Scripts | **20/20 pass** | 5 original + 8 Session 2 + 3 Session 3 + 4 Session 4 |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
 | CKM magnitudes | **Cabibbo 93.7% off** | Dynamical (mass ratios), not topological; GST works at 1% |
-| Lattice QED | **σ = 4πα²/(3s) verified ✅** | All tests pass |
+| Lattice QED / g−2 | **σ = 4πα²/(3s) verified; Schwinger α/(2π) ✅** | D₄ suppresses artifacts by 10⁶⁸ |
 | Yang-Mills | **g² = 2/(Ja₀⁴); sin²θ_W = 3/13** | From D₄ phonon stress tensor |
 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | Corrected LH Weyl basis |
 | Higgs quartic Z_λ | **Lattice: 0.2097; CW: −7.12 (unphysical)** | Hierarchy problem manifesting |
-| Two-loop unification | **Spread 17.0 units; best scenario closes 0.9** | Δb₂=0 structural; mechanism insufficient |
+| Two-loop unification | **Spread 0.4 units (Session 4, improved from 17.0)** | Pati-Salam Δb₂ ≠ 0; M_PS ~ 10¹⁰ GeV |
+| Cosmological constant | **α⁵⁷/(4π) matches to 0.2%; heuristic** | Spectral density computed; suppression postulated |
+| Higgs VEV | **v = E_P α⁹ π⁵(9/8); fitting (D+)** | Prefactor not derived from D₄ |
 | Parsimony | **2.5–5.0 (corrected)** | All references consistent |
-| Overall confidence | **85%** | Down from 88% (unification downgrade) |
+| Overall confidence | **87%** | Up from 85% (unification upgrade) |
 
 ### Priority 1: Close the α BZ Integral (0.89% gap remaining)
 
@@ -373,15 +387,15 @@ Create the GPU simulation infrastructure:
 
 **Action:** Create `scripts/d4_simulation_4d.py` using molecular-mcp or custom code.
 
-### Open Problem Status (as of v83.0 Session 3)
+### Open Problem Status (as of v83.0 Session 4)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
-| 1 | α BZ integral | **Gap 0.89% (Session 3, improved from 2.46%)** | Explicit two-loop computation or lattice MC |
-| 2 | Two-loop unification | **Spread 17.0 units; Δb₂=0 structural obstacle** | Non-perturbative matching or alternative embedding |
+| 1 | α BZ integral | **Gap 0.89% (Session 3)** | Explicit two-loop computation or lattice MC |
+| 2 | Two-loop unification | **Spread 0.4 units (Session 4, Pati-Salam)** | Derive M_PS from D₄ dynamics; proton decay constraints |
 | 3 | 4D simulation | Plan specified | GPU infrastructure |
 | 4 | Z_λ effective potential | One-loop CW: 0.2097 vs SM 0.8885; CW: −7.12 | RG-improved CW + threshold matching |
-| 5 | ρ_Λ spectral density | Phonon spectrum computed | Suppression function |
+| 5 | ρ_Λ spectral density | **Spectral density computed (Session 4); suppression heuristic** | Derive f_supp from BZ integral |
 | 6 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Phase confirmed; topology-protected |
 | 6b | CKM magnitudes | **Cabibbo 93.7% off; GST works at 1%** | Derive m_d/m_s from D₄ or Koide extension |
 | 7 | D₄ anharmonic κ₄ / force constant J | g²=2/(Ja₀⁴) derived; J open | Lattice perturbation theory |
@@ -391,3 +405,5 @@ Create the GPU simulation infrastructure:
 | 11 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
 | 12 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
 | 13 | Lean 4 T3 Lieb-Robinson | Not started | Create LiebRobinson.lean |
+| 14 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
+| 15 | Higgs VEV derivation | **v = E_P α⁹ π⁵(9/8) is fitting (Session 4)** | Derive prefactor from lattice action |
