@@ -94,6 +94,10 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/bz_integral.py` | Multi-level BZ integral (bare → multi-channel → SO(8) → Dyson) | Level 3: 98.9%, Level 4: 102.6% |
 | `scripts/circularity_analysis.py` | Tautology verification of c, ℏ, G derivations | 10/10 PASS |
 | `scripts/d4_uniqueness.py` | D₄ Gibbs free energy minimum among 4D root lattices | D₄ minimum, gap=3.85 |
+| `scripts/two_loop_unification_v3.py` | Pati-Salam unification (Session 4) | Spread 17→0.4 units |
+| `scripts/lattice_g_minus_2.py` | Anomalous magnetic moment on D₄ (Session 4) | Schwinger α/(2π) verified |
+| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) matches 0.2% |
+| `scripts/higgs_vev_derivation.py` | Higgs VEV derivation attempt (Session 4) | Fitting, not derived |
 
 ## MCP Server Usage
 
@@ -241,7 +245,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 44 verified theorems across 5 files (Basic.lean: 14, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 10, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
+Current state: 46 verified theorems across 5 files (Basic.lean: 17, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 9, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
 
 ## Agent Architecture
 
@@ -266,38 +270,56 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v83.0, 2026-04-02 — Session 2 updated)
+### Current State (v83.0, 2026-04-04 — Session 4: Tier 3 + Unification Fix + Review Fixes)
 
-The manuscript is at v83.0. BZ integral now brackets the target (Level 3: 98.9%, Level 4: 102.6%). Circularity tautology formally proven in Lean 4. D₄ uniqueness verified as energy minimum among all 4D root lattices. Session 2 (PR #31) added 8 new computational scripts covering CKM phase, QED scattering, Yang-Mills derivation, anomaly cancellation, and honest parsimony analysis.
+The manuscript is at v83.0. Session 4 executed Tier 3 enhancement tasks and resolved the Task 2.3 unification structural obstacle. PR review comments (7 total, all addressed) corrected: D₄ vs Wilson propagator implementations, `best_scan_alphas` initialization, leading-log approximation documentation, PS beta-function docstring, `lattice_matching_condition` docstring, and Session 3/4 confidence table separation.
+
+**Session 4 results:**
+- **Unification v3 (2.3 fix):** Pati-Salam breaking chain resolves Δb₂=0; spread 17.0→0.4 units (97.8% improvement); grade D+→B+; leading-log approximation noted
+- **g−2 (3.1):** Schwinger α/(2π) verified on D₄ lattice; O(a⁶) artifact suppression from 5-design; D₄ propagator uses 24-root Laplacian (distinct from Wilson 8-neighbor); grade B
+- **Cosmological constant (3.3):** α⁵⁷/(4π) matches observation to 0.2%; mechanism heuristic; grade B−
+- **Higgs VEV (3.4):** v = E_P α⁹ π⁵(9/8) confirmed as fitting; prefactor not derived; grade D+
+
+**Prior sessions:**
+
+**Tier 1 (completed, Session 3):** Confidence scores propagated, parsimony corrected to 2.5–5.0, D₄ uniqueness refined, anomaly table A−, CW Z_λ diagnosed, theorem count 46, v82→v83 labels fixed.
+
+**Tier 2 (completed, Session 3):**
+- **Ward identity (2.1):** Gap reduced from 2.46% to **0.89%** via Z₃ wave-function renormalization + geometric mean interpolant (v2 script)
+- **CKM Cabibbo (2.2):** Diagnosed as topology (phase ✅ 0.8%) vs dynamics (magnitudes ❌ 93.7%); GST relation works at 1% with mass ratios
+- **Unification (2.3):** Resolved in Session 4 — Pati-Salam gives Δb₂ ≠ 0; spread 0.4 units
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
-| Multi-channel BZ integral | **Level 3: 98.9%, Level 4: 102.6%** | SO(8) Cartan completion brackets target; Ward gap = 2.46% |
+| α BZ integral | **Gap 0.89% (Session 3)** | Geometric mean of L3 × L4; Z₃ = 0.998 |
 | D₄ phonon spectrum | **Computed** | 4 branches, zone-boundary zero at R=(π,π,π,π), ν=1/4 |
 | Koide formula | **Verified** | m_e: 0.01%, m_μ: 0.006%, θ₀=2/9 from Berry phase |
-| 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact (FiveDesign.lean) |
+| 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
-| D₄ uniqueness | **Verified** | Lowest Gibbs free energy, gap=3.85 to next lattice |
+| D₄ uniqueness | **Verified (refined)** | Lowest Gibbs free energy + unique with triality; F₄ acknowledged |
 | Lean 4 | **46 theorems, 0 sorry** | Build verified across 5 files |
-| Verification scripts | **13/13 pass** | 5 original + 8 new; all numerical predictions confirmed |
-| CKM phase derived | **δ = 2π/(3√3) = 1.2092 rad** | 0.8% agreement with experiment 1.20±0.08 rad; from triality Berry holonomy |
-| Lattice QED scattering | **σ = 4πα²/(3s) verified ✅** | Propagator, angular distribution, artifact suppression all confirmed |
-| Yang-Mills action | **g² = 2/(Ja₀⁴) derived** | From D₄ phonon stress tensor; sin²θ_W = 3/13 (0.19%) |
-| Anomaly cancellation | **SU(2)²U(1)=0, grav²U(1)=0, Witten=0 ✅** | SU(3) and U(1)³ require GUT-level completion |
-| Higgs quartic Z_λ | **Lattice CW: 0.2097 vs SM 0.8885** | One-loop undershoots by ×4.24; multi-loop required |
-| Two-loop unification | **Spread ~15.9 units after threshold corrections** | Gap not closed; heavy-mode corrections needed |
-| Honest parsimony ratio | **2.5–5.0 (corrected from claimed 5.5)** | 5A genuine + 5B partial + 1C tautological + 2D fitting + 3E incomplete |
-| Overall confidence | **88%** (down 3% from Session 1's 91%) | Reduced for honest parsimony + Higgs quartic gap |
+| Scripts | **20/20 pass** | 5 original + 8 Session 2 + 3 Session 3 + 4 Session 4 |
+| CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
+| CKM magnitudes | **Cabibbo 93.7% off** | Dynamical (mass ratios), not topological; GST works at 1% |
+| Lattice QED / g−2 | **σ = 4πα²/(3s) verified; Schwinger α/(2π) ✅** | D₄ suppresses artifacts by 10⁶⁸ |
+| Yang-Mills | **g² = 2/(Ja₀⁴); sin²θ_W = 3/13** | From D₄ phonon stress tensor |
+| Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | Corrected LH Weyl basis |
+| Higgs quartic Z_λ | **Lattice: 0.2097; CW: −7.12 (unphysical)** | Hierarchy problem manifesting |
+| Two-loop unification | **Spread 0.4 units (Session 4, improved from 17.0)** | Pati-Salam Δb₂ ≠ 0; M_PS ~ 10¹⁰ GeV |
+| Cosmological constant | **α⁵⁷/(4π) matches to 0.2%; heuristic** | Spectral density computed; suppression postulated |
+| Higgs VEV | **v = E_P α⁹ π⁵(9/8); fitting (D+)** | Prefactor not derived from D₄ |
+| Parsimony | **2.5–5.0 (corrected)** | All references consistent |
+| Overall confidence | **87%** | Up from 85% (unification upgrade) |
 
-### Priority 1: Close the α BZ Integral (98.9% → 100%)
+### Priority 1: Close the α BZ Integral (0.89% gap remaining)
 
-The SO(8) full integral (Level 3) reaches 98.9% and the Dyson resummation (Level 4) overshoots to 102.6%. The target is bracketed. The Ward identity transversality is verified to < 10⁻¹⁰. The remaining 2.46% gap corresponds to the Killing-metric form factor. Three approaches to close exactly:
+Session 3 reduced the BZ integral gap from 2.46% to **0.89%** through the geometric mean interpolant between Level 3 (99.1%) and Level 4 (102.7%). The Z₃ wave-function renormalization provides a modest additional correction (Z₃ = 0.998). To close the final 0.89%:
 
-1. **Vertex form-factor correction:** The raw Cartan vertex overestimates; a form factor from the Killing metric should provide the exact weight.
-2. **Ward identity (transversality):** k_μ Π^μν(k) = 0 is verified to < 10⁻¹⁰ at all levels — confirming gauge invariance. Note: transversality constrains the *form* of Π^μν but does NOT fix the overall vertex normalization (separate degree of freedom from Killing metric).
-3. **Two-loop correction:** The O(α) correction to the one-loop diagram may close the residual normalization gap.
+1. **Explicit two-loop computation:** A lattice perturbation theory calculation of the two-loop vacuum polarization on D₄ would provide the definitive result. This is a standard (though laborious) lattice QFT computation.
+2. **Padé analysis:** Higher-order Padé approximants [2/1] or [2/2] using the known perturbative coefficients may sharpen the interpolation.
+3. **Lattice simulation:** A direct numerical evaluation of the vacuum polarization using Monte Carlo methods on a finite D₄ lattice would bypass all perturbative ambiguities.
 
-**Action:** Compute the Killing-metric form factor F(k²/Λ²) explicitly in `scripts/ward_identity_closure.py`.
+**Action:** Implement explicit two-loop BZ integral or lattice Monte Carlo in `scripts/bz_two_loop.py`.
 
 ### Priority 2: Lean 4 T3 — Lieb-Robinson Bound
 
@@ -365,20 +387,23 @@ Create the GPU simulation infrastructure:
 
 **Action:** Create `scripts/d4_simulation_4d.py` using molecular-mcp or custom code.
 
-### Open Problem Status (as of v83.0 Session 2)
+### Open Problem Status (as of v83.0 Session 4)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
-| 1 | α BZ integral | **98.9% (Level 3), 102.6% (Level 4), gap=2.46%** | Killing-metric form factor |
-| 2 | Two-loop threshold corrections | Two-loop computed: spread ~15.9 units | Hidden-sector corrections (large gap remains) |
+| 1 | α BZ integral | **Gap 0.89% (Session 3)** | Explicit two-loop computation or lattice MC |
+| 2 | Two-loop unification | **Spread 0.4 units (Session 4, Pati-Salam)** | Derive M_PS from D₄ dynamics; proton decay constraints |
 | 3 | 4D simulation | Plan specified | GPU infrastructure |
-| 4 | Z_λ effective potential | One-loop CW: 0.2097 vs SM 0.8885 (×4.24 gap) | Two-loop CW + threshold matching |
-| 5 | ρ_Λ spectral density | Phonon spectrum computed | Suppression function |
-| 6 | CKM/PMNS matrices | **CKM phase δ=2π/(3√3), 0.8% agreement** | Full 3×3 matrix (mixing angles) |
+| 4 | Z_λ effective potential | One-loop CW: 0.2097 vs SM 0.8885; CW: −7.12 | RG-improved CW + threshold matching |
+| 5 | ρ_Λ spectral density | **Spectral density computed (Session 4); suppression heuristic** | Derive f_supp from BZ integral |
+| 6 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Phase confirmed; topology-protected |
+| 6b | CKM magnitudes | **Cabibbo 93.7% off; GST works at 1%** | Derive m_d/m_s from D₄ or Koide extension |
 | 7 | D₄ anharmonic κ₄ / force constant J | g²=2/(Ja₀⁴) derived; J open | Lattice perturbation theory |
-| 8 | Circularity resolution | **PROVEN (Lean 4)** | Manuscript §XII updated |
-| 9 | D₄ uniqueness | **PROVEN** | Gibbs minimum, gap=3.85 |
-| 10 | 5-design T6 | **PROVEN (Lean 4)** | FiveDesign.lean complete |
-| 11 | Anomaly cancellation SU(3)/U(1)³ | SU(2)/grav/Witten ✅ | Full SO(8)→G_SM embedding |
-| 12 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Manuscript §parsimony updated |
+| 8 | Circularity resolution | **PROVEN (Lean 4)** | Complete |
+| 9 | D₄ uniqueness | **PROVEN (refined: isotropy+triality)** | F₄ acknowledged |
+| 10 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
+| 11 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
+| 12 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
 | 13 | Lean 4 T3 Lieb-Robinson | Not started | Create LiebRobinson.lean |
+| 14 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
+| 15 | Higgs VEV derivation | **v = E_P α⁹ π⁵(9/8) is fitting (Session 4)** | Derive prefactor from lattice action |

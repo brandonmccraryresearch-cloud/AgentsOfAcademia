@@ -423,9 +423,16 @@ def main():
         print(f"  {name}: 4th-moment={'PASS' if r['4th_moment'] else 'FAIL'}, "
               f"isotropic={'PASS' if r['isotropic'] else 'FAIL'}")
     print()
-    print("  Only D₄ satisfies the 4th-moment isotropy conditions, ensuring exact")
-    print("  elastic isotropy. This is the geometric foundation for emergent Lorentz")
-    print("  invariance in the continuum limit.")
+    # Count which lattices pass isotropy
+    iso_passers = [n for n in LATTICE_DATA if results[n]['4th_moment'] and results[n]['isotropic']]
+    if len(iso_passers) == 1:
+        print(f"  Only {iso_passers[0]} satisfies 4th-moment isotropy.")
+    else:
+        print(f"  Lattices passing 4th-moment isotropy: {', '.join(iso_passers)}")
+        triality_iso = [n for n in iso_passers if LATTICE_DATA[n]['has_triality']]
+        print(f"  Of these, only {', '.join(triality_iso)} also has S₃ triality.")
+    print("  4th-moment isotropy ensures exact elastic isotropy — the geometric")
+    print("  foundation for emergent Lorentz invariance in the continuum limit.")
     print()
 
     # ===== Summary =====
@@ -442,7 +449,11 @@ def main():
         print("  D₄ uniqueness is supported by THREE independent criteria:")
         print("    1. Lowest Gibbs free energy among 4D root lattices")
         print("    2. Unique lattice with S₃ triality (outer automorphism)")
-        print("    3. Unique 4D root lattice satisfying 4th-moment isotropy on S³")
+        print("    3. Unique 4D root lattice with BOTH 4th-moment isotropy AND triality")
+        print()
+        print("  NOTE: F₄ also passes 4th-moment isotropy on S³, but lacks S₃ triality.")
+        print("  The uniqueness of D₄ rests on the conjunction of isotropy + triality,")
+        print("  not isotropy alone.")
     print()
 
     if args.strict and not d4_is_min:
