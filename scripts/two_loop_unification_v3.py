@@ -52,13 +52,19 @@ def ps_beta_1loop():
     """
     One-loop Pati-Salam beta coefficients for (α₄, α₂L, α₂R).
 
-    SU(4): b₄ = -22/3 + (2/3)×n_g×(2×1/2 + 1/2) + scalar contributions
-    For n_g = 3 generations of (4,2,1) + (4̄,1,2):
-      b₄ = -22/3 + (2/3)×3×(2×1/2 + 1/2) = -22/3 + 3 = -13/3
-    SU(2)_L: b_{2L} = -22/3 + (2/3)×3×4×1/2 + ...
-    SU(2)_R: b_{2R} = same by L-R symmetry (before breaking)
+    Using b = -(11/3) C₂(G) + (2/3) Σ_f T(R_f) for Weyl fermions:
 
-    Using standard results for PS with 3 generations:
+    SU(4): C₂(SU(4)) = 4, so the gauge contribution is -44/3.
+    For n_g = 3 generations of (4,2,1) + (4̄,1,2):
+      each (4,2,1) contributes T(4) × d(2) = (1/2) × 2 = 1,
+      each (4̄,1,2) contributes T(4̄) × d(2) = (1/2) × 2 = 1.
+    Thus the fermion contribution is:
+      (2/3) × 3 × (1 + 1) = 4,
+    giving
+      b₄ = -44/3 + 4 = -32/3.
+
+    SU(2)_L: b_{2L} = -22/3 + (2/3)×3×T(2)×d(4) = -22/3 + 4 = -10/3
+    SU(2)_R: same by L-R symmetry (before breaking), b_{2R} = -10/3
     """
     # Standard Pati-Salam with 3 generations, no Higgs scalars beyond minimal
     # Fermion content: 3 × [(4,2,1) + (4̄,1,2)]
@@ -123,7 +129,14 @@ def run_sm_couplings_2loop(alpha_inv_0, mu_0, mu_f, thresholds=None,
     """
     Two-loop RG evolution of SM couplings (α₁⁻¹, α₂⁻¹, α₃⁻¹).
 
-    thresholds: list of (M_threshold, Δb_array) pairs
+    thresholds: list of (M_threshold, Δb_array) pairs.
+
+    NOTE: Threshold corrections are applied only to the 1-loop coefficients
+    b_eff, while the 2-loop matrix b2 remains the SM value at all scales.
+    This is a consistent leading-log approximation: threshold effects enter
+    at O(α) via b_eff, while the 2-loop SM matrix contributes at O(α²).
+    A fully regime-consistent 2-loop treatment would require PS-specific
+    2-loop coefficients above M_PS, which is beyond the scope of this scan.
     """
     if thresholds is None:
         thresholds = []
@@ -224,8 +237,9 @@ def lattice_matching_condition(alpha_inv_at_Mlat, sin2_tw_tree):
     gives a 1-parameter family of solutions. The additional constraint is
     that all three couplings emerge from a single lattice coupling g_lat.
 
-    Returns: the lattice coupling α_U⁻¹ that satisfies the matching, and
-    the predicted low-energy couplings.
+    Returns:
+        sin2_actual: sin²θ_W computed from SM running at M_lat
+        delta_sin2:  discrepancy from the tree-level lattice prediction
     """
     a1_inv, a2_inv, a3_inv = alpha_inv_at_Mlat
 
@@ -607,6 +621,7 @@ def main():
     # Scenario 5: Optimized — scan for best M_PS with all corrections
     best_total_spread = abs(spread_sm)
     best_scan_MPS = M_lat
+    best_scan_alphas = alpha_sm.copy()  # Initialize to SM baseline
     for log_MPS in np.linspace(10, 18.4, 200):
         M_test = 10**log_MPS
         th_test = [(M_test, delta_b_PS + lq_db), (M_lat * 0.9, shear_db)]

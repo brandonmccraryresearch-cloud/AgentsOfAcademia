@@ -46,17 +46,33 @@ def d4_roots():
 
 def lattice_propagator_inv_d4(q, m, a0=1.0):
     """
-    D₄ lattice propagator inverse.
-    D⁻¹(q) = (4/a₀²) Σ_μ sin²(q_μ a₀/2) + m²
+    D₄ lattice propagator inverse using the nearest-neighbor Laplacian
+    on the D₄ root lattice (coordination number z=24).
 
-    The D₄ lattice uses the standard Wilson-type propagator but
-    with the improved discretization from the 5-design property.
+    D⁻¹(q) = (1/a₀²) Σ_{δ ∈ D₄ roots} [1 - cos(q·δ a₀)] + m²
+
+    The D₄ lattice sums over all 24 nearest-neighbor vectors (the root
+    vectors ±eᵢ±eⱼ), not just the 8 hypercubic neighbors. This gives a
+    different discretization of ∇² than the Wilson action, and the 5-design
+    property of the D₄ roots ensures that the angular average of lattice
+    artifacts vanishes through O(a⁴), making the leading correction O(a⁶).
     """
-    return (4.0 / a0**2) * np.sum(np.sin(q * a0 / 2)**2) + m**2
+    roots = d4_roots()
+    result = 0.0
+    for delta in roots:
+        result += 1.0 - np.cos(np.dot(q, delta) * a0)
+    return result / a0**2 + m**2
 
 
 def lattice_propagator_inv_wilson(q, m, a0=1.0):
-    """Standard hypercubic Wilson lattice propagator."""
+    """
+    Standard hypercubic (Wilson) lattice propagator inverse.
+
+    D⁻¹(q) = (4/a₀²) Σ_μ sin²(q_μ a₀/2) + m²
+
+    Sums only over the 8 nearest-neighbor vectors (±eᵢ) of the Z⁴ lattice.
+    Leading lattice artifact is O(a²).
+    """
     return (4.0 / a0**2) * np.sum(np.sin(q * a0 / 2)**2) + m**2
 
 
