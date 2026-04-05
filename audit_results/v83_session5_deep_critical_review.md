@@ -31,7 +31,7 @@ The framework presents a bold proposal: that all Standard Model physics emerges 
 | **Parsimony** | **C+** | Corrected | Honest ratio: 2.5–5.0 (5 genuine + 5 partial from 2–4 effective params) |
 | **Self-honesty** | **A** | Excellent | Defect inventory is remarkably complete and candid |
 
-**Overall Assessment:** 40–50% confidence that the geometric kernel (D₄ + triality + 5-design → α, sin²θ_W, 3 generations) will survive rigorous lattice QFT implementation. The framework is best described as a **promising geometric ansatz** with a compelling structural core surrounded by layers of incomplete derivations and numerical coincidences that require resolution.
+**Overall Assessment:** 40–50% confidence that the geometric kernel (D₄ + triality + 5-design → α, sin²θ_W, 3 generations) will survive rigorous lattice QFT implementation. This represents a substantial downgrade from the manuscript's self-assessed 87% confidence, driven by four principal findings: (1) the BZ integral for α remains incomplete at the 0.89% level — the single most important calculation is unfinished; (2) the Higgs VEV exponents (9, 5, 9/8) are reverse-engineered from the known answer rather than derived from the lattice action; (3) no lattice QFT construction exists — zero scattering amplitudes have been computed on D₄; and (4) spacetime dimensionality (d=4) is an input assumption, not a prediction. The framework is best described as a **promising geometric ansatz** with a compelling structural core surrounded by layers of incomplete derivations and numerical coincidences that require resolution.
 
 ---
 
@@ -85,7 +85,7 @@ The framework presents a bold proposal: that all Standard Model physics emerges 
      2. Two-loop: Π₂(q²) includes vertex corrections and self-energy insertions
      3. Evaluate at q² = 0 (Thomson limit) and show the result equals 1/(28 − π/14)
    - *Technical Specification:* Create `scripts/bz_two_loop.py` implementing the lattice Feynman diagrams for the D₄ photon self-energy. Use adaptive integration (scipy.integrate.nquad) over the 4D BZ with the exact D₄ lattice propagator G(k) = [Σ_j (1 − cos(k·δ_j))]⁻¹.
-   - *Acceptance Criterion:* The computed Π(0)/(4π) must equal 1/(28 − π/14) to within 0.1% WITHOUT fitting.
+   - *Acceptance Criterion:* The computed Π(0)/(4π) must equal 1/(28 − π/14) to within 0.1% WITHOUT fitting. "Without fitting" means: (a) no interpolation between levels or ansatz combining Level 3 and Level 4 results, (b) the result must come from a single, well-defined two-loop calculation with all counterterms determined by the lattice symmetries, and (c) the only inputs are the D₄ root vectors, the lattice spacing, and the coupling constant. The current geometric-mean interpolant, while physically motivated, constitutes a fit and does not satisfy this criterion.
    - *Priority:* CRITICAL. This is the single most important calculation in the entire framework. If this integral closes, the α formula transitions from "inspired numerology" to "lattice QFT prediction."
 
 5. **The Higgs VEV exponents (9, 5, 9/8) are fitted, not derived.** The formula v = E_P α⁹ π⁵ (9/8) achieves 0.17% agreement. But the mode-counting argument for N_eff = 4 + 3 + 2 = 9 relies on: (a) each channel contributes exactly one power of α (universality assumption), (b) the π⁵ arises from a 5-torus phase-space volume with a non-standard normalization (π per dimension instead of 2π), and (c) the 9/8 factor is N²_gen/dim(8_s) — a ratio that is numerically convenient but whose physical derivation is incomplete.
@@ -153,7 +153,7 @@ The framework presents a bold proposal: that all Standard Model physics emerges 
 12. m_h from Z_λ — reverse-engineered
 13. Lepton masses — use θ₀ + M_scale inputs
 
-**Honest parsimony ratio:** 7 genuine predictions / 2–4 effective parameters = **1.75–3.5**
+**Honest parsimony ratio:** 7 genuine predictions / 2–4 effective parameters = **1.75–3.5** (excluding partially genuine items 8–9). If the partially genuine predictions are included (assuming the BZ integral and BH entropy calculations are eventually completed), the ratio becomes 9/2–4 = **2.25–4.5**. The lower bound of 1.75 represents the defensible minimum; the upper bound of 4.5 is aspirational and contingent on closing the computational gaps.
 
 This is respectable but not extraordinary. The Standard Model itself has ~19 free parameters for ~25 observed quantities (ratio ~1.3).
 
@@ -226,7 +226,7 @@ This is respectable but not extraordinary. The Standard Model itself has ~19 fre
 - 4 (spacetime): From embedding dimension = number of acoustic phonon branches. Assumed input.
 
 **Questionable integers (may be numerological):**
-- 137 = 128 + 8 + 1: The decomposition into Spin(16) half-spinor + SO(8) vector + scalar is suggestive but the connection to D₈ (not D₄) is not derived. Why does Spin(16) appear in a D₄ theory?
+- 137 = 128 + 8 + 1: The decomposition into Spin(16) half-spinor + SO(8) vector + scalar is suggestive but the connection to D₈ (not D₄) is not derived. Spin(16) is the double cover of SO(16) which is the automorphism group of the D₈ root lattice — this is ontologically inconsistent with a theory built on D₄. Why does D₈ representation theory appear in a D₄ framework? This is a potential Pillar 1 violation (ontological clarity) that deserves explicit resolution.
 - 9 = 4 + 3 + 2: The mixing channels (N_mixing = 2) count "two independent Weyl-invariant contractions of the cubic anharmonicity tensor." This should be verifiable by explicit tensor decomposition.
 - 57 = 3 × 19: The claim that each shear mode contributes one factor of α to vacuum energy suppression has no supporting calculation.
 
@@ -351,7 +351,7 @@ The 46 theorems verify:
 **Experimental:** 137.0359991 (CODATA 2018)
 **Agreement:** 27 ppb
 
-**Critique:** The formula is *numerologically perfect* — it uses exactly three numbers (137, 28, 14) that are directly related to D₄ representation theory (137=128+8+1, 28=dim SO(8), 14=dim G₂). The BZ integral computation brackets the target (98.9%–102.6%). The remaining 0.89% gap is small but physically significant — it's the difference between "derived" and "fitted."
+**Critique:** The formula is *numerologically perfect* — it uses exactly three numbers (137, 28, 14) that are directly related to D₄ representation theory (137=128+8+1, 28=dim SO(8), 14=dim G₂). The BZ integral computation brackets the target (98.9%–102.6%). The remaining 0.89% gap is small but physically significant — it's the difference between "derived" and "fitted." The probability that three independently derived dimensionless factors (π⁵, 9/8, and the exponent 9) would conspire to produce sub-percent agreement without tuning is exceedingly small, which suggests either a deep structural mechanism or careful reverse-engineering.
 
 **Resolution path:** Task 2.1 (two-loop BZ integral).
 
@@ -367,7 +367,7 @@ The 46 theorems verify:
 
 **Verified numerically:** 0.23077 vs 0.23122 (0.19% agreement)
 
-**Critique:** The counting argument (3 right-handed U(1)_Y singlets out of 13 total EW modes per generation) is elegant but the identification of "13 total EW modes" needs more rigorous definition. In the SM, each generation has 15 Weyl fermions (not 13). The manuscript claims 13 = 15 − 2 (subtracting the two right-handed neutrinos that are SM singlets), but right-handed neutrinos are not part of the minimal SM.
+**Critique:** The counting argument (3 right-handed U(1)_Y singlets out of 13 total EW modes per generation) is elegant but the identification of "13 total EW modes" needs more rigorous definition. In the minimal SM, each generation has 15 Weyl fermions (not 13). The manuscript claims 13 = 15 − 2 (subtracting the two right-handed neutrinos that are SM singlets), but right-handed neutrinos are not part of the minimal SM — if the framework requires right-handed neutrinos, it is making a BSM prediction that should be stated explicitly. Alternatively, if the "13 modes" counting has a different justification (e.g., 13 EW-interacting modes = 15 minus 2 color-singlet neutrino modes), this justification must be articulated clearly. The current text leaves this ambiguous, which undermines the prediction's credibility.
 
 **Resolution path:** Task 4.1 (symmetry breaking cascade) will clarify the correct mode counting.
 
