@@ -640,7 +640,7 @@ def main():
     print(f"  Wilson Laplacian:  D_W(k) = 4 Σ_μ sin²(k_μ/2)")
     print(f"  D₄ Laplacian:     D₄(k)  = Σ_δ [1 − cos(k·δ)]")
     print()
-    print(f"  At small k: D₄/D_W → 6.0 (from 12|k|² / 2|k|²)")
+    print(f"  At small k: D₄/D_W → 6.0 (from D₄ ≈ 6|k|² and D_W ≈ |k|²)")
     print(f"  Monte Carlo: ⟨D₄/D_W⟩ = {np.mean(D4_test[DW_test > 0.1] / DW_test[DW_test > 0.1]):.4f}")
     print()
     print(f"  D₄ Laplacian has a ZERO at k = (π,π,π,π) [lattice doubler]:")
