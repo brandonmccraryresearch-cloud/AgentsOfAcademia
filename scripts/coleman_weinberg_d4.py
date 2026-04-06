@@ -131,8 +131,8 @@ def find_CW_minimum(kappa_4, lambda_geom, Lambda_UV, n_hidden=20):
     Setting dV_eff/dσ = 0 and dividing by σ³:
         λ_geom + (n_hidden κ₄²)/(16π²) [ln(v²/Λ²) - 1] = 0
 
-    Solving for v:
-        v = Λ × exp((8π² λ_geom)/(n_hidden κ₄²) + 1/2)^(1/2)
+    Solving for v (note: ln(v²/Λ²) < 0 since v << Λ, giving a negative sign):
+        v = Λ × exp[(-16π² λ_geom/(n κ₄²) + 1) / 4]
 
     Returns: VEV in GeV, diagnostics
     """

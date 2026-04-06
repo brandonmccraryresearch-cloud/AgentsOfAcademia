@@ -135,7 +135,7 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
     # setting dV/dθ = 0 with sin(3θ) ≠ 0 gives:
     #   sin²(3θ₀) = (27λ - 3)/(36λ)
     #
-    # For θ₀ = 2/9: sin(2/3) ≈ 0.6184, so sin²(2/3) ≈ 0.3824.
+    # For θ₀ = 2/9: sin(3 × 2/9) = sin(2/3 rad) ≈ 0.6184, so sin²(2/3 rad) ≈ 0.3824.
     # Solving: λ = 3/(27 - 36 × sin²(2/3)) ≈ 0.2267.
     #
     # This value is close to α_s(M_Z) ≈ 0.118 × 2 ≈ 0.236, suggesting

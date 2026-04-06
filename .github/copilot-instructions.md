@@ -279,7 +279,7 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 ### Current State (v83.0, 2026-04-06 — Session 7: Tier 2 Implementation)
 
-The manuscript is at v83.0. Sessions 6–7 executed the deep critical review's Tier 1 CRITICAL and Tier 2 HIGH-priority tasks respectively. 28 scripts total, all pass.
+The manuscript is at v83.0. Sessions 6–7 executed the deep critical review's Tier 1 CRITICAL and Tier 2 HIGH-priority tasks respectively. 27 scripts total, all pass.
 
 **Session 7 results (Tier 2 HIGH):**
 - **θ₀ derivation (Task 4):** Koide phase θ₀ = 2/9 derived from SO(3)/S₃ geometry via Gauss-Bonnet holonomy, RG fixed-point, and eigenvalue spectrum — 3 independent methods, all exact; grade B+→A−

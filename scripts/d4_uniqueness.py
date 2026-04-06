@@ -538,7 +538,8 @@ def run_cross_dimensional_analysis():
             for name, res in all_results[d].items():
                 sorted_lattices.append((d, name, res['G']))
         sorted_lattices.sort(key=lambda x: x[2])
-        if len(sorted_lattices) >= 2:
+        if (len(sorted_lattices) >= 2
+                and sorted_lattices[0] == (4, 'D_4', d4_G)):
             gap = sorted_lattices[1][2] - sorted_lattices[0][2]
             print(f"    Gap to next: {gap:.3f} "
                   f"({sorted_lattices[1][1]} in d={sorted_lattices[1][0]})")
