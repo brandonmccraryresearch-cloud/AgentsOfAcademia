@@ -8,7 +8,8 @@
 #
 # This is the FIRST action that fires on any agent session start.
 #
-# Trigger: workflow_dispatch (manual), push to main, schedule (weekly)
+# Trigger: workflow_dispatch (manual), pull_request (opened/synchronize/reopened
+#          on any branch), push to any branch, schedule (weekly)
 # ==============================================================================
 
 name: "Session Initialization — Full Stack Bootstrap"
@@ -31,15 +32,20 @@ on:
         required: false
         type: boolean
         default: true
+  # Fire on every PR event — new session (opened) or existing session (synchronize/reopened)
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # Fire on any branch push so direct-commit agent sessions are also initialized
   push:
-    branches: [main]
-    paths:
-      - 'lean4/**'
-      - 'scripts/**'
-      - '.github/workflows/session_init.yml'
+    branches: ['**']
   schedule:
     # Run weekly to catch dependency updates
     - cron: '0 6 * * 1'
+
+# Prevent duplicate concurrent runs on the same ref; cancel superseded runs
+concurrency:
+  group: session-init-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
