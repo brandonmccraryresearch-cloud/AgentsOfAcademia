@@ -327,10 +327,20 @@ def main():
     parser.add_argument('--strict', action='store_true',
                         help='Exit non-zero if any test fails')
     parser.add_argument('--grid', type=int, default=32,
-                        help='Grid size N (creates N³ grid, default: 32)')
+                        help='Grid size N (creates N³ grid, default: 32; min: 16)')
     parser.add_argument('--steps', type=int, default=1500,
                         help='Number of timesteps (default: 1500)')
     args = parser.parse_args()
+
+    if args.grid < 16:
+        print(f"ERROR: --grid must be >= 16 (got {args.grid}). "
+              f"Smaller grids produce meaningless winding and gradient measurements.",
+              file=sys.stderr)
+        sys.exit(1)
+    if args.steps < 100:
+        print(f"ERROR: --steps must be >= 100 (got {args.steps}).",
+              file=sys.stderr)
+        sys.exit(1)
 
     results = []
     all_pass = True
@@ -504,7 +514,13 @@ def main():
     # topological analog of particle-antiparticle annihilation — the ring is
     # a virtual pair that decays to vacuum. This is CORRECT physics:
     # only infinite lines (or topologically protected loops) are stable.
-    ring_shrinks = ring_energy <= 1.0  # Ring should decay toward vacuum
+    # Pass condition: ring energy decreases by at least 10% from initial value,
+    # demonstrating shrinkage toward vacuum rather than relying on an absolute
+    # energy cutoff that would depend on grid size and coupling constants.
+    E_ring_init_val, _, _ = compute_energy_3d(theta_ring, J, kappa, neighbors)
+    ring_initial_excess = max(E_ring_init_val - E_ring_vac, 1e-6)
+    ring_energy_decrease_frac = (ring_initial_excess - ring_energy) / ring_initial_excess
+    ring_shrinks = ring_energy_decrease_frac >= 0.10  # ≥10% energy decrease = shrinking
     pass_ring = ring_shrinks
     results.append(('4.1 Ring shrinks (pair annihilation)', pass_ring, ring_energy))
     if not pass_ring:
@@ -515,10 +531,11 @@ def main():
     if lt_final > 0:
         expected_ring_E = 2 * np.pi * ring_radius * lt_final
         print(f"  Expected if stable (2πR × τ_line): {expected_ring_E:.2f}")
-    if ring_energy < 1.0:
-        print(f"  Ring has ANNIHILATED → correct pair annihilation physics")
+    print(f"  Ring energy decrease: {ring_energy_decrease_frac * 100:.1f}% from initial")
+    if ring_energy_decrease_frac >= 0.10:
+        print(f"  Ring is SHRINKING (≥10% decrease) → correct pair annihilation physics")
     else:
-        print(f"  Ring is STABLE → check if topologically protected")
+        print(f"  Ring energy has not decreased significantly → check dynamics")
     print(f"  [{'PASS' if pass_ring else 'FAIL'}] Ring decays (unprotected pair annihilation)")
 
     # Test ring energy stability

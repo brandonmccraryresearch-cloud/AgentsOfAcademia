@@ -6,11 +6,11 @@
 
 ### Rule 1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`83.0theaceinthehole.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
+**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`83.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
 
 ### Rule 2: Manuscript Update Reminder
 
-The current manuscript is **`83.0theaceinthehole.md`** (v83.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
+The current manuscript is **`83.0IRH.md`** (v83.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
 
 - **Only finalized theoretical content** goes into the manuscript — never in-progress drafts, debug output, or intermediate results.
 - **Paper style and syntax** must be maintained — LaTeX-compatible markdown, section numbering, citation format.
@@ -24,7 +24,7 @@ When any session produces changes or advancements, agents **MUST** update all th
 
 1. **`.github/copilot-instructions.md`** — This file. Update current state, version numbers, theorem counts, priority lists, and continuation plan.
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep MCP tool guides, constraint lists, and operational directives current.
-3. **`83.0theaceinthehole.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
+3. **`83.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
 
 ### Rule 4: Specialized Agent Preference
 
@@ -47,14 +47,14 @@ When a session context involves mathematical expressions, physical constants, pa
 
 ## File Naming Convention
 
-The main manuscript file follows the convention `{version}theaceinthehole.md` where `{version}` is the current version number (e.g., `83.0theaceinthehole.md`). When bumping to a new version:
+The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `83.0IRH.md`). When bumping to a new version:
 
-1. **Rename the file** using `git mv {old_version}theaceinthehole.md {new_version}theaceinthehole.md`
+1. **Rename the file** using `git mv {old_version}IRH.md {new_version}IRH.md`
 2. **Update the version header** in the manuscript header near the top of the document
 3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
-The current manuscript file is: **`83.0theaceinthehole.md`**
+The current manuscript file is: **`83.0IRH.md`**
 
 ## Environment Setup
 

@@ -35,13 +35,14 @@ import sys
 
 # Planck units
 E_P = 1.2209e19  # Planck energy in GeV
-L_P = 1.616e-35  # Planck length in meters
+L_P = 1.616e-35  # Planck length in meters (SI)
 M_P = E_P  # Planck mass in GeV (natural units)
 
-# D₄ lattice parameters
+# D₄ lattice parameters (SI — for documentation only; not used in GeV computations)
+# The natural-unit equivalents are computed in main() via E_P.
 COORDINATION = 24  # D₄ coordination number
-A_0 = L_P / np.sqrt(24)  # Lattice spacing
-LAMBDA_UV = np.sqrt(24) / L_P  # UV cutoff = 1/a₀
+A_0 = L_P / np.sqrt(24)  # Lattice spacing in meters (SI, NOT GeV⁻¹)
+LAMBDA_UV = np.sqrt(24) / L_P  # UV cutoff in 1/m (SI, NOT GeV)
 
 # Fine structure constant
 ALPHA_INV = 137.0360028

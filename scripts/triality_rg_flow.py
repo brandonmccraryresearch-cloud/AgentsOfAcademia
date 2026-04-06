@@ -109,13 +109,13 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
     3. The Berry curvature: adds a geometric drift term
 
     The effective potential on the triality orbifold is:
-        V_eff(θ) = -J_eff [cos(3θ) + λ · cos(9θ)]
+        V(θ) = -cos(3θ) + λ · cos(9θ)
 
     where the cos(9θ) term represents the next harmonic allowed by S₃ symmetry,
     and λ is determined by the D₄ lattice geometry.
 
     The fixed point satisfies dV/dθ = 0:
-        3 sin(3θ) + 9λ sin(9θ) = 0
+        3 sin(3θ) - 9λ sin(9θ) = 0
 
     For the D₄ lattice, λ is determined by requiring the fixed point to
     coincide with the Berry phase angle θ₀ = 2/9 (consistency condition).
@@ -258,8 +258,12 @@ def triality_eigenvalue_spectrum():
     transposition_eigenangles_sorted = np.sort(transposition_eigenangles)
 
     # Construct an actual order-3 triality generator C.
-    # This 3-cycle acts on the first three basis vectors and fixes the fourth:
-    # e1 -> e2 -> e3 -> e1, e4 -> e4
+    # IMPORTANT: This is a generic basis 3-cycle (e1→e2→e3→e1, e4 fixed),
+    # NOT derived from the D₄ triality automorphism used in
+    # symmetry_breaking_cascade.py. The purpose is to demonstrate that any
+    # order-3 matrix has eigenangles 0, 2π/3, 4π/3, and to extract the
+    # non-trivial Z₃ eigenangle for the Berry phase calculation. This check
+    # is illustrative/generic rather than a D₄-specific computation.
     C = np.array([
         [0.0, 1.0, 0.0, 0.0],
         [0.0, 0.0, 1.0, 0.0],

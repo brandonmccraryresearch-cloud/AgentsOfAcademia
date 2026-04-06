@@ -456,7 +456,14 @@ def cross_dim_gibbs_energy(name, data, N_mc=5000, seed=42):
     if n_roots == 0:
         return float('inf'), 0, 0, 0
 
-    # Phonon energy: Monte Carlo BZ average
+    # Phonon energy: Monte Carlo BZ average using a uniform torus proxy.
+    # NOTE: k is sampled uniformly on [-π,π]^d for all lattice types, even
+    # when the true BZ shape differs from a hypercube (e.g., for A_d or B_d
+    # whose reciprocal lattices are not Z^d). This makes the phonon energy
+    # values across different lattice types not strictly BZ-comparable; they
+    # should be interpreted as heuristic 'uniform torus' proxies. A rigorous
+    # comparison would require constructing the reciprocal primitive vectors
+    # and sampling over the correct BZ for each lattice.
     rng = np.random.RandomState(seed)
     k_samples = rng.uniform(-np.pi, np.pi, (N_mc, d))
 

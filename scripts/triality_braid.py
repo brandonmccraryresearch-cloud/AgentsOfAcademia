@@ -186,10 +186,16 @@ def main():
     parser.add_argument('--strict', action='store_true',
                         help='Exit non-zero if any test fails')
     parser.add_argument('--grid', type=int, default=64,
-                        help='Grid size (default: 64)')
+                        help='Grid size (default: 64; min: 16)')
     parser.add_argument('--steps', type=int, default=2000,
                         help='Number of timesteps (default: 2000)')
     args = parser.parse_args()
+
+    if args.grid < 16:
+        print(f"ERROR: --grid must be >= 16 (got {args.grid}). "
+              f"Smaller grids produce meaningless winding and gradient measurements.",
+              file=sys.stderr)
+        sys.exit(1)
 
     results = []
     all_pass = True

@@ -403,7 +403,8 @@ def main():
     )
     parser.add_argument(
         "--strict", action="store_true",
-        help="CI mode: still exit 0 (two-loop is exploratory)"
+        help="CI mode: exit non-zero if V₃ is not zero, root properties fail, "
+             "or the two-loop correction does not reduce the gap"
     )
     args = parser.parse_args()
 
@@ -511,19 +512,25 @@ def main():
     print("-" * 60)
 
     SE_vals = []
+    frac_vals = []
     for s in range(n_seeds):
         seed = s * 251 + 13
         I_SE, I_SE_err, frac = two_loop_self_energy(N, roots, seed)
         SE_vals.append(I_SE)
+        frac_vals.append(frac)
 
     I_SE_mean = np.mean(SE_vals)
     I_SE_err_combined = np.std(SE_vals) / np.sqrt(n_seeds)
-    frac_mean = frac  # last value, approximately constant
+    frac_mean = np.mean(frac_vals)
+    frac_std = np.std(frac_vals)
 
     print(f"  I_SE = ∫∫ V₂²/(D_k² D_l) d⁸/(2π)⁸")
     print(f"       = {I_SE_mean:.8f} ± {I_SE_err_combined:.8f}")
     print(f"  Relative error: {I_SE_err_combined / I_SE_mean * 100:.2f}%")
-    print(f"  IR acceptance:  {frac_mean * 100:.2f}%")
+    if n_seeds > 1:
+        print(f"  IR acceptance:  {frac_mean * 100:.2f}% ± {frac_std * 100:.2f}%")
+    else:
+        print(f"  IR acceptance:  {frac_mean * 100:.2f}%")
     print(f"  I_SE / Π_L3    = {I_SE_mean / Pi_L3:.6f}")
     print()
 
@@ -731,6 +738,22 @@ def main():
         print(f"  provides a {gap_improvement:.0f}% reduction of the one-loop gap.")
         print(f"  Further corrections (three-loop, non-perturbative, lattice MC)")
         print(f"  are needed to close the remaining {best_gap:.2f}% gap.")
+
+    # Determine exit code for --strict mode
+    strict_failures = []
+    if not ok:
+        strict_failures.append("D₄ root properties failed")
+    if not v3_zero:
+        strict_failures.append("V₃ ≢ 0 (centrosymmetry check failed)")
+    if verdict == "NO IMPROVEMENT":
+        strict_failures.append("Two-loop correction does not reduce the gap")
+
+    if args.strict and strict_failures:
+        print()
+        print("STRICT MODE FAILURES:")
+        for f in strict_failures:
+            print(f"  - {f}")
+        return 1
 
     return 0
 
