@@ -309,6 +309,243 @@ def gibbs_energy(name, roots, phonon_E, data):
     return G, E_elastic, E_ARO, S_config
 
 
+# ==================== Cross-Dimensional Root Systems (d=2–8) ====================
+
+def roots_A(d):
+    """A_d root system: e_i - e_j in R^{d+1}, projected to d-dim hyperplane."""
+    roots = []
+    for i in range(d + 1):
+        for j in range(d + 1):
+            if i != j:
+                v = np.zeros(d + 1)
+                v[i] = 1
+                v[j] = -1
+                roots.append(v)
+    roots = np.array(roots)
+    # Project onto d-dim hyperplane Σx_i = 0
+    spanning = []
+    for i in range(d):
+        v = np.zeros(d + 1)
+        v[i] = 1
+        v[i + 1] = -1
+        spanning.append(v)
+    spanning = np.array(spanning, dtype=float)
+    if len(spanning) == 0:
+        return np.zeros((0, d))
+    q, _ = np.linalg.qr(spanning.T)
+    basis = q.T[:d]
+    projected = roots @ basis.T
+    # Remove duplicates
+    unique = []
+    for p in projected:
+        if not any(np.allclose(p, u, atol=1e-10) for u in unique):
+            unique.append(p)
+    return np.array(unique)
+
+
+def roots_D(d):
+    """D_d root system: ±e_i ± e_j for i<j in R^d. 2d(d-1) roots."""
+    if d < 2:
+        return np.zeros((0, max(d, 1)))
+    roots = []
+    for i in range(d):
+        for j in range(i + 1, d):
+            for si in [1, -1]:
+                for sj in [1, -1]:
+                    v = np.zeros(d)
+                    v[i] = si
+                    v[j] = sj
+                    roots.append(v)
+    return np.array(roots)
+
+
+def roots_B(d):
+    """B_d root system: ±e_i ± e_j (i<j) plus ±e_i. 2d² roots."""
+    roots = list(roots_D(d))
+    for i in range(d):
+        for s in [1, -1]:
+            v = np.zeros(d)
+            v[i] = s
+            roots.append(v)
+    return np.array(roots)
+
+
+# Cross-dimensional lattice database
+# For each dimension d=2..8, list the most important D_d root lattice
+# along with competitors, with their properties.
+CROSS_DIM_DATA = {}
+
+
+def build_cross_dim_data():
+    """Build the cross-dimensional lattice comparison database."""
+    global CROSS_DIM_DATA
+    CROSS_DIM_DATA = {}
+
+    for d in range(2, 9):
+        lattices = {}
+
+        # D_d lattice (always present for d >= 2)
+        D_roots = roots_D(d)
+        # Outer automorphism of D_d:
+        # d=2: D₂ ≅ A₁ × A₁, Out = Z₂, order 2
+        # d=3: D₃ ≅ A₃, Out = Z₂, order 2
+        # d=4: D₄, Out = S₃, order 6  ← UNIQUE TRIALITY
+        # d≥5: D_d, Out = Z₂, order 2
+        if d == 2:
+            out_order = 2
+        elif d == 3:
+            out_order = 2
+        elif d == 4:
+            out_order = 6  # S₃ triality
+        else:
+            out_order = 2
+
+        # Weyl group order: |W(D_d)| = 2^{d-1} × d!
+        import math
+        weyl_D = 2**(d - 1) * math.factorial(d)
+
+        has_triality = (d == 4)
+
+        lattices[f'D_{d}'] = {
+            'roots': D_roots,
+            'n_roots': len(D_roots),
+            'weyl_order': weyl_D,
+            'outer_aut_order': out_order,
+            'has_triality': has_triality,
+            'dimension': d,
+        }
+
+        # A_d lattice (competitor)
+        A_roots = roots_A(d)
+        weyl_A = math.factorial(d + 1)
+        lattices[f'A_{d}'] = {
+            'roots': A_roots,
+            'n_roots': len(A_roots),
+            'weyl_order': weyl_A,
+            'outer_aut_order': 2,  # Z₂ for all A_d
+            'has_triality': False,
+            'dimension': d,
+        }
+
+        # B_d lattice (competitor, d >= 2)
+        B_roots = roots_B(d)
+        weyl_B = 2**d * math.factorial(d)
+        lattices[f'B_{d}'] = {
+            'roots': B_roots,
+            'n_roots': len(B_roots),
+            'weyl_order': weyl_B,
+            'outer_aut_order': 1,
+            'has_triality': False,
+            'dimension': d,
+        }
+
+        CROSS_DIM_DATA[d] = lattices
+
+
+def cross_dim_gibbs_energy(name, data, N_mc=5000, seed=42):
+    """
+    Compute Gibbs energy for a d-dimensional root lattice.
+    Uses the same energy functional as the 4D case.
+    """
+    roots = data['roots']
+    d = data['dimension']
+    n_roots = data['n_roots']
+    outer = data['outer_aut_order']
+    W = data['weyl_order']
+
+    if n_roots == 0:
+        return float('inf'), 0, 0, 0
+
+    # Phonon energy: Monte Carlo BZ average
+    rng = np.random.RandomState(seed)
+    k_samples = rng.uniform(-np.pi, np.pi, (N_mc, d))
+
+    energies = []
+    for k in k_samples:
+        D_mat = np.zeros((d, d))
+        for delta in roots:
+            norm_sq = np.dot(delta, delta)
+            if norm_sq < 1e-12:
+                continue
+            outer_prod = np.outer(delta, delta) / norm_sq
+            D_mat += (1 - np.cos(np.dot(k, delta))) * outer_prod
+        eigs = np.linalg.eigvalsh(D_mat)
+        energies.append(np.sum(np.sqrt(np.maximum(eigs, 0))))
+
+    E_phonon = np.mean(energies)
+    E_ARO = outer
+    S_config = np.log(W)
+    G = E_phonon - E_ARO - S_config
+
+    return G, E_phonon, E_ARO, S_config
+
+
+def run_cross_dimensional_analysis():
+    """
+    Run the cross-dimensional Gibbs energy analysis for d=2..8.
+    Returns dict of results and whether D₄ is the global minimum.
+    """
+    build_cross_dim_data()
+
+    print("\n" + "=" * 72)
+    print("CROSS-DIMENSIONAL ANALYSIS: D_d OPTIMALITY (d=2–8)")
+    print("=" * 72)
+
+    all_results = {}
+    for d in range(2, 9):
+        lattices = CROSS_DIM_DATA[d]
+        print(f"\n  --- Dimension d={d} ---")
+        d_results = {}
+        for name, data in lattices.items():
+            G, E_ph, E_ARO, S = cross_dim_gibbs_energy(name, data)
+            d_results[name] = {
+                'G': G, 'E_phonon': E_ph, 'E_ARO': E_ARO, 'S_config': S,
+                'n_roots': data['n_roots'],
+                'has_triality': data['has_triality'],
+                'outer_aut': data['outer_aut_order'],
+            }
+            triality_mark = " ★ TRIALITY" if data['has_triality'] else ""
+            print(f"    {name:5s}: G={G:8.3f}  (E_ph={E_ph:.3f}, "
+                  f"E_ARO={E_ARO}, S={S:.3f}, z={data['n_roots']}){triality_mark}")
+
+        # Find minimum
+        winner = min(d_results, key=lambda n: d_results[n]['G'])
+        print(f"    → Minimum: {winner} (G={d_results[winner]['G']:.3f})")
+        all_results[d] = d_results
+
+    # Global analysis: find the single lattice with lowest G across all dimensions
+    print(f"\n  {'─'*60}")
+    print("  GLOBAL COMPARISON:")
+    global_min_G = float('inf')
+    global_winner = None
+    for d in range(2, 9):
+        for name, res in all_results[d].items():
+            if res['G'] < global_min_G:
+                global_min_G = res['G']
+                global_winner = (d, name)
+
+    d4_G = all_results[4].get('D_4', {}).get('G', float('inf'))
+    print(f"    Global minimum: d={global_winner[0]}, {global_winner[1]} "
+          f"(G={global_min_G:.3f})")
+    print(f"    D₄ (d=4): G={d4_G:.3f}")
+    d4_is_global_min = (global_winner == (4, 'D_4'))
+    print(f"    D₄ is global minimum: {'YES' if d4_is_global_min else 'NO'}")
+
+    if d4_is_global_min:
+        # Find the gap to the next best
+        sorted_lattices = []
+        for d in range(2, 9):
+            for name, res in all_results[d].items():
+                sorted_lattices.append((d, name, res['G']))
+        sorted_lattices.sort(key=lambda x: x[2])
+        if len(sorted_lattices) >= 2:
+            gap = sorted_lattices[1][2] - sorted_lattices[0][2]
+            print(f"    Gap to next: {gap:.3f} "
+                  f"({sorted_lattices[1][1]} in d={sorted_lattices[1][0]})")
+
+    return all_results, d4_is_global_min
+
+
 # ==================== Main ====================
 
 def main():
@@ -455,6 +692,18 @@ def main():
         print("  The uniqueness of D₄ rests on the conjunction of isotropy + triality,")
         print("  not isotropy alone.")
     print()
+
+    # ===== Cross-dimensional analysis (Session 7, Tier 2, Task 7) =====
+    cross_results, d4_global = run_cross_dimensional_analysis()
+
+    print()
+    if d4_global:
+        print("  D₄ is the GLOBAL MINIMUM across all dimensions d=2–8.")
+        print("  This supports the claim that D₄ is not merely optimal in 4D")
+        print("  but is optimal across ALL dimensions — a much stronger statement.")
+    else:
+        print("  WARNING: D₄ is NOT the global minimum across dimensions.")
+        print("  The framework's claim of D₄ uniqueness may need qualification.")
 
     if args.strict and not d4_is_min:
         print(f"[STRICT] D₄ is NOT the energy minimum — {winner} is lower.",
