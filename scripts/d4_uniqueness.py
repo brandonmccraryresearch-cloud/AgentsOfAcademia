@@ -556,6 +556,8 @@ def main():
                         help="Monte Carlo samples for BZ integration (default: 10000)")
     parser.add_argument("--strict", action="store_true",
                         help="CI mode: exit non-zero if D₄ is not the energy minimum")
+    parser.add_argument("--cross-dim", action="store_true",
+                        help="Run cross-dimensional analysis (d=2-8). Skipped by default in CI.")
     args = parser.parse_args()
 
     N = args.samples
@@ -695,16 +697,21 @@ def main():
     print()
 
     # ===== Cross-dimensional analysis (Session 7, Tier 2, Task 7) =====
-    cross_results, d4_global = run_cross_dimensional_analysis()
+    # Only run when explicitly requested via --cross-dim flag to avoid
+    # adding sizable Monte Carlo workload to CI runs.
+    if args.cross_dim:
+        cross_results, d4_global = run_cross_dimensional_analysis()
 
-    print()
-    if d4_global:
-        print("  D₄ is the GLOBAL MINIMUM across all dimensions d=2–8.")
-        print("  This supports the claim that D₄ is not merely optimal in 4D")
-        print("  but is optimal across ALL dimensions — a much stronger statement.")
+        print()
+        if d4_global:
+            print("  D₄ is the GLOBAL MINIMUM across all dimensions d=2–8.")
+            print("  This supports the claim that D₄ is not merely optimal in 4D")
+            print("  but is optimal across ALL dimensions — a much stronger statement.")
+        else:
+            print("  WARNING: D₄ is NOT the global minimum across dimensions.")
+            print("  The framework's claim of D₄ uniqueness may need qualification.")
     else:
-        print("  WARNING: D₄ is NOT the global minimum across dimensions.")
-        print("  The framework's claim of D₄ uniqueness may need qualification.")
+        print("\n  [Skipping cross-dimensional analysis; use --cross-dim to enable]")
 
     if args.strict and not d4_is_min:
         print(f"[STRICT] D₄ is NOT the energy minimum — {winner} is lower.",

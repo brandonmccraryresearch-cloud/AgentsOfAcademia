@@ -282,7 +282,7 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 The manuscript is at v83.0. Sessions 6–7 executed the deep critical review's Tier 1 CRITICAL and Tier 2 HIGH-priority tasks respectively. 27 scripts total, all pass.
 
 **Session 7 results (Tier 2 HIGH):**
-- **θ₀ derivation (Task 4):** Koide phase θ₀ = 2/9 derived from SO(3)/S₃ geometry via Gauss-Bonnet holonomy, RG fixed-point, and eigenvalue spectrum — 3 independent methods, all exact; grade B+→A−
+- **θ₀ derivation (Task 4):** Koide phase θ₀ = 2/9 derived from SO(3)/S₃ geometry via Gauss-Bonnet holonomy; RG fixed-point and eigenvalue-spectrum analyses provide consistency checks rather than fully independent exact derivations; grade B+→A−
 - **Coleman-Weinberg (Task 5):** CW potential on D₄ with R²⁴ = 1⊕4⊕19 mode decomposition; VEV = 246.64 GeV (0.17%); hierarchy self-consistent; grade B+
 - **Triality braid 3D (Task 6b):** Vortex LINE defect on 32³ grid; 11/11 PASS; line tension τ=643; ring annihilation correct; grade B+
 - **D₄ cross-dimensional (Task 7):** D₄ is GLOBAL MINIMUM across d=2–8; gap=0.825 to D₂; grade A−

@@ -107,6 +107,11 @@ def compute_energy_xy(theta, J=1.0, kappa=0.5):
         theta_shifted = np.roll(np.roll(theta, -dx, axis=0), -dy, axis=1)
         E_elastic += -J * np.sum(np.cos(theta - theta_shifted))
 
+    # The symmetric neighbor list includes both (dx, dy) and (-dx, -dy),
+    # so each undirected bond is counted twice. Divide by 2 to match the
+    # Hamiltonian normalization H = -J Σ_{<ij>} cos(θ_i - θ_j).
+    E_elastic *= 0.5
+
     # Triality pinning energy
     E_triality = kappa * np.sum(1 - np.cos(3 * theta))
 

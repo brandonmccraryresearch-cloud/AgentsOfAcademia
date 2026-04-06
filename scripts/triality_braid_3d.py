@@ -16,7 +16,8 @@ Key differences from 2D:
 1. The vortex has LINE TENSION (energy per unit length) — not just point energy
 2. The vortex can BEND and develop Kelvin waves
 3. Reconnection events (vortex-antivortex annihilation) are possible in 3D
-4. The D₄ neighbors project to a richer 3D connectivity (12 neighbors in 3D)
+4. The D₄ neighbors project to a richer 3D connectivity (18 unique neighbors in 3D:
+   12 face-diagonal + 6 axis-aligned)
 
 The simulation uses a 3D O(2) model (XY model) with Z₃ triality pinning:
     H = -J Σ_{<ij>} cos(θ_i - θ_j) + κ Σ_i (1 - cos(3θ_i))
@@ -168,6 +169,11 @@ def compute_energy_3d(theta, J=1.0, kappa=0.3, neighbors=None):
         theta_shifted = np.roll(np.roll(np.roll(theta, -dx, axis=0),
                                          -dy, axis=1), -dz, axis=2)
         E_elastic += -J * np.sum(np.cos(theta - theta_shifted))
+
+    # The D₄-projected neighbor set includes both δ and −δ for each root,
+    # so each undirected bond is counted twice. Divide by 2 to match the
+    # Hamiltonian normalization H = -J Σ_{<ij>} cos(θ_i - θ_j).
+    E_elastic *= 0.5
 
     # Triality pinning energy
     E_triality = kappa * np.sum(1 - np.cos(3 * theta))

@@ -131,13 +131,13 @@ def find_CW_minimum(kappa_4, lambda_geom, Lambda_UV, n_hidden=20):
     Setting dV_eff/dσ = 0 and dividing by σ³:
         λ_geom + (n_hidden κ₄²)/(16π²) [ln(v²/Λ²) - 1] = 0
 
-    Solving for v (note: ln(v²/Λ²) < 0 since v << Λ, giving a negative sign):
-        v = Λ × exp[(-16π² λ_geom/(n κ₄²) + 1) / 4]
+        ln(v²/Λ²) = 1 - 16π² λ_geom/(n κ₄²)
+        v = Λ × exp[(1 - 16π² λ_geom/(n κ₄²)) / 2]
 
     Returns: VEV in GeV, diagnostics
     """
-    # Coleman-Weinberg formula for the VEV
-    exponent_arg = -16 * np.pi**2 * lambda_geom / (n_hidden * kappa_4**2) + 0.5
+    # Coleman-Weinberg formula for the VEV, with exponent_arg = ln(v²/Λ²)
+    exponent_arg = -16 * np.pi**2 * lambda_geom / (n_hidden * kappa_4**2) + 1.0
     v_CW = Lambda_UV * np.exp(exponent_arg / 2)
 
     # The Higgs mass at the minimum
@@ -213,8 +213,8 @@ def scan_kappa4(target_vev=V_EW_EXP, Lambda_UV_GeV=None, n_hidden=20):
     Determine the quartic anharmonicity κ₄ that produces the correct VEV
     in the CW mechanism.
 
-    The CW VEV is: v = Λ × exp((-16π² λ_geom)/(n κ₄²) + 1/4)
-    Inverting: κ₄² = -16π² λ_geom / (n [ln(v/Λ)² - 1/2])
+    The CW VEV is: v = Λ × exp[(1 - 16π² λ_geom/(n κ₄²)) / 2]
+    Inverting: κ₄² = 16π² λ_geom / (n [1 - 2·ln(v/Λ)])
 
     Returns: kappa_4, lambda_geom, diagnostics
     """
@@ -228,8 +228,10 @@ def scan_kappa4(target_vev=V_EW_EXP, Lambda_UV_GeV=None, n_hidden=20):
     # Required ln(v/Λ)
     ln_ratio = np.log(target_vev / Lambda_UV_GeV)
 
-    # Invert CW formula: solve for κ₄²
-    denominator = n_hidden * (2 * ln_ratio + 0.5)
+    # Invert CW formula: ln(v²/Λ²) = 1 - 16π²λ/(nκ₄²)
+    # => 2·ln(v/Λ) = 1 - 16π²λ/(nκ₄²)
+    # => κ₄² = 16π²λ / (n·[1 - 2·ln(v/Λ)])
+    denominator = n_hidden * (1.0 - 2 * ln_ratio)
     if denominator > 0:
         kappa_4_sq = 16 * np.pi**2 * lambda_geom / denominator
     else:

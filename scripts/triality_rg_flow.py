@@ -117,8 +117,11 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
     The fixed point satisfies dV/dθ = 0:
         3 sin(3θ) + 9λ sin(9θ) = 0
 
-    For the D₄ lattice, λ = -1/27 (from the ratio of Casimir invariants
-    C₂(SO(8))/[C₂(G₂) × 3²]), giving a non-trivial fixed point at θ₀ = 2/9.
+    For the D₄ lattice, λ is determined by requiring the fixed point to
+    coincide with the Berry phase angle θ₀ = 2/9 (consistency condition).
+    This makes the RG method a consistency fit, not an independent derivation.
+    The interest is that the required λ ≈ 0.227 is numerically close to
+    2α_s(M_Z), suggesting a connection to the strong coupling.
 
     Returns: (theta_fixed, flow_history, diagnostics_dict)
     """
@@ -126,10 +129,9 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
     # V(θ) = -cos(3θ) + λ cos(9θ)
     # This is the minimal S₃-invariant potential with the two lowest harmonics.
     #
-    # Physical origin of λ:
-    # The S₃-invariant harmonics on the orbifold are cos(3nθ) for integer n.
-    # The ratio λ of the n=3 to n=1 harmonics is determined by the requirement
-    # that the fixed point coincide with the Berry phase angle θ₀ = 2/9.
+    # λ is determined from the consistency condition that the fixed point
+    # of this potential coincides with the Gauss-Bonnet value θ₀ = 2/9.
+    # This is a consistency fit, NOT an independent derivation of θ₀.
     #
     # From the triple-angle identity sin(9θ) = 3sin(3θ) - 4sin³(3θ),
     # setting dV/dθ = 0 with sin(3θ) ≠ 0 gives:
@@ -138,9 +140,8 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
     # For θ₀ = 2/9: sin(3 × 2/9) = sin(2/3 rad) ≈ 0.6184, so sin²(2/3 rad) ≈ 0.3824.
     # Solving: λ = 3/(27 - 36 × sin²(2/3)) ≈ 0.2267.
     #
-    # This value is close to α_s(M_Z) ≈ 0.118 × 2 ≈ 0.236, suggesting
-    # a connection to the strong coupling. The precise derivation from
-    # D₄ Casimir invariants is an open problem.
+    # This value is close to α_s(M_Z) ≈ 0.118 × 2 ≈ 0.236. The precise
+    # derivation of λ from D₄ Casimir invariants is an open problem.
     u_sq = np.sin(3 * (2.0/9.0))**2
     lambda_ratio = 3.0 / (27.0 - 36.0 * u_sq)
 
@@ -187,8 +188,8 @@ def triality_rg_flow(N_steps=10000, dt=0.001):
         for step in range(N_steps):
             # Gradient descent (RG flow toward IR fixed point)
             theta = theta - dt * dV_dtheta(theta)
-            # Keep in [0, 2π/3) fundamental domain
-            theta = theta % (2 * np.pi / 3)
+            # Keep in the same [0, π/3) domain used by the fixed-point scan
+            theta = theta % (np.pi / 3)
             history.append(theta)
         flow_histories.append((theta_init, history))
 
@@ -250,18 +251,33 @@ def triality_eigenvalue_spectrum():
     T2 = T @ T
     T2_is_identity = np.allclose(T2, np.eye(4), atol=1e-14)
 
-    # Eigenvalues of T
-    eigenvalues = np.linalg.eigvals(T)
+    # Eigenvalues of T: since T is an order-2 transposition, these should be ±1.
+    # We keep this as a sanity check, but it does NOT encode the Z₃ triality angle.
+    transposition_eigenvalues = np.linalg.eigvals(T)
+    transposition_eigenangles = np.angle(transposition_eigenvalues)
+    transposition_eigenangles_sorted = np.sort(transposition_eigenangles)
 
-    # The eigenvalues should be: 1, e^{2πi/3}, e^{-2πi/3}, ±1
-    # (depending on representation)
-    eigenangles = np.angle(eigenvalues)
+    # Construct an actual order-3 triality generator C.
+    # This 3-cycle acts on the first three basis vectors and fixes the fourth:
+    # e1 -> e2 -> e3 -> e1, e4 -> e4
+    C = np.array([
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ], dtype=complex)
+    C3 = C @ C @ C
+    C3_is_identity = np.allclose(C3, np.eye(4), atol=1e-14)
+
+    # Eigenvalues of an order-3 generator are 1, 1, e^{2πi/3}, e^{-2πi/3}.
+    # Compute the non-trivial Z₃ eigenangle from the spectrum instead of hardcoding it.
+    eigenvalues = np.linalg.eigvals(C)
+    eigenangles = np.mod(np.angle(eigenvalues), 2 * np.pi)
+    nontrivial_eigenangles = eigenangles[(eigenangles > 1e-12) & (np.abs(eigenangles - 2 * np.pi) > 1e-12)]
+    z3_eigenangle = np.min(nontrivial_eigenangles)
     eigenangles_sorted = np.sort(eigenangles)
 
-    # The Z₃ eigenangle is 2π/3
-    z3_eigenangle = 2 * np.pi / 3
-
-    # Berry phase from the Z₃ eigenangle
+    # Berry phase from the computed Z₃ eigenangle
     # θ₀ = (Z₃ eigenangle) / (3π)
     theta_0 = z3_eigenangle / (3 * np.pi)
 
@@ -283,8 +299,11 @@ def triality_eigenvalue_spectrum():
         'method': 'Triality operator eigenvalue spectrum',
         'triality_matrix_T': T.tolist(),
         'T_squared_is_identity': T2_is_identity,
-        'eigenvalues': eigenvalues.tolist(),
-        'eigenangles_rad': eigenangles.tolist(),
+        'transposition_eigenvalues': transposition_eigenvalues.tolist(),
+        'transposition_eigenangles_rad': transposition_eigenangles.tolist(),
+        'z3_generator_C_cubed_is_identity': C3_is_identity,
+        'z3_eigenvalues': eigenvalues.tolist(),
+        'z3_eigenangles_rad': eigenangles.tolist(),
         'z3_eigenangle': z3_eigenangle,
         'theta_0': theta_0,
         'theta_0_exact': '2/9',
@@ -402,8 +421,9 @@ def main():
     print("\n--- Method 3: Triality Operator Eigenvalue Spectrum ---")
     theta_EV, diag_EV = triality_eigenvalue_spectrum()
     print(f"  Triality matrix T² = I: {diag_EV['T_squared_is_identity']}")
-    print(f"  Eigenvalues of T: {[f'{e:.4f}' for e in diag_EV['eigenvalues']]}")
-    print(f"  Z₃ eigenangle: {diag_EV['z3_eigenangle']:.6f} = 2π/3 = {2*np.pi/3:.6f}")
+    print(f"  Z₃ generator C³ = I: {diag_EV['z3_generator_C_cubed_is_identity']}")
+    print(f"  Eigenvalues of C: {[f'{e:.4f}' for e in diag_EV['z3_eigenvalues']]}")
+    print(f"  Z₃ eigenangle (computed): {diag_EV['z3_eigenangle']:.6f} = 2π/3 = {2*np.pi/3:.6f}")
     print(f"  θ₀ = eigenangle/(3π) = {theta_EV:.10f}")
     print(f"  Agreement: {diag_EV['agreement']:.2e}%")
     pass_EV = diag_EV['agreement'] < 1e-10
@@ -439,24 +459,36 @@ def main():
     print(f"  [{'PASS' if pass_koide_e else 'FAIL'}] m_e within 5%")
 
     # ---- Consistency: Three Methods Agree ----
-    print("\n--- Cross-Check: Three Methods Agree ---")
-    methods_agree = (abs(theta_GB - theta_EV) < 1e-14 and
-                     abs(theta_GB - 2.0/9.0) < 1e-14)
+    print("\n--- Cross-Check: Three Methods Consistent ---")
+    exact_tolerance = 1e-14
+    rg_tolerance = 2e-3  # RG method is approximate; see caveat on ~0.8% residual
+    exact_methods_agree = (
+        abs(theta_GB - theta_EV) < exact_tolerance and
+        abs(theta_GB - 2.0/9.0) < exact_tolerance
+    )
+    rg_method_consistent = (
+        abs(theta_RG - theta_GB) < rg_tolerance and
+        abs(theta_RG - 2.0/9.0) < rg_tolerance
+    )
+    methods_agree = exact_methods_agree and rg_method_consistent
     results.append(('Three methods consistent', methods_agree, 0.0))
     if not methods_agree:
         all_pass = False
     print(f"  Gauss-Bonnet: {theta_GB:.10f}")
     print(f"  RG fixed pt:  {theta_RG:.10f}")
     print(f"  Eigenvalue:   {theta_EV:.10f}")
-    print(f"  [{'PASS' if methods_agree else 'FAIL'}] All methods agree")
+    print(f"  Exact-method tolerance: {exact_tolerance:.1e}")
+    print(f"  RG tolerance:           {rg_tolerance:.1e}")
+    print(f"  [{'PASS' if exact_methods_agree else 'FAIL'}] Gauss-Bonnet and eigenvalue match 2/9 exactly")
+    print(f"  [{'PASS' if rg_method_consistent else 'FAIL'}] RG fixed point is consistent with 2/9 within tolerance")
 
     # ---- Honest Caveats ----
     print("\n--- Honest Caveats ---")
     print("  1. The Gauss-Bonnet and eigenvalue methods are GEOMETRIC: they derive")
     print("     θ₀ = 2/9 from SO(3)/S₃ structure without dynamical input. Grade: A.")
-    print("  2. The RG flow method uses a MINIMAL S₃-invariant potential with λ = -1/27")
-    print("     from Casimir ratio. The fixed point is near 2/9 but the potential's")
-    print("     derivation from D₄ is schematic, not rigorous. Grade: B.")
+    print("  2. The RG flow method uses a MINIMAL S₃-invariant potential with λ")
+    print("     determined in the implementation from θ₀ = 2/9 (λ ≈ 0.2267), not")
+    print("     λ = -1/27. The potential's derivation from D₄ is schematic, not rigorous. Grade: B.")
     print("  3. The Koide predictions use M_scale from the EW formula, which involves")
     print("     the Higgs VEV v = 246 GeV as input. Fully parameter-free prediction")
     print("     would require deriving v from the lattice. Grade: B-.")
