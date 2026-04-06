@@ -3,7 +3,7 @@
 # ==============================================================================
 #
 # NOTE: This workflow is superseded by session_init.yml which provides the
-# full Anaconda-based scientific stack. This file is retained for backward
+# full Miniconda-based scientific stack. This file is retained for backward
 # compatibility and lightweight CI runs. For full session initialization,
 # use session_init.yml instead.
 #

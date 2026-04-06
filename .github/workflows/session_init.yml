@@ -2,7 +2,7 @@
 # SESSION INITIALIZATION — Standalone Validation
 # ==============================================================================
 #
-# This workflow validates the full environment (Anaconda, Lean 4, verification
+# This workflow validates the full environment (Miniconda, Lean 4, verification
 # scripts) on a standalone runner. Use it for manual validation or weekly CI.
 #
 # NOTE: This does NOT run inside an agent session's environment. For in-session
@@ -47,14 +47,14 @@ permissions:
 
 env:
   MANUSCRIPT: "83.0IRH.md"
-  CONDA_PREFIX_PATH: "/home/runner/anaconda3"
+  CONDA_PREFIX_PATH: "/home/runner/miniconda3"
 
 jobs:
   # ============================================================================
-  # PHASE 1: FULL ANACONDA SCIENTIFIC ENVIRONMENT
+  # PHASE 1: FULL MINICONDA SCIENTIFIC ENVIRONMENT
   # ============================================================================
   full-environment:
-    name: "Full Stack Anaconda Environment"
+    name: "Full Stack Miniconda Environment"
     runs-on: ubuntu-latest
 
     steps:
@@ -84,19 +84,19 @@ jobs:
           echo "============================================================"
 
       # ------------------------------------------------------------------
-      # STEP 1: ANACONDA INSTALLATION
+      # STEP 1: MINICONDA INSTALLATION
       # ------------------------------------------------------------------
-      - name: "Phase 1 — Install Anaconda"
+      - name: "Phase 1 — Install Miniconda"
         run: |
-          echo "Installing Anaconda..."
-          wget -q https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh -O /tmp/anaconda.sh
-          bash /tmp/anaconda.sh -b -p ${{ env.CONDA_PREFIX_PATH }}
+          echo "Installing Miniconda..."
+          wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+          bash /tmp/miniconda.sh -b -p ${{ env.CONDA_PREFIX_PATH }}
           eval "$(${{ env.CONDA_PREFIX_PATH }}/bin/conda shell.bash hook)"
           conda init bash
           echo "${{ env.CONDA_PREFIX_PATH }}/bin" >> $GITHUB_PATH
 
       # ------------------------------------------------------------------
-      # STEP 2: SCIENTIFIC PYTHON STACK (Anaconda channels)
+      # STEP 2: SCIENTIFIC PYTHON STACK (Miniconda channels)
       # ------------------------------------------------------------------
       - name: "Phase 2 — Install scientific Python stack"
         run: |
@@ -278,7 +278,7 @@ jobs:
           echo "============================================================"
           echo "  SESSION INITIALIZATION COMPLETE"
           echo "============================================================"
-          echo "  Anaconda scientific stack : ${{ needs['full-environment'].result }}"
+          echo "  Miniconda scientific stack : ${{ needs['full-environment'].result }}"
           echo "  Lean 4 verification      : ${{ needs['lean4-environment'].result || 'skipped' }}"
           echo ""
           echo "  REMINDER TO ALL AGENTS (see M1–M6 in agent files):"

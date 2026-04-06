@@ -58,12 +58,12 @@ The current manuscript file is: **`83.0IRH.md`**
 
 ## Environment Setup
 
-Session initialization is handled by `.github/workflows/session_init.yml` which installs the full Anaconda-based scientific stack plus all MCP tools. For manual sessions:
+Session initialization is handled by `.github/workflows/session_init.yml` which installs the full Miniconda-based scientific stack plus all MCP tools. For manual sessions:
 
 ### Quick Setup (manual session)
 
 ```bash
-# Full Anaconda scientific stack (preferred)
+# Full Miniconda scientific stack (preferred)
 wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
 bash /tmp/miniconda.sh -b -p $HOME/miniconda3
 eval "$($HOME/miniconda3/bin/conda shell.bash hook)"
