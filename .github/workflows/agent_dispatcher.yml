@@ -156,6 +156,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── Full environment bootstrap (runs IN this runner) ──────────
+      - name: "Session Bootstrap — Full Stack"
+        uses: ./.github/actions/session-bootstrap
+        with:
+          run_lean_build: 'false'
+          run_computations: 'false'
+
       - name: Load & activate Expert Research Assistant persona
         env:
           AGENT_ID: expert_research_assistant
@@ -199,6 +206,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── Full environment bootstrap (runs IN this runner) ──────────
+      - name: "Session Bootstrap — Full Stack"
+        uses: ./.github/actions/session-bootstrap
+        with:
+          run_lean_build: 'true'
+          run_computations: 'false'
+
       - name: Load & activate Lean 4 Specialist persona
         env:
           AGENT_ID: lean4_formal_verification_specialist
@@ -241,6 +255,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # ── Full environment bootstrap (runs IN this runner) ──────────
+      - name: "Session Bootstrap — Full Stack"
+        uses: ./.github/actions/session-bootstrap
+        with:
+          run_lean_build: 'false'
+          run_computations: 'false'
 
       - name: Load & activate HLRE Agent persona
         env:

@@ -1,16 +1,16 @@
 # ==============================================================================
-# SESSION INITIALIZATION — Full Environment Bootstrap
+# SESSION INITIALIZATION — Standalone Validation
 # ==============================================================================
 #
-# This workflow replaces the base GitHub default startup. It installs the
-# complete Anaconda scientific stack, Lean 4, all MCP server dependencies,
-# and runs verification scripts to confirm the environment is operational.
+# This workflow validates the full environment (Anaconda, Lean 4, verification
+# scripts) on a standalone runner. Use it for manual validation or weekly CI.
 #
-# This is the FIRST action that fires on any agent session start.
+# NOTE: This does NOT run inside an agent session's environment. For in-session
+# bootstrap, each agent trigger workflow calls the composite action at
+# .github/actions/session-bootstrap/action.yml — that installs everything
+# directly on the agent's own runner.
 #
-# Trigger: workflow_dispatch (manual), workflow_run (when any agent-trigger
-#          workflow is requested — i.e., whenever an MCP server session starts),
-#          schedule (weekly)
+# Trigger: workflow_dispatch (manual), schedule (weekly)
 # ==============================================================================
 
 name: "Session Initialization — Full Stack Bootstrap"
@@ -33,22 +33,11 @@ on:
         required: false
         type: boolean
         default: true
-  # Fire as soon as any agent session is requested (dispatcher or direct trigger).
-  # Uses 'requested' so bootstrap starts in parallel with — not after — the agent.
-  # Does NOT fire on PR review checks or routine pushes.
-  workflow_run:
-    workflows:
-      - "Agent Dispatcher"
-      - "Activate Agent: Expert Research Assistant"
-      - "Activate Agent: HLRE Agent"
-      - "Activate Agent: Lean 4 Formal Verification Specialist"
-    types: [requested]
   schedule:
     # Run weekly to catch dependency updates
     - cron: '0 6 * * 1'
 
-# Prevent duplicate concurrent runs for the same branch; cancel superseded runs.
-# head_ref is set for pull_request events; ref_name works for push/workflow_run.
+# Prevent duplicate concurrent runs; cancel superseded runs.
 concurrency:
   group: session-init-${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true

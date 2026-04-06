@@ -39,6 +39,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── Full environment bootstrap (runs IN this runner) ──────────
+      - name: "Session Bootstrap — Full Stack"
+        uses: ./.github/actions/session-bootstrap
+        with:
+          run_lean_build: 'true'
+          run_computations: 'false'
+
       - name: Resolve inputs (workflow_dispatch vs repository_dispatch)
         id: resolve-inputs
         run: |

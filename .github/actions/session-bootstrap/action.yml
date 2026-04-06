@@ -1,0 +1,246 @@
+# ==============================================================================
+# SESSION BOOTSTRAP — Composite Action
+# ==============================================================================
+#
+# Installs the full Anaconda scientific stack, Lean 4, and runs verification
+# scripts INSIDE the calling workflow's runner — so everything is available
+# to subsequent steps in the same job.
+#
+# Usage (in any workflow job):
+#
+#   steps:
+#     - uses: actions/checkout@v4
+#     - uses: ./.github/actions/session-bootstrap
+#       with:
+#         run_lean_build: 'true'       # optional, default true
+#         run_computations: 'true'     # optional, default true
+#
+# ==============================================================================
+
+name: "Session Bootstrap"
+description: "Install Anaconda scientific stack, Lean 4, and verify the environment inside the current runner."
+
+inputs:
+  run_lean_build:
+    description: "Build Lean 4 project (slow, ~30 min)"
+    required: false
+    default: 'true'
+  run_computations:
+    description: "Run verification computations"
+    required: false
+    default: 'true'
+  manuscript:
+    description: "Manuscript filename"
+    required: false
+    default: '83.0IRH.md'
+
+runs:
+  using: "composite"
+  steps:
+    # ----------------------------------------------------------------
+    # STEP 0: MANUSCRIPT CONTEXT LOAD
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Load manuscript context"
+      shell: bash
+      run: |
+        echo "============================================================"
+        echo "  MANDATORY: Full Manuscript Read Required"
+        echo "============================================================"
+        echo "  File: ${{ inputs.manuscript }}"
+        if [ -f "${{ inputs.manuscript }}" ]; then
+          echo "  Size: $(wc -c < '${{ inputs.manuscript }}') bytes"
+          echo "  Lines: $(wc -l < '${{ inputs.manuscript }}') lines"
+          echo ""
+          echo "  Sections:"
+          grep -n '^## \|^### \|^# ' '${{ inputs.manuscript }}' | head -80
+        else
+          echo "  WARNING: Manuscript file not found (may be in manuscript_parts/)"
+        fi
+        echo "============================================================"
+
+    # ----------------------------------------------------------------
+    # STEP 1: ANACONDA INSTALLATION
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Install Anaconda"
+      shell: bash
+      run: |
+        CONDA_PREFIX_PATH="/home/runner/anaconda3"
+        echo "Installing Anaconda..."
+        wget -q https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh -O /tmp/anaconda.sh
+        bash /tmp/anaconda.sh -b -p "${CONDA_PREFIX_PATH}"
+        eval "$("${CONDA_PREFIX_PATH}"/bin/conda shell.bash hook)"
+        conda init bash
+        echo "${CONDA_PREFIX_PATH}/bin" >> "$GITHUB_PATH"
+        echo "CONDA_PREFIX_PATH=${CONDA_PREFIX_PATH}" >> "$GITHUB_ENV"
+
+    # ----------------------------------------------------------------
+    # STEP 2: SCIENTIFIC PYTHON STACK
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Install scientific Python stack"
+      shell: bash
+      run: |
+        eval "$("${CONDA_PREFIX_PATH}"/bin/conda shell.bash hook)"
+
+        # Core scientific stack
+        conda install -y -c conda-forge \
+          python=3.11 \
+          numpy \
+          scipy \
+          sympy \
+          matplotlib \
+          pandas \
+          scikit-learn \
+          jupyter \
+          networkx \
+          h5py \
+          ipython \
+          seaborn \
+          numba \
+          cython \
+          tqdm \
+          pyyaml \
+          requests
+
+        # Additional packages via pip (not in conda)
+        pip install \
+          mpmath \
+          pint \
+          uncertainties \
+          pylatex \
+          arviz \
+          emcee
+
+    # ----------------------------------------------------------------
+    # STEP 3: VERIFY PYTHON ENVIRONMENT
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Verify Python environment"
+      shell: bash
+      run: |
+        eval "$("${CONDA_PREFIX_PATH}"/bin/conda shell.bash hook)"
+        python -c "
+        import numpy as np
+        import scipy
+        import sympy
+        import matplotlib
+        import pandas as pd
+        import sklearn
+        import networkx as nx
+        import h5py
+        import numba
+        import mpmath
+        import pint
+        print(f'NumPy:       {np.__version__}')
+        print(f'SciPy:       {scipy.__version__}')
+        print(f'SymPy:       {sympy.__version__}')
+        print(f'Matplotlib:  {matplotlib.__version__}')
+        print(f'Pandas:      {pd.__version__}')
+        print(f'Scikit-learn:{sklearn.__version__}')
+        print(f'NetworkX:    {nx.__version__}')
+        print(f'h5py:        {h5py.__version__}')
+        print(f'Numba:       {numba.__version__}')
+        print(f'mpmath:      {mpmath.__version__}')
+        print('✅ Full scientific Python stack: OPERATIONAL')
+        "
+
+    # ----------------------------------------------------------------
+    # STEP 4: LEAN 4 (optional)
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Install elan (Lean version manager)"
+      if: inputs.run_lean_build == 'true'
+      shell: bash
+      run: |
+        curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+        echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+    - name: "Bootstrap — Verify Lean installation"
+      if: inputs.run_lean_build == 'true'
+      shell: bash
+      run: |
+        export PATH="$HOME/.elan/bin:$PATH"
+        cd lean4
+        LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
+        echo "Required Lean version: $LEAN_VERSION"
+        elan toolchain install leanprover/lean4:$LEAN_VERSION
+        lean --version
+
+    - name: "Bootstrap — Cache Lean 4 dependencies"
+      if: inputs.run_lean_build == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          lean4/.lake
+          lean4/lake-packages
+          ~/.elan
+        key: lean4-${{ hashFiles('lean4/lakefile.toml', 'lean4/lean-toolchain', 'lean4/lake-manifest.json') }}
+        restore-keys: |
+          lean4-
+
+    - name: "Bootstrap — Build Lean 4 project"
+      if: inputs.run_lean_build == 'true'
+      shell: bash
+      run: |
+        export PATH="$HOME/.elan/bin:$PATH"
+        cd lean4
+        lake update
+        lake build
+
+    - name: "Bootstrap — Verify zero sorry"
+      if: inputs.run_lean_build == 'true'
+      shell: bash
+      run: |
+        cd lean4
+        SORRY_COUNT=$(grep -r "sorry" IHMFramework/ --include="*.lean" | wc -l)
+        echo "sorry count: $SORRY_COUNT"
+        if [ "$SORRY_COUNT" -ne 0 ]; then
+          echo "FAIL: Found sorry in Lean files!"
+          grep -rn "sorry" IHMFramework/ --include="*.lean"
+          exit 1
+        fi
+        echo "PASS: Zero sorry in all files"
+
+    # ----------------------------------------------------------------
+    # STEP 5: RUN VERIFICATION SCRIPTS (optional)
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Run verification scripts"
+      if: inputs.run_computations == 'true'
+      shell: bash
+      run: |
+        eval "$("${CONDA_PREFIX_PATH}"/bin/conda shell.bash hook)"
+
+        echo "=== Numerical Predictions ==="
+        python scripts/verify_numerical_predictions.py
+
+        echo ""
+        echo "=== D₄ Phonon Spectrum ==="
+        python scripts/d4_phonon_spectrum.py --strict
+
+        echo ""
+        echo "=== BZ Integral ==="
+        python scripts/bz_integral.py --strict
+
+        echo ""
+        echo "=== Circularity Analysis ==="
+        python scripts/circularity_analysis.py
+
+        echo ""
+        echo "=== D₄ Uniqueness ==="
+        python scripts/d4_uniqueness.py --strict
+
+    # ----------------------------------------------------------------
+    # SUMMARY
+    # ----------------------------------------------------------------
+    - name: "Bootstrap — Summary"
+      shell: bash
+      run: |
+        echo "============================================================"
+        echo "  SESSION BOOTSTRAP COMPLETE (in-runner)"
+        echo "============================================================"
+        echo "  Anaconda scientific stack : installed"
+        if [ "${{ inputs.run_lean_build }}" = "true" ]; then
+          echo "  Lean 4 verification      : installed"
+        else
+          echo "  Lean 4 verification      : skipped"
+        fi
+        echo ""
+        echo "  All tools are available in THIS runner for subsequent steps."
+        echo "============================================================"
