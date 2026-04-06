@@ -57,7 +57,7 @@ permissions:
   contents: read
 
 env:
-  MANUSCRIPT: "83.0theaceinthehole.md"
+  MANUSCRIPT: "83.0IRH.md"
   CONDA_PREFIX_PATH: "/home/runner/anaconda3"
 
 jobs:
