@@ -32,9 +32,23 @@ on:
         required: false
         type: boolean
         default: true
-  # Fire on every PR event — new session (opened) or existing session (synchronize/reopened)
+  # Fire on PR updates only when bootstrap-relevant files change, to avoid
+  # running the full environment setup for unrelated fork PRs.
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/session_init.yml'
+      - '.github/workflows/**'
+      - '.github/copilot-instructions.md'
+      - '.github/agents/**'
+      - 'agents/**'
+      - 'lean4/**'
+      - 'scripts/**'
+      - 'mcp-servers/**'
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+      - 'environment*.yml'
+      - 'environment*.yaml'
   # Fire on any branch push so direct-commit agent sessions are also initialized
   push:
     branches: ['**']
