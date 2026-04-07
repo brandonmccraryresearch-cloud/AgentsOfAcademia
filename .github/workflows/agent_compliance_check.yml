@@ -67,7 +67,7 @@ jobs:
             echo ""
             echo "  REQUIRED ACTION: Update .github/copilot-instructions.md to reference"
             echo "  the current manuscript file using the pattern:"
-            echo "  'The current manuscript file is: **\`{version}theaceinthehole.md\`**'"
+            echo "  'The current manuscript file is: **\`{version}IRH.md\`**'"
             exit 1
           fi
           
@@ -79,7 +79,7 @@ jobs:
             echo "  (b) Update copilot-instructions.md to reference the actual file"
             echo ""
             echo "  Available manuscript files:"
-            ls -1 *theaceinthehole.md 2>/dev/null || echo "  (none found)"
+            ls -1 *IRH.md 2>/dev/null || echo "  (none found)"
             exit 1
           fi
           

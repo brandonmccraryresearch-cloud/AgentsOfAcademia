@@ -8,6 +8,8 @@ Computes the full phonon dispersion for the D₄ root lattice:
 - Acoustic branch structure and sound velocities
 - Zone-boundary topological degeneracy
 - Spectral density integral (partial)
+- [Session 8, Tier 3, Task 8] Vacuum energy spectral density with
+  triality phase averaging and shear mode suppression
 
 This directly addresses Review&Reconstruction §I.2 and §II.2.
 
@@ -15,6 +17,7 @@ Usage:
     python d4_phonon_spectrum.py                  # Default (fast, 10K samples)
     python d4_phonon_spectrum.py --samples 500000 # Full computation
     python d4_phonon_spectrum.py --strict          # CI mode: non-zero exit on failure
+    python d4_phonon_spectrum.py --spectral        # Tier 3: vacuum energy spectral density
 """
 
 import argparse
@@ -107,6 +110,8 @@ def main():
                         help="Monte Carlo samples for spectral density (default: 10000)")
     parser.add_argument("--strict", action="store_true",
                         help="CI mode: exit non-zero if any invariant check fails")
+    parser.add_argument("--spectral", action="store_true",
+                        help="Tier 3 Task 8: vacuum energy spectral density analysis")
     args = parser.parse_args()
 
     failures = []
@@ -245,6 +250,241 @@ def main():
     if not poisson_ok:
         failures.append("Poisson ratio")
     print()
+
+    # ===== [Tier 3 Task 8] Vacuum Energy Spectral Density =====
+    if args.spectral:
+        spectral_results = []
+        spectral_all_pass = True
+        alpha = 1.0 / 137.036
+
+        print("=" * 72)
+        print("VACUUM ENERGY SPECTRAL DENSITY (Session 8, Tier 3, Task 8)")
+        print("=" * 72)
+        print()
+
+        # --- 8.1: Bare zero-point energy ---
+        print("Part 8.1: Bare Zero-Point Energy")
+        print("-" * 60)
+        N_spec = min(args.samples, 50000)
+        np.random.seed(42)
+
+        total_omega_spec = 0.0
+        batch_spec = min(N_spec, 5000)
+        processed_spec = 0
+        while processed_spec < N_spec:
+            this_batch = min(batch_spec, N_spec - processed_spec)
+            k_batch = np.random.uniform(-np.pi, np.pi, size=(this_batch, 4))
+            eigs = dynamical_matrix_batch(k_batch, roots)
+            eigs = np.maximum(eigs, 0)
+            total_omega_spec += np.sum(np.sqrt(eigs))
+            processed_spec += this_batch
+
+        avg_omega_spec = total_omega_spec / N_spec
+        E_bare = 0.5 * avg_omega_spec
+        print(f"  MC samples: {N_spec}")
+        print(f"  <Σ_b ω_b(k)> = {avg_omega_spec:.6f} (lattice units)")
+        print(f"  E_bare = ½ × <Σω> = {E_bare:.6f}")
+        print(f"  In Planck units: ρ_bare/ρ_P ~ {E_bare:.4f} (order unity)")
+
+        pass_bare = 0.1 < E_bare < 10.0
+        spectral_results.append(('8.1 Bare E_vac ~ O(1) ρ_P', pass_bare, E_bare))
+        if not pass_bare:
+            spectral_all_pass = False
+        print(f"  [{'PASS' if pass_bare else 'FAIL'}] Bare vacuum energy O(1)")
+        print()
+
+        # --- 8.2: Triality phase averaging ---
+        print("Part 8.2: Triality Phase Averaging (S₃ Action)")
+        print("-" * 60)
+        # D₄ triality matrix: Z₃ generator acting on root system
+        T1 = 0.5 * np.array([
+            [1,  1,  1,  1],
+            [1,  1, -1, -1],
+            [1, -1,  1, -1],
+            [1, -1, -1,  1]
+        ])
+        T2 = T1 @ T1
+
+        # Verify T1³ = I
+        T3 = T1 @ T2
+        triality_ok = np.allclose(T3, np.eye(4), atol=1e-10)
+        print(f"  T₁³ = I: {'PASS' if triality_ok else 'FAIL'}")
+
+        # Compute triality-averaged vacuum energy
+        np.random.seed(42)
+        N_tri = min(N_spec, 20000)
+        E_triality_sum = 0.0
+        E_bare_sum_2 = 0.0
+
+        for _ in range(N_tri):
+            k = np.random.uniform(-np.pi, np.pi, 4)
+            eigs0 = np.maximum(np.linalg.eigvalsh(dynamical_matrix(k, roots)), 0)
+            omega0 = np.sum(np.sqrt(eigs0))
+
+            # Triality-rotated wavevectors
+            k1 = T1 @ k
+            k2 = T2 @ k
+            eigs1 = np.maximum(np.linalg.eigvalsh(dynamical_matrix(k1, roots)), 0)
+            eigs2 = np.maximum(np.linalg.eigvalsh(dynamical_matrix(k2, roots)), 0)
+            omega1 = np.sum(np.sqrt(eigs1))
+            omega2 = np.sum(np.sqrt(eigs2))
+
+            # Phase differences
+            phi1 = np.sum(np.sqrt(eigs1) - np.sqrt(eigs0))
+            phi2 = np.sum(np.sqrt(eigs2) - np.sqrt(eigs0))
+
+            # Coherent sum
+            amp = 1 + np.exp(1j * phi1) + np.exp(1j * phi2)
+            f_tri = np.abs(amp)**2 / 9.0
+
+            E_bare_sum_2 += omega0
+            E_triality_sum += omega0 * f_tri
+
+        E_bare_avg = 0.5 * E_bare_sum_2 / N_tri
+        E_tri_avg = 0.5 * E_triality_sum / N_tri
+        f_tri_avg = E_tri_avg / E_bare_avg if E_bare_avg > 0 else 0
+
+        print(f"  E_bare (reference) = {E_bare_avg:.6f}")
+        print(f"  E_triality (averaged) = {E_tri_avg:.6f}")
+        print(f"  Suppression factor = {f_tri_avg:.4f}")
+        print(f"  Expected: O(1) — triality gives modest averaging, not 10¹²³")
+
+        pass_tri = 0.05 < f_tri_avg < 2.0
+        spectral_results.append(('8.2 Triality factor O(1)', pass_tri, f_tri_avg))
+        if not pass_tri:
+            spectral_all_pass = False
+        print(f"  [{'PASS' if pass_tri else 'FAIL'}] Triality factor is O(1)")
+        print()
+
+        # --- 8.3: Shear mode suppression ---
+        print("Part 8.3: Shear Mode Geometric Suppression")
+        print("-" * 60)
+        N_shear = 19   # = 24 - 4 (spacetime) - 1 (breathing)
+        N_triality = 3  # S₃ sectors
+        gamma = N_shear * N_triality  # = 57
+
+        alpha_57 = alpha**gamma
+        alpha_57_4pi = alpha_57 / (4 * np.pi)
+
+        print(f"  DOF decomposition: 24 = 1(breathing) + 4(translation) + 19(shear)")
+        print(f"  Shear modes: {N_shear}")
+        print(f"  Triality sectors: {N_triality}")
+        print(f"  Suppression exponent: γ = {N_shear} × {N_triality} = {gamma}")
+        print(f"  α^{gamma} = {alpha_57:.4e}")
+        print(f"  α^{gamma}/(4π) = {alpha_57_4pi:.4e}")
+
+        # Observed cosmological constant
+        rho_obs = 1.26e-123  # ρ_Λ/ρ_P (Planck 2018)
+        ratio_pred_obs = alpha_57_4pi / rho_obs
+
+        print(f"  Predicted ρ_Λ/ρ_P = α⁵⁷/(4π) = {alpha_57_4pi:.4e}")
+        print(f"  Observed  ρ_Λ/ρ_P = {rho_obs:.4e}")
+        print(f"  Ratio predicted/observed = {ratio_pred_obs:.4f}")
+
+        # Order-of-magnitude match: within factor of 10
+        pass_cc = 0.1 < ratio_pred_obs < 10.0
+        spectral_results.append(('8.3 α⁵⁷/(4π) matches ρ_Λ/ρ_P', pass_cc,
+                                 ratio_pred_obs))
+        if not pass_cc:
+            spectral_all_pass = False
+        print(f"  [{'PASS' if pass_cc else 'FAIL'}] Order-of-magnitude match"
+              f" (ratio = {ratio_pred_obs:.2f})")
+        print()
+
+        # --- 8.4: Full combined computation ---
+        print("Part 8.4: Full Spectral Density (Triality + Shear)")
+        print("-" * 60)
+        E_full = E_tri_avg * alpha_57
+        E_full_4pi = E_full / (4 * np.pi)
+
+        print(f"  E_full = E_triality × α⁵⁷ = {E_full:.4e}")
+        print(f"  E_full/(4π) = {E_full_4pi:.4e}")
+        print(f"  Target ρ_Λ/ρ_P = {rho_obs:.4e}")
+
+        combined_ratio = E_full_4pi / rho_obs if rho_obs > 0 else 0
+        print(f"  Ratio = {combined_ratio:.4f}")
+
+        pass_full = 0.01 < combined_ratio < 100
+        spectral_results.append(('8.4 Full spectral density', pass_full,
+                                 combined_ratio))
+        if not pass_full:
+            spectral_all_pass = False
+        print(f"  [{'PASS' if pass_full else 'FAIL'}] Full computation within"
+              " 2 orders of magnitude")
+        print()
+
+        # --- 8.5: Spectral weight distribution ---
+        print("Part 8.5: Spectral Weight Distribution")
+        print("-" * 60)
+        n_bins = 10
+        omega_bins = np.linspace(0, 4, n_bins + 1)  # Max ω ≈ 2.83 = √8
+        counts = np.zeros(n_bins)
+        weighted = np.zeros(n_bins)
+
+        np.random.seed(42)
+        for _ in range(min(N_spec, 20000)):
+            k = np.random.uniform(-np.pi, np.pi, 4)
+            eigs_spec = np.maximum(
+                np.linalg.eigvalsh(dynamical_matrix(k, roots)), 0)
+            for e in eigs_spec:
+                omega = np.sqrt(e)
+                idx = np.searchsorted(omega_bins[1:], omega)
+                if idx < n_bins:
+                    counts[idx] += 1
+                    weighted[idx] += omega
+
+        total_weight = np.sum(weighted)
+        print(f"  {'ω range':>12s}  {'N(ω)':>8s}  {'Σω':>10s}  {'fraction':>8s}")
+        for i in range(n_bins):
+            if counts[i] > 0:
+                frac = weighted[i] / total_weight if total_weight > 0 else 0
+                print(f"  [{omega_bins[i]:4.1f}, {omega_bins[i+1]:4.1f}]  "
+                      f"{counts[i]:8.0f}  {weighted[i]:10.1f}  {frac:8.4f}")
+
+        # Zone-boundary weight fraction (upper half of spectrum)
+        zb_cut = omega_bins[n_bins // 2]
+        zb_frac = np.sum(weighted[n_bins//2:]) / total_weight if total_weight > 0 else 0
+        pass_zb = zb_frac > 0.1  # At least 10% weight in upper spectrum
+        spectral_results.append((f'8.5 Zone-boundary weight > 10% (ω >= {zb_cut:.1f})',
+                                 pass_zb, zb_frac))
+        if not pass_zb:
+            spectral_all_pass = False
+        print(f"\n  Zone-boundary fraction (ω >= {zb_cut:.1f}): {zb_frac:.3f}")
+        print(f"  [{'PASS' if pass_zb else 'FAIL'}] Significant zone-boundary weight")
+        print()
+
+        # --- Honest caveats ---
+        print("--- Honest Caveats (Tier 3, Task 8) ---")
+        print("  1. The shear mode suppression α⁵⁷ is POSTULATED from mode counting,")
+        print("     not derived from the BZ integral dynamics. The mechanism 'each")
+        print("     shear mode dissipates fraction α' is heuristic. Grade: B-.")
+        print()
+        print("  2. The triality phase averaging gives O(1) suppression, not the")
+        print("     claimed perfect cancellation at zone boundaries. Grade: B.")
+        print()
+        print("  3. The 1/(4π) normalization is attributed to angular averaging")
+        print("     but is not derived from an explicit solid angle integral. Grade: C+.")
+        print()
+        print("  4. The ORDER-OF-MAGNITUDE match (α⁵⁷/(4π) ≈ 1.3×10⁻¹²³ vs")
+        print("     observed 1.26×10⁻¹²³) is remarkable but the exponent 57 = 19×3")
+        print("     must be derived, not just counted. Grade: B- overall.")
+
+        # Spectral summary
+        print("\n" + "=" * 72)
+        n_spec_pass = sum(1 for _, p, _ in spectral_results if p)
+        n_spec_total = len(spectral_results)
+        for name, passed, val in spectral_results:
+            status = "PASS" if passed else "FAIL"
+            print(f"  [{status}] {name}: {val:.4f}")
+        print("-" * 72)
+        print(f"SPECTRAL RESULTS: {n_spec_pass} PASS,"
+              f" {n_spec_total - n_spec_pass} FAIL"
+              f" out of {n_spec_total} checks")
+        print("=" * 72)
+        print()
+
+        if not spectral_all_pass:
+            failures.append("spectral density")
 
     print("=" * 72)
     print("PHONON SPECTRUM COMPUTATION COMPLETE")
