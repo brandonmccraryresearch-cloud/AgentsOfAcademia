@@ -211,8 +211,10 @@ def run_rg_multithreshold(lambda_uv, thresholds, mu_ir, n_steps_per=5000):
     lam = lambda_uv
     mu_current = LAMBDA_UV
 
-    # Evolve gauge/Yukawa couplings from M_Z to the UV starting scale
-    # so boundary conditions are scale-consistent.
+    # Evolve gauge/Yukawa couplings from their known M_Z values up to the
+    # UV starting scale (LAMBDA_UV) via _run_sm_gauge_yukawa_to_scale, which
+    # performs one-loop RG evolution of y_t, g₁, g₂, g₃ from M_Z to mu_current.
+    # This establishes scale-consistent initial conditions for the coupled run.
     uv_couplings = _run_sm_gauge_yukawa_to_scale(mu_current)
     yt = uv_couplings['yt']
     g1 = uv_couplings['g1']

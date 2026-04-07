@@ -164,12 +164,9 @@ theorem lrExponent_neg_outside_cone (v_LR μ t d : ℝ)
 /-! ## Continuum Limit
 
   In the continuum limit, we take a₀ → 0 while keeping c_s = a₀ Ω_P fixed.
-  The Lieb-Robinson velocity v_LR = 48 J a₀ also scales: since
-  c_s² = 3J (with a₀ = 1), we have J = c_s²/3, so:
+  The Lieb-Robinson velocity v_LR = 48 J a₀ also scales.
 
-    v_LR = 48 · (c_s²/3) · a₀ = 16 c_s² a₀
-
-  In lattice units where c_s² = 3J a₀², J = c_s²/(3 a₀²), giving:
+  With dimensional a₀: c_s² = 3J a₀², so J = c_s²/(3 a₀²), giving:
     v_LR = 48 · c_s²/(3 a₀²) · a₀ = 16 c_s²/a₀
 
   This diverges as a₀ → 0, which is correct: in the continuum limit,
