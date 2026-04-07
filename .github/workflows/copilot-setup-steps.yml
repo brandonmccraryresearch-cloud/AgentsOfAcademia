@@ -1,0 +1,161 @@
+# ==============================================================================
+# COPILOT SETUP STEPS — Runs automatically at the start of EVERY Copilot
+# coding agent session, for any task, anywhere in this repository.
+#
+# This installs the full Anaconda scientific stack, additional pip packages,
+# and Lean 4 toolchain so that all scripts and tools are available to the agent.
+#
+# See: https://docs.github.com/en/copilot/customizing-copilot/customizing-the-development-environment-for-copilot-coding-agent
+# ==============================================================================
+
+name: "Copilot Setup Steps"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or Copilot will not pick it up.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: read
+
+    steps:
+      # ----------------------------------------------------------------
+      # STEP 1: Checkout repository
+      # ----------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------
+      # STEP 2: Install Anaconda
+      # ----------------------------------------------------------------
+      - name: Install Anaconda scientific distribution
+        run: |
+          echo "=========================================="
+          echo "  Installing Anaconda scientific stack"
+          echo "=========================================="
+          wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+          bash /tmp/miniconda.sh -b -p "$HOME/miniconda3"
+          eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+          conda init bash
+          echo "$HOME/miniconda3/bin" >> "$GITHUB_PATH"
+
+      # ----------------------------------------------------------------
+      # STEP 3: Install scientific Python stack via conda
+      # ----------------------------------------------------------------
+      - name: Install scientific Python packages (conda)
+        run: |
+          eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+          conda install -y -c conda-forge \
+            python=3.11 \
+            numpy \
+            scipy \
+            sympy \
+            matplotlib \
+            pandas \
+            scikit-learn \
+            jupyter \
+            networkx \
+            h5py \
+            ipython \
+            seaborn \
+            numba \
+            cython \
+            tqdm \
+            pyyaml \
+            requests
+
+      # ----------------------------------------------------------------
+      # STEP 4: Install additional pip packages
+      # ----------------------------------------------------------------
+      - name: Install additional Python packages (pip)
+        run: |
+          eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+          pip install \
+            mpmath \
+            pint \
+            uncertainties \
+            pylatex \
+            arviz \
+            emcee
+
+      # ----------------------------------------------------------------
+      # STEP 5: Verify Python environment
+      # ----------------------------------------------------------------
+      - name: Verify full scientific Python stack
+        run: |
+          eval "$("$HOME/miniconda3/bin/conda" shell.bash hook)"
+          python -c "
+          import numpy as np
+          import scipy
+          import sympy
+          import matplotlib
+          import pandas as pd
+          import sklearn
+          import networkx as nx
+          import h5py
+          import numba
+          import mpmath
+          import pint
+          print(f'NumPy:       {np.__version__}')
+          print(f'SciPy:       {scipy.__version__}')
+          print(f'SymPy:       {sympy.__version__}')
+          print(f'Matplotlib:  {matplotlib.__version__}')
+          print(f'Pandas:      {pd.__version__}')
+          print(f'Scikit-learn:{sklearn.__version__}')
+          print(f'NetworkX:    {nx.__version__}')
+          print(f'h5py:        {h5py.__version__}')
+          print(f'Numba:       {numba.__version__}')
+          print(f'mpmath:      {mpmath.__version__}')
+          print('✅ Full scientific Python stack: OPERATIONAL')
+          "
+
+      # ----------------------------------------------------------------
+      # STEP 6: Install Lean 4 via elan
+      # ----------------------------------------------------------------
+      - name: Install elan (Lean 4 version manager)
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Lean 4 installation
+        run: |
+          export PATH="$HOME/.elan/bin:$PATH"
+          if [ -d "lean4" ] && [ -f "lean4/lean-toolchain" ]; then
+            cd lean4
+            LEAN_VERSION=$(sed 's|leanprover/lean4:||' lean-toolchain)
+            echo "Required Lean version: $LEAN_VERSION"
+            elan toolchain install "leanprover/lean4:$LEAN_VERSION"
+            lean --version
+            echo "✅ Lean 4 toolchain: INSTALLED"
+          else
+            echo "⚠️  No lean4/ directory found — skipping Lean toolchain install"
+          fi
+
+      # ----------------------------------------------------------------
+      # SUMMARY
+      # ----------------------------------------------------------------
+      - name: Session bootstrap summary
+        run: |
+          echo "============================================================"
+          echo "  COPILOT SESSION BOOTSTRAP COMPLETE"
+          echo "============================================================"
+          echo "  Anaconda (Miniconda3)    : installed at ~/miniconda3"
+          echo "  Scientific Python stack  : numpy, scipy, sympy, matplotlib,"
+          echo "                             pandas, scikit-learn, networkx,"
+          echo "                             h5py, numba, seaborn, cython, etc."
+          echo "  Pip extras               : mpmath, pint, uncertainties,"
+          echo "                             pylatex, arviz, emcee"
+          echo "  Lean 4 (elan)            : installed at ~/.elan"
+          echo ""
+          echo "  All tools are available for the Copilot agent session."
+          echo "============================================================"
