@@ -282,6 +282,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
+### Current State (v83.0, 2026-04-07 — Session 10: PR #43 Review Fixes + Manuscript Guide)
+
+The manuscript is at v83.0. Sessions 6–9 executed the full critical-review task list and finalization plan (Phases A–C). Session 10 addressed the unresolved review comments from PR #43 and added the "How to Read This Paper" guide.
+
+**Session 10 results (PR #43 Review Fixes + Final Polish):**
+- **`scripts/higgs_effective_potential.py`:** Fixed 4/4 PASS (was 3/4); lower-bound RG convergence now recognized as genuine physics (D₄ extra-scalar contributions drive λ upward from any positive bare coupling); fixed incorrect comment `~183 GeV` → `~273 GeV` (m_h,bare(SM) is ~348 GeV, not 183); updated Z_λ caveat text 0.47 → 0.21 to match actual D₄ formula
+- **`83.0IRH.md`:** Added "How to Read This Paper" guide (after Table of Contents) explaining derivation status grades (A/B/C/D), reading strategies, and pointers to scripts, Lean 4 proofs, and review-response appendices
+- **`.github/copilot-instructions.md`:** Narrowed "Zero TODO/FIXME/HACK" claim to exclude `test_agent.py` regex pattern (accurate scoping)
+- **All other PR #43 review fixes:** Verified already applied in that PR — `run_rg_multithreshold` BCs corrected; `d4_simulation_4d.py` dead code and division-by-zero fixed; `d4_phonon_spectrum.py` zone-boundary label consistent; `ckm_magnitudes.py` Koide message consistent; `Goldstone.lean` sound speed c_s² = 3J consistent with `LiebRobinson.lean`; `MeasureUniqueness.lean` Poisson ratio comment corrected
+
+**Script verification (Session 10):** All 30 scripts pass. `higgs_effective_potential.py` now 4/4 PASS (fixed from 3/4).
+
 ### Current State (v83.0, 2026-04-07 — Session 9: Manuscript Finalization Phases A-C)
 
 The manuscript is at v83.0. Sessions 6–8 executed the deep critical review's Tier 1 CRITICAL, Tier 2 HIGH-priority, and Tier 3 IMPORTANT tasks respectively. Session 9 executed the finalization plan (Phases A–C). 30 scripts total, all pass.
@@ -429,4 +441,4 @@ The CKM magnitude analysis (Session 8) identifies sin²(θ₀) = sin²(2/9) as a
 | 17 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 18 | Topological defects | **3D vortex + 4D MD (S7+S8)** | Anharmonic defect mass spectrum |
 | 19 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 20 | Manuscript finalization | **Phase A+B+C COMPLETE (Session 9)** | Appendix consolidation (Phase A.4) optional |
+| 20 | Manuscript finalization | **Phase A+B+C COMPLETE (Session 9); Review fixes + Reader Guide COMPLETE (Session 10)** | Complete |
