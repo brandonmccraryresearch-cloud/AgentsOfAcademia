@@ -130,31 +130,31 @@ Lines 7900 and 7928 claim "16+ numerical agreements spanning 120 orders of magni
 
 #### Task 1.1: Propagate Session 2 Confidence Scores Throughout Manuscript
 - **What:** Update all 6+ confidence score blocks to reflect the most recent honest scores from §C.9 (92%/92%/52%/47%/88%)
-- **Files:** `83.0theaceinthehole.md` — lines 38, 5750, 7876, 7883, 7948, 8125
+- **Files:** `83.0IRH.md` — lines 38, 5750, 7876, 7883, 7948, 8125
 - **Expected outcome:** Single consistent set of confidence scores; Higgs quartic correctly at 52% (not 62%)
 - **Difficulty:** Easy
 
 #### Task 1.2: Correct All Parsimony Ratio Claims
 - **What:** Replace all instances of "~5.5" parsimony ratio with the honest "2.5–5.0" range from `parsimony_recalculation.py`
-- **Files:** `83.0theaceinthehole.md` — lines 4042, 7878, 7887, 7900, 7928, 7950
+- **Files:** `83.0IRH.md` — lines 4042, 7878, 7887, 7900, 7928, 7950
 - **Expected outcome:** No remaining "5.5" claims that haven't been corrected to the honest range
 - **Difficulty:** Easy
 
 #### Task 1.3: Fix D₄ Uniqueness Script and Manuscript Claims
 - **What:** (a) Correct the script summary in `d4_uniqueness.py` that falsely claims "Only D₄ satisfies 4th-moment isotropy" when F₄ also passes. (b) Update manuscript to say "D₄ is the unique root lattice satisfying both 4th-moment isotropy AND S₃ triality." (c) Add explicit F₄ discussion acknowledging it passes isotropy but fails triality.
-- **Files:** `scripts/d4_uniqueness.py`, `83.0theaceinthehole.md` (§AA.8, §II.3.2, any section claiming isotropy uniqueness)
+- **Files:** `scripts/d4_uniqueness.py`, `83.0IRH.md` (§AA.8, §II.3.2, any section claiming isotropy uniqueness)
 - **Expected outcome:** Honest, defensible uniqueness claim that doesn't overstate
 - **Difficulty:** Easy
 
 #### Task 1.4: Update Anomaly Cancellation Summary Table
 - **What:** §C.9 table (line 9342) grades anomaly cancellation as "B" with "SU(3), U(1)³ need GUT completion" — but the corrected script shows all 6 conditions now PASS. Update table to match §C.2's "A−" grade and remove stale deficit note.
-- **Files:** `83.0theaceinthehole.md` — line 9342
+- **Files:** `83.0IRH.md` — line 9342
 - **Expected outcome:** Consistency between §C.2 body (A−, all pass) and §C.9 summary table
 - **Difficulty:** Easy
 
 #### Task 1.5: Investigate and Fix the CW Negative Z_λ
 - **What:** The Coleman-Weinberg computation in `higgs_quartic.py` produces Z_λ(CW) = −7.12, an unphysical negative quartic coupling. Diagnose whether this is a code bug (sign error, wrong renormalization condition) or a genuine indication that the one-loop CW approach fails on D₄. Add prominent discussion in manuscript.
-- **Files:** `scripts/higgs_quartic.py`, `83.0theaceinthehole.md` §C.5
+- **Files:** `scripts/higgs_quartic.py`, `83.0IRH.md` §C.5
 - **Expected outcome:** Either a corrected CW computation or an honest explanation of why the one-loop CW fails
 - **Difficulty:** Hard
 
@@ -162,31 +162,31 @@ Lines 7900 and 7928 claim "16+ numerical agreements spanning 120 orders of magni
 
 #### Task 2.1: Close the Ward Identity 2.46% Gap
 - **What:** The BZ integral brackets the target (98.9% from below, 102.6% from above) with a midpoint gap of 2.46%. Investigate higher-order corrections: (a) two-loop vertex corrections, (b) wave-function renormalization, (c) running coupling effects. Goal: reduce gap to <1%.
-- **Files:** `scripts/ward_identity_closure.py`, `scripts/bz_integral.py`, `83.0theaceinthehole.md` §C.1
+- **Files:** `scripts/ward_identity_closure.py`, `scripts/bz_integral.py`, `83.0IRH.md` §C.1
 - **Expected outcome:** Improved BZ integral with identified source of residual 2.46%
 - **Difficulty:** Hard
 
 #### Task 2.2: Derive Cabibbo Angle from Triality (Not Just Phase)
 - **What:** The CKM phase (0.8% agreement) is a genuine success, but the Cabibbo angle is 93.7% off. Investigate whether the triality model can be extended with a proper parametrization of quark mass-mixing to reproduce the full CKM matrix, not just the CP-violating phase.
-- **Files:** `scripts/ckm_triality.py`, `83.0theaceinthehole.md` §C.3
+- **Files:** `scripts/ckm_triality.py`, `83.0IRH.md` §C.3
 - **Expected outcome:** Either improved Cabibbo angle prediction or honest documentation of why the simple triality model fails for mixing magnitudes
 - **Difficulty:** Hard
 
 #### Task 2.3: Investigate Real Threshold Correction Mechanism for Unification
 - **What:** The current threshold corrections improve the gap by only 0.1 units out of 16.9 needed. Investigate whether: (a) the hidden-sector mass spectrum is incorrect, (b) the two-loop mixing coefficients Δb_ij for hidden multiplets are underestimated, (c) the embedding index ratios need correction. The discrepancy between predicted (2:1.33:1) and actual (0.67:0.95:1) embedding ratios suggests a fundamental problem with the SO(8) breaking chain assumed.
-- **Files:** `scripts/two_loop_unification.py`, `83.0theaceinthehole.md` §C.4, §IV.5
+- **Files:** `scripts/two_loop_unification.py`, `83.0IRH.md` §C.4, §IV.5
 - **Expected outcome:** Either a viable path to closing the gap or an honest acknowledgment that the mechanism is insufficient
 - **Difficulty:** Hard
 
 #### Task 2.4: Remove Stale Version Labels
 - **What:** Multiple confidence blocks in the main text are labeled "v82.0" when they should be "v83.0". Update all version labels.
-- **Files:** `83.0theaceinthehole.md` — lines 7883, 7884, 7948
+- **Files:** `83.0IRH.md` — lines 7883, 7884, 7948
 - **Expected outcome:** Consistent version labeling throughout
 - **Difficulty:** Easy
 
 #### Task 2.5: Reconcile "16+ Agreements" Claim with Honest Classification
 - **What:** Lines 7900, 7928 claim "16+ numerical agreements" but the parsimony script classifies only 10 (5A+5B) as genuine or partial, with 3 tautological, 2 fitting, 3 incomplete. Either justify the "16+" count with an explicit breakdown or reduce the claim to match the honest classification.
-- **Files:** `83.0theaceinthehole.md` — lines 7900, 7928
+- **Files:** `83.0IRH.md` — lines 7900, 7928
 - **Expected outcome:** Consistent claim aligned with parsimony script classification
 - **Difficulty:** Easy
 
@@ -194,25 +194,25 @@ Lines 7900 and 7928 claim "16+ numerical agreements spanning 120 orders of magni
 
 #### Task 3.1: Compute Anomalous Magnetic Moment (g−2) on D₄ Lattice
 - **What:** The `lattice_qed_scattering.py` script verifies the tree-level cross-section σ = 4πα²/(3s). The natural next step is the one-loop vertex correction that gives the anomalous magnetic moment a_e = α/(2π). This would be a genuine new prediction from the lattice.
-- **Files:** New script `scripts/lattice_g_minus_2.py`, `83.0theaceinthehole.md` §C.7
+- **Files:** New script `scripts/lattice_g_minus_2.py`, `83.0IRH.md` §C.7
 - **Expected outcome:** Either reproduce Schwinger's a_e = α/(2π) from D₄ BZ integral or identify where the lattice computation diverges
 - **Difficulty:** Hard
 
 #### Task 3.2: Full 3×3 CKM Matrix from Triality
 - **What:** Extend the CKM triality script to compute all 9 matrix elements (not just the phase δ and Cabibbo angle). Include quark mass hierarchy from Koide-like relations in the quark sector, incorporating QCD corrections.
-- **Files:** `scripts/ckm_triality.py`, `83.0theaceinthehole.md` §C.3
+- **Files:** `scripts/ckm_triality.py`, `83.0IRH.md` §C.3
 - **Expected outcome:** Improved CKM matrix elements, reduction of Cabibbo angle discrepancy
 - **Difficulty:** Hard
 
 #### Task 3.3: Spectral Density Calculation for Cosmological Constant
 - **What:** The manuscript claims ρ_Λ/ρ_P = α⁵⁷/(4π) with exponent 57 = 3×19 from D₄ structure, but this is classified as "D (fitting)" by parsimony script. Compute the phonon spectral density integral explicitly to see if the α⁵⁷ scaling emerges.
-- **Files:** New script `scripts/cosmological_constant_spectral.py`, `83.0theaceinthehole.md`
+- **Files:** New script `scripts/cosmological_constant_spectral.py`, `83.0IRH.md`
 - **Expected outcome:** Either first-principles derivation of the α⁵⁷ scaling or identification of where it breaks down
 - **Difficulty:** Hard
 
 #### Task 3.4: Higgs VEV from Lattice Potential
 - **What:** The formula v = E_P · α⁹ · π⁵ · 9/8 is classified as "D (fitting)" — numerological. Attempt to derive the α⁹ exponent from the lattice effective potential minimization to upgrade it from fitting to derivation.
-- **Files:** New script `scripts/higgs_vev_derivation.py`, `83.0theaceinthehole.md`
+- **Files:** New script `scripts/higgs_vev_derivation.py`, `83.0IRH.md`
 - **Expected outcome:** First-principles path from lattice potential to v ≈ 246 GeV, or documentation of why this remains numerological
 - **Difficulty:** Hard
 
