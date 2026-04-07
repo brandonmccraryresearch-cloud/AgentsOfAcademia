@@ -2,7 +2,7 @@
 # SESSION BOOTSTRAP — Composite Action
 # ==============================================================================
 #
-# Installs the full Anaconda scientific stack, Lean 4, and runs verification
+# Installs the full Miniconda scientific stack, Lean 4, and runs verification
 # scripts INSIDE the calling workflow's runner — so everything is available
 # to subsequent steps in the same job.
 #
@@ -18,7 +18,7 @@
 # ==============================================================================
 
 name: "Session Bootstrap"
-description: "Install Anaconda scientific stack, Lean 4, and verify the environment inside the current runner."
+description: "Install Miniconda scientific stack, Lean 4, and verify the environment inside the current runner."
 
 inputs:
   run_lean_build:
@@ -59,15 +59,15 @@ runs:
         echo "============================================================"
 
     # ----------------------------------------------------------------
-    # STEP 1: ANACONDA INSTALLATION
+    # STEP 1: MINICONDA INSTALLATION
     # ----------------------------------------------------------------
-    - name: "Bootstrap — Install Anaconda"
+    - name: "Bootstrap — Install Miniconda"
       shell: bash
       run: |
-        CONDA_PREFIX_PATH="/home/runner/anaconda3"
-        echo "Installing Anaconda..."
-        wget -q https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh -O /tmp/anaconda.sh
-        bash /tmp/anaconda.sh -b -p "${CONDA_PREFIX_PATH}"
+        CONDA_PREFIX_PATH="/home/runner/miniconda3"
+        echo "Installing Miniconda..."
+        wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+        bash /tmp/miniconda.sh -b -p "${CONDA_PREFIX_PATH}"
         eval "$("${CONDA_PREFIX_PATH}"/bin/conda shell.bash hook)"
         conda init bash
         echo "${CONDA_PREFIX_PATH}/bin" >> "$GITHUB_PATH"
@@ -235,7 +235,7 @@ runs:
         echo "============================================================"
         echo "  SESSION BOOTSTRAP COMPLETE (in-runner)"
         echo "============================================================"
-        echo "  Anaconda scientific stack : installed"
+        echo "  Miniconda scientific stack : installed"
         if [ "${{ inputs.run_lean_build }}" = "true" ]; then
           echo "  Lean 4 verification      : installed"
         else
