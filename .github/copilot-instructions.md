@@ -257,7 +257,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 46 verified theorems across 5 files (Basic.lean: 17, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 9, Circularity.lean: 6). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
+Current state: 118 verified theorems across 10 files (Basic.lean: 17, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 9, Circularity.lean: 6, LiebRobinson.lean: 14, MeasureUniqueness.lean: 13, D4Uniqueness.lean: 13, Goldstone.lean: 15, GaugeInvariance.lean: 17). Zero `sorry` in all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
 
 ## Agent Architecture
 
@@ -308,7 +308,7 @@ The manuscript is at v83.0. Sessions 6–8 executed the deep critical review's T
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
-| Lean 4 | **46 theorems, 0 sorry** | Build verified across 5 files |
+| Lean 4 | **118 theorems, 0 sorry** | Build verified across 10 files |
 | Scripts | **30/30 pass** | 5 original + 8 S2 + 3 S3 + 4 S4 + 3 S6 + 4 S7 + 3 S8 new + 2 S8 ext |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
 | CKM magnitudes | **sin θ_C 1% via GST; topology vs dynamics (S8)** | Wolfenstein λ 1%; Koide extension speculative |
@@ -420,7 +420,7 @@ The CKM magnitude analysis (Session 8) identifies sin²(θ₀) = sin²(2/9) as a
 | 10 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
 | 11 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
 | 12 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
-| 13 | Lean 4 T3 Lieb-Robinson | Not started | Create LiebRobinson.lean |
+| 13 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Machine-check with `lake build` |
 | 14 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
 | 15 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
 | 16 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (Session 7)** | Complete; 3 methods agree |
