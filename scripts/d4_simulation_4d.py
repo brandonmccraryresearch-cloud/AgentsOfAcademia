@@ -352,13 +352,14 @@ def main():
     # Run MD
     forces = compute_forces_harmonic(disp, neighbors, roots, J, L)
     energies = []
+    log_interval = max(1, n_steps // 5)
 
     print(f"  Running {n_steps} steps...")
     for step in range(n_steps):
         disp, vel, forces = velocity_verlet_step(
             disp, vel, forces, neighbors, roots, J, L, dt
         )
-        if step % (n_steps // 5) == 0 or step == n_steps - 1:
+        if step % log_interval == 0 or step == n_steps - 1:
             E_K = kinetic_energy(vel)
             E_P_val = potential_energy(disp, neighbors, roots, J)
             E_tot = E_K + E_P_val
