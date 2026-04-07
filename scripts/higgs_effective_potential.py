@@ -451,7 +451,7 @@ def main():
     if not pass_physical:
         all_pass = False
     print(f"  [{'PASS' if pass_physical else 'FAIL'}] Physical Z_λ = {Z_meaningful:.4f}"
-          " in expected range [0.3, 0.7]")
+          " in expected range [0.1, 0.6]")
     print()
 
     # ---- Honest Caveats ----

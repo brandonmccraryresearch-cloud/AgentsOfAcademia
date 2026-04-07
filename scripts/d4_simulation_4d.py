@@ -438,8 +438,13 @@ def main():
 
     eigs_small = np.linalg.eigvalsh(D_mat)
     c_sq_small = eigs_small / eps**2
-    c_T = np.sqrt(c_sq_small[0])
-    c_L = np.sqrt(c_sq_small[3])
+    # Eigenvalues are sorted ascending by eigvalsh:
+    # [0] = smallest (transverse/shear mode)
+    # [3] = largest (longitudinal mode)
+    c_T = np.sqrt(c_sq_small[0])   # Transverse sound velocity
+    c_L = np.sqrt(c_sq_small[3])   # Longitudinal sound velocity
+    # Poisson ratio for isotropic elastic medium in d dimensions:
+    # ν = (c_L² - 2c_T²) / (2c_L² - 2c_T²)
     nu = (c_sq_small[3] - 2*c_sq_small[0]) / (2*c_sq_small[3] - 2*c_sq_small[0])
 
     print(f"  c²_T = {c_sq_small[0]:.6f}")

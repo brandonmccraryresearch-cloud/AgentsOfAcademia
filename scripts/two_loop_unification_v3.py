@@ -956,7 +956,7 @@ def main():
         mps_results.append(('7.2 M_PS derivation', pass_mps, log_agreement))
         if not pass_mps:
             mps_all_pass = False
-        print(f"  [{'PASS' if pass_mps else 'FAIL'}] M_PS within 3 decades"
+        print(f"  [{'PASS' if pass_mps else 'FAIL'}] M_PS within 5 decades"
               " of scan")
         print()
 

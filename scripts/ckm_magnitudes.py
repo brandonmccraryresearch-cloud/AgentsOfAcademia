@@ -258,9 +258,9 @@ def main():
     koide_pct = abs(sin_tc_koide - LAMBDA_EXP) / LAMBDA_EXP * 100
     print(f"  sin θ_C(Koide) = {sin_tc_koide:.5f} ({koide_pct:.1f}% off)")
     # NOTE: Koide extension to quarks is speculative (different sector from leptons)
-    # This test is informational — large deviations are expected and do not
-    # constitute a framework failure.
-    pass_koide = True  # Informational: always passes (honest caveat noted)
+    # This test uses a generous threshold — large deviations do not constitute a
+    # framework failure but gross errors (>200%) would indicate a code bug.
+    pass_koide = koide_pct < 200.0  # Generous: detect gross errors only
     results.append(('3.1 Koide extension computed', pass_koide, koide_pct))
     if not pass_koide:
         all_pass = False
