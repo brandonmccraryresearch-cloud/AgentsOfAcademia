@@ -282,16 +282,27 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v83.0, 2026-04-07 — Session 8: Tier 3 Implementation)
+### Current State (v83.0, 2026-04-07 — Session 9: Manuscript Finalization Phases A-C)
 
-The manuscript is at v83.0. Sessions 6–8 executed the deep critical review's Tier 1 CRITICAL, Tier 2 HIGH-priority, and Tier 3 IMPORTANT tasks respectively. 30 scripts total, all pass.
+The manuscript is at v83.0. Sessions 6–8 executed the deep critical review's Tier 1 CRITICAL, Tier 2 HIGH-priority, and Tier 3 IMPORTANT tasks respectively. Session 9 executed the finalization plan (Phases A–C). 30 scripts total, all pass.
 
-**Session 8 results (Tier 3 IMPORTANT):**
-- **Λ spectral density (Task 8):** Extended d4_phonon_spectrum.py with --spectral flag; BZ zero-point energy + triality averaging + α⁵⁷/(4π) match to 0.2%; 5/5 PASS; grade B−
-- **Higgs Z_λ (Task 9):** RG-improved CW with multi-threshold matching; Z_λ = 0.21 from η_D₄; hierarchy self-consistent; 4/4 PASS; grade B
-- **M_PS derivation (Task 10):** Three methods (RG, sin²θ_W, lattice phonon gap); geometric mean M_PS ~ 10¹⁴; 4-decade tension with scan; 3/3 PASS; grade C+
-- **4D simulation (Task 11):** First MD on 4D D₄ lattice; isotropy confirmed dynamically; Poisson ν = 1/4; defect stable; 5/5 PASS; grade B−
-- **CKM magnitudes (Task 12):** GST sin θ_C 1%, topology vs dynamics delineated; Wolfenstein λ 1%; 6/6 PASS; grade B−
+**Session 9 results (Manuscript Finalization):**
+- **Phase A (Restructuring):** 5 bridge paragraphs already in place (Sessions 7–8); no chapter reordering needed
+- **Phase B (Empirical Grounding):** All 7 known ad hoc elements addressed with explicit derivation status caveats:
+  - Higgs VEV α⁹: "STRUCTURALLY MOTIVATED, NOT RIGOROUSLY DERIVED" + cross-refs §C.13, §C.24
+  - Cosmological constant 57: "EXPONENT STRUCTURAL, SUPPRESSION MECHANISM HEURISTIC" + cross-refs §C.12, §C.23
+  - sin²θ_W = 3/13: "ALGEBRAICALLY DERIVED (B+)" + BSM right-handed neutrino prediction + cross-ref §C.16
+  - 137 = 128+8+1: Ontological inconsistency flagged (D₈/Spin(16) ≠ D₄); BZ integral approach promoted + cross-ref §C.15
+  - CKM: "CP PHASE TOPOLOGICAL (A−), MIXING MAGNITUDES DYNAMICAL (C)" + Koide extension marked speculative + cross-refs §C.3, §C.27
+  - M_PS: 4-decade tension honestly stated with 3 analytical methods + cross-ref §C.25
+  - Gauge cascade: "ALGEBRAICALLY VERIFIED, DYNAMICALLY INCOMPLETE" + dynamical mechanism open + cross-refs §C.16, §C.19
+  - Additional: α BZ integral 0.95% gap status + θ₀ triple verification cross-ref §C.18
+- **Phase C (Technical Review):**
+  - LaTeX syntax: 1144 delimiters balanced; single-$ display equation in §T.4 fixed
+  - Cross-reference integrity: all §C.1–§C.34 sections exist; all 30 scripts referenced; all 10 Lean files referenced
+  - Consistency: confidence 90% propagated to header; version 83.0 throughout; 118 theorems / 30 scripts counts consistent
+  - Configuration: stale `theaceinthehole` refs in agent_compliance_check.yml fixed; README_SETUP.md updated
+  - Zero TODO/FIXME/HACK markers across all files
 
 **Session 6 results (Tier 1 CRITICAL):**
 - **BZ two-loop:** V₃≡0 by centrosymmetry; I_SE=0.071; gap 1.7%→0.95%
@@ -336,24 +347,13 @@ Session 6 reduced the BZ integral gap to **0.95%** through two-loop analysis (V�
 
 **Action:** Extend `scripts/bz_two_loop.py` with three-loop or MC evaluation.
 
-### Priority 2: Lean 4 T3 — Lieb-Robinson Bound
+### Priority 2: Lean 4 T3 — Lieb-Robinson Bound ✅ DONE (Session 8)
 
-Formalize finite propagation speed on the D₄ lattice:
+**Completed.** `lean4/IHMFramework/LiebRobinson.lean` — 14 theorems, 0 sorry. See §C.29.
 
-1. Define the lattice Hamiltonian with finite-range interactions
-2. Prove commutator decay: ‖[A(t), B]‖ ≤ C · e^{v|t| - d(A,B)}
-3. Extract the Lieb-Robinson velocity from D₄ dispersion relation
+### Priority 3: T7 — Measure Uniqueness from 5-Design ✅ DONE (Session 8)
 
-**Action:** Create `lean4/IHMFramework/LiebRobinson.lean`.
-
-### Priority 3: T7 — Measure Uniqueness from 5-Design
-
-This follows directly from FiveDesign.lean (T6):
-
-1. Show that the 5-design property implies a unique rotation-invariant measure
-2. Connect to ergodicity of the D₄ triality action on S³
-
-**Action:** Create `lean4/IHMFramework/MeasureUniqueness.lean`.
+**Completed.** `lean4/IHMFramework/MeasureUniqueness.lean` — 13 theorems, 0 sorry. See §C.30.
 
 ### Priority 4: Resolve M_PS 4-Decade Tension
 
@@ -386,12 +386,14 @@ Session 8 implemented the 4D simulation with harmonic potentials. Next:
 
 **Action:** Extend `scripts/d4_simulation_4d.py` with anharmonic terms.
 
-### Priority 7: Additional Lean 4 Theorems (T3, T7, T8–T10)
+### Priority 7: Additional Lean 4 Theorems (T8–T10) — T8, T9 ✅ DONE (Session 8)
 
-After T3 and T7, formalize:
-- **T8:** Goldstone theorem on D₄ lattice
-- **T9:** Gauge invariance of the lattice action
-- **T10:** Anomaly cancellation from triality
+**Completed:**
+- **T8:** Goldstone theorem on D₄ lattice — `Goldstone.lean`, 15 theorems, 0 sorry. See §C.32.
+- **T9:** Gauge invariance of the lattice action — `GaugeInvariance.lean`, 17 theorems, 0 sorry. See §C.33.
+
+**Remaining:**
+- **T10:** Anomaly cancellation from triality — requires new Lean 4 file.
 
 ### Priority 8: Derive m_d/m_s from D₄ Geometry
 
@@ -403,7 +405,7 @@ The CKM magnitude analysis (Session 8) identifies sin²(θ₀) = sin²(2/9) as a
 
 **Action:** Extend `scripts/ckm_magnitudes.py` with D₄ mass ratio derivation.
 
-### Open Problem Status (as of v83.0 Session 8)
+### Open Problem Status (as of v83.0 Session 9)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
@@ -420,10 +422,11 @@ The CKM magnitude analysis (Session 8) identifies sin²(θ₀) = sin²(2/9) as a
 | 10 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
 | 11 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
 | 12 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
-| 13 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Machine-check with `lake build` |
+| 13 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Complete |
 | 14 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
 | 15 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
 | 16 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (Session 7)** | Complete; 3 methods agree |
 | 17 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 18 | Topological defects | **3D vortex + 4D MD (S7+S8)** | Anharmonic defect mass spectrum |
 | 19 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
+| 20 | Manuscript finalization | **Phase A+B+C COMPLETE (Session 9)** | Appendix consolidation (Phase A.4) optional |
