@@ -11,3 +11,9 @@ import IHMFramework.V2Basic
 import IHMFramework.V2Problems
 import IHMFramework.FiveDesign
 import IHMFramework.Circularity
+-- Tier 4 Lean 4 Formalization (Session 8)
+import IHMFramework.LiebRobinson
+import IHMFramework.MeasureUniqueness
+import IHMFramework.D4Uniqueness
+import IHMFramework.Goldstone
+import IHMFramework.GaugeInvariance
