@@ -302,7 +302,7 @@ The manuscript is at v83.0. Sessions 6–8 executed the deep critical review's T
   - Cross-reference integrity: all §C.1–§C.34 sections exist; all 30 scripts referenced; all 10 Lean files referenced
   - Consistency: confidence 90% propagated to header; version 83.0 throughout; 118 theorems / 30 scripts counts consistent
   - Configuration: stale `theaceinthehole` refs in agent_compliance_check.yml fixed; README_SETUP.md updated
-  - Zero TODO/FIXME/HACK markers across all files
+  - Zero TODO/FIXME/HACK markers in the manuscript, scripts, and project instruction/configuration files reviewed during finalization
 
 **Session 6 results (Tier 1 CRITICAL):**
 - **BZ two-loop:** V₃≡0 by centrosymmetry; I_SE=0.071; gap 1.7%→0.95%

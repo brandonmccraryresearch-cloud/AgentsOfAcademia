@@ -286,6 +286,8 @@ def main():
                         help='Tier 3 Task 10: derive M_PS from D₄ dynamics')
     args = parser.parse_args()
 
+    all_pass = True  # Track overall pass/fail for --strict mode
+
     print("=" * 76)
     print("GAUGE UNIFICATION v3 — PATI-SALAM + LATTICE MATCHING (v83.0 Session 4/8)")
     print("=" * 76)
@@ -1047,6 +1049,12 @@ def main():
         print("=" * 72)
         print()
 
+        if not mps_all_pass:
+            all_pass = False
+
+    if args.strict and not all_pass:
+        print("STRICT MODE: one or more checks failed — exiting non-zero")
+        return 1
     return 0
 
 

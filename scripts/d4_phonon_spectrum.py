@@ -442,13 +442,14 @@ def main():
                       f"{counts[i]:8.0f}  {weighted[i]:10.1f}  {frac:8.4f}")
 
         # Zone-boundary weight fraction (upper half of spectrum)
+        zb_cut = omega_bins[n_bins // 2]
         zb_frac = np.sum(weighted[n_bins//2:]) / total_weight if total_weight > 0 else 0
         pass_zb = zb_frac > 0.1  # At least 10% weight in upper spectrum
-        spectral_results.append(('8.5 Zone-boundary weight > 30%', pass_zb,
-                                 zb_frac))
+        spectral_results.append((f'8.5 Zone-boundary weight > 10% (ω >= {zb_cut:.1f})',
+                                 pass_zb, zb_frac))
         if not pass_zb:
             spectral_all_pass = False
-        print(f"\n  Zone-boundary fraction (ω > 4): {zb_frac:.3f}")
+        print(f"\n  Zone-boundary fraction (ω >= {zb_cut:.1f}): {zb_frac:.3f}")
         print(f"  [{'PASS' if pass_zb else 'FAIL'}] Significant zone-boundary weight")
         print()
 

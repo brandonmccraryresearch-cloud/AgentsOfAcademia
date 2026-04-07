@@ -20,7 +20,8 @@ this range. Instead, we:
 Key formulas:
     β_λ^SM = (1/16π²)[24λ² + 12λy_t² − 12y_t⁴ − gauge corrections]
     Z_λ = λ_phys / λ_bare
-    Target: Z_λ ≈ 0.47 (from m_h = 125.25 GeV, m_h,bare = 183 GeV)
+    Target: Z_λ(SM) ≈ 0.47 (from m_h = 125.25 GeV, m_h,bare(SM) = v√2 ≈ 183 GeV)
+    D₄ prediction: Z_λ ≈ 0.21 (from m_h,bare(D₄) = v√(2η_D₄) ≈ 273 GeV)
 
 Session 8, Tier 3, Task 9
 Success criterion: Z_λ ≈ 0.47 from RG-improved calculation, not fit
@@ -208,9 +209,15 @@ def run_rg_multithreshold(lambda_uv, thresholds, mu_ir, n_steps_per=5000):
     diagnostics = {'segments': []}
 
     lam = lambda_uv
-    yt = Y_T
-    g1, g2, g3 = G1_MZ, G2_MZ, G3_MZ
     mu_current = LAMBDA_UV
+
+    # Evolve gauge/Yukawa couplings from M_Z to the UV starting scale
+    # so boundary conditions are scale-consistent.
+    uv_couplings = _run_sm_gauge_yukawa_to_scale(mu_current)
+    yt = uv_couplings['yt']
+    g1 = uv_couplings['g1']
+    g2 = uv_couplings['g2']
+    g3 = uv_couplings['g3']
 
     for mu_thresh, n_extra, label in thresholds:
         # Run from mu_current to mu_thresh with extended content
@@ -298,7 +305,7 @@ def main():
     lambda_phys = M_H**2 / (2 * V_EW**2)  # = 0.1294
     lambda_bare = ETA_D4**2 * ALPHA         # geometric bare quartic
     m_h_bare = V_EW * np.sqrt(2 * lambda_bare / lambda_phys) * M_H / V_EW
-    m_h_bare_geom = V_EW * np.sqrt(2 * ETA_D4)  # ~ 183 GeV
+    m_h_bare_geom = V_EW * np.sqrt(2 * ETA_D4)  # ~ 273 GeV (η_D₄ = π²/16 ≈ 0.617)
     Z_lambda_target = lambda_phys / (ETA_D4)  # ~ 0.21
     Z_lambda_from_mass = (M_H / m_h_bare_geom)**2
 
@@ -444,7 +451,7 @@ def main():
     if not pass_match:
         all_pass = False
     print(f"  [{'PASS' if pass_match else 'FAIL'}] RG running matches λ_phys"
-          " within 5%")
+          " within 10%")
     print()
 
     # ---- Part 6: Hierarchy consistency ----

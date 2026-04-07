@@ -208,15 +208,7 @@ def create_breathing_defect(displacements, center, amplitude, sigma, L):
     """
     N = displacements.shape[0]
     for i in range(N):
-        # Position relative to center (with periodic wrapping)
-        dr = np.zeros(4)
-        for d in range(4):
-            coord = i
-            for dd in range(3, -1, -1):
-                if dd == d:
-                    dr[d] = coord % L - center[d]
-                coord //= L
-        # Simple: recompute coordinates
+        # Compute grid coordinates from flat index
         rem = i
         pos = np.zeros(4)
         for d in range(3, -1, -1):
@@ -401,11 +393,12 @@ def main():
     n_defect_steps = min(n_steps, 200)
 
     defect_rms = []
+    defect_report_interval = max(1, n_defect_steps // 5)
     for step in range(n_defect_steps):
         disp_defect, vel_defect, forces_d = velocity_verlet_step(
             disp_defect, vel_defect, forces_d, neighbors, roots, J, L, dt
         )
-        if step % (n_defect_steps // 5) == 0 or step == n_defect_steps - 1:
+        if step % defect_report_interval == 0 or step == n_defect_steps - 1:
             rms = np.sqrt(np.mean(disp_defect**2))
             defect_rms.append(rms)
 

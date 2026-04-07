@@ -19,8 +19,9 @@
     v_LR ≤ 2 J z a₀ = 48 J a₀
 
   This is a rigorous upper bound, not the physical sound velocity. The
-  actual phonon velocity c_s = a₀ √(J z / d) = a₀ √(6J) ≈ 2.45 a₀ √J
-  is much smaller, as expected.
+  actual phonon velocity c_s = a₀ √(J z / (2d)) = a₀ √(3J) ≈ 1.73 a₀ √J
+  is much smaller, as expected. The factor of 2 in the denominator comes
+  from the small-k expansion of the dynamical matrix: 1 - cos(k·δ) ≈ (k·δ)²/2.
 
   Physical significance: The finite propagation speed is the geometric
   origin of the light cone. In the continuum limit (a₀ → 0 with
@@ -92,27 +93,34 @@ theorem liebRobinson_d4 (J : LatticeInteraction) (a₀ : ℝ) :
 
 /-! ## Phonon Velocity vs Lieb-Robinson Velocity
 
-  The physical phonon velocity on the D₄ lattice is:
-    c_s² = J · z / d = J · 24 / 4 = 6J  (in lattice units with a₀ = 1)
+  The physical phonon velocity on the D₄ lattice is determined by the
+  dynamical matrix D_αβ(k) = J Σ_δ (δ_α δ_β / |δ|²) [1 - cos(k·δ)].
+  The small-k expansion gives 1 - cos(k·δ) ≈ (k·δ)²/2, so:
+    c_s² = J · z / (2d) = J · 24 / (2 × 4) = 3J  (in lattice units with a₀ = 1)
 
-  The Lieb-Robinson velocity 48J is much larger than c_s = √(6J),
+  This matches the Goldstone.lean convention (soundVelocitySq = 3J).
+
+  The Lieb-Robinson velocity 48J is much larger than c_s = √(3J),
   as expected: the LR bound is an upper bound on ALL information
   propagation, while the phonon velocity is the speed of the
   specific acoustic excitation.
 
   For the physical case J · a₀² = c² / z (identifying the phonon
   velocity with the speed of light), the ratio is:
-    v_LR / c = 48 J a₀ / (a₀ √(6J)) = 48 √J / √(6J) = 48/√6 ≈ 19.6
+    v_LR / c = 48 J a₀ / (a₀ √(3J)) = 48 √J / √(3J) = 48/√3 ≈ 27.7
 -/
 
 /-- The phonon velocity squared on the D₄ lattice (in units where a₀ = 1):
-    c_s² = J · z / d = 6J. -/
+    c_s² = J · z / (2d) = 3J.
+    The factor of 2 comes from the dynamical matrix convention
+    D_αβ(k) = J Σ_δ (δ_α δ_β / |δ|²) [1 - cos(k·δ)], where
+    1 - cos(k·δ) ≈ (k·δ)²/2 at small k. -/
 noncomputable def phononVelocitySq (J : LatticeInteraction) : ℝ :=
-  J.coupling * d4CoordReal / 4
+  J.coupling * d4CoordReal / (2 * 4)
 
-/-- The phonon velocity squared equals 6J. -/
+/-- The phonon velocity squared equals 3J. -/
 theorem phononVelocitySq_val (J : LatticeInteraction) :
-    phononVelocitySq J = 6 * J.coupling := by
+    phononVelocitySq J = 3 * J.coupling := by
   unfold phononVelocitySq d4CoordReal
   ring
 
@@ -157,9 +165,12 @@ theorem lrExponent_neg_outside_cone (v_LR μ t d : ℝ)
 
   In the continuum limit, we take a₀ → 0 while keeping c_s = a₀ Ω_P fixed.
   The Lieb-Robinson velocity v_LR = 48 J a₀ also scales: since
-  J = c_s² / (z a₀²) = c_s² / (24 a₀²), we get:
+  c_s² = 3J (with a₀ = 1), we have J = c_s²/3, so:
 
-    v_LR = 48 · c_s² / (24 a₀²) · a₀ = 2 c_s² / a₀
+    v_LR = 48 · (c_s²/3) · a₀ = 16 c_s² a₀
+
+  In lattice units where c_s² = 3J a₀², J = c_s²/(3 a₀²), giving:
+    v_LR = 48 · c_s²/(3 a₀²) · a₀ = 16 c_s²/a₀
 
   This diverges as a₀ → 0, which is correct: in the continuum limit,
   the Lieb-Robinson bound becomes vacuous (all speeds are ≤ ∞),
@@ -172,8 +183,8 @@ theorem lrExponent_neg_outside_cone (v_LR μ t d : ℝ)
     This is a consistency check: the upper bound is indeed above
     the physical propagation speed.
 
-    Specifically, (48Ja₀)² > 6J·a₀² ⟺ 48²J > 6, which holds
-    since J > 0 and 48² = 2304 > 6. -/
+    Specifically, (48Ja₀)² > 3J·a₀² ⟺ 48²J > 3, which holds
+    since J > 0 and 48² = 2304 > 3. -/
 theorem lr_exceeds_phonon (J : LatticeInteraction) (a₀ : ℝ) (ha : 0 < a₀)
     (hJ1 : 1 ≤ J.coupling) :
     (liebRobinsonVelocity J d4CoordReal a₀) ^ 2 >

@@ -124,9 +124,10 @@ theorem quadratic_isotropy_d4 :
     (12 : ℝ) * (1 / 2) / 24 = 1 / 4 := by
   norm_num
 
-/-- Moment matching at 4th order implies the Poisson ratio ν = 1/(d+1).
-    For d = 4: ν = 1/5. (Actually ν = 1/4 on D₄ due to the specific
-    elastic tensor, but the 5-design guarantees isotropic elastic constants.)
+/-- Moment matching at 4th order implies elastic isotropy, not by itself
+    a universal Poisson-ratio formula. In particular, for the D₄ case studied
+    here, the physically relevant isotropic invariant used elsewhere in the
+    manuscript is ν = 1/4.
 
     The elastic isotropy theorem: if the 4th moments match the uniform
     measure, then the elastic tensor C_{ijkl} is isotropic, i.e.,
