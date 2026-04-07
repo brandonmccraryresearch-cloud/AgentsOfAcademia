@@ -88,6 +88,7 @@ theorem moment_ratio_universal (d : ℕ) (hd : (0 : ℝ) < d) (hd2 : (0 : ℝ) <
   unfold targetQuarticMoment targetMixedMoment
   have hprod : (0 : ℝ) < (d : ℝ) * ((d : ℝ) + 2) := mul_pos hd hd2
   field_simp
+  ring
 
 /-! ## Measure Uniqueness from Moment Conditions
 
