@@ -126,20 +126,57 @@ def beta_lambda_extended(lam, yt, g1, g2, g3, n_extra_scalars=0):
 
 # ==================== RG Running ====================
 
+def _run_sm_gauge_yukawa_to_scale(mu_target, n_steps=10000):
+    """
+    Evolve SM gauge couplings and top Yukawa from their known M_Z values
+    to an arbitrary target scale mu_target.
+
+    This provides scale-consistent boundary conditions for RG runs that
+    start away from M_Z.
+    """
+    if np.isclose(mu_target, M_Z):
+        return {'yt': Y_T, 'g1': G1_MZ, 'g2': G2_MZ, 'g3': G3_MZ}
+
+    t_start = np.log(M_Z)
+    t_end = np.log(mu_target)
+    dt = (t_end - t_start) / n_steps
+
+    yt = Y_T
+    g1, g2, g3 = G1_MZ, G2_MZ, G3_MZ
+
+    for _ in range(n_steps):
+        b_yt = beta_yt_sm(yt, g1, g2, g3)
+        b_g = beta_gauge_sm(g1, g2, g3)
+
+        yt += b_yt * dt
+        g1 += b_g[0] * dt
+        g2 += b_g[1] * dt
+        g3 += b_g[2] * dt
+
+    return {'yt': yt, 'g1': g1, 'g2': g2, 'g3': g3}
+
+
 def run_rg_sm(lambda_start, mu_start, mu_end, n_steps=10000):
     """
     Run SM RG evolution from mu_start down to mu_end.
 
     Simultaneously evolves λ, y_t, g₁, g₂, g₃.
     Returns lambda at mu_end and coupling values.
+
+    Gauge/Yukawa couplings are first initialized at the same scale mu_start.
+    If mu_start differs from M_Z, they are evolved from M_Z to mu_start
+    before the coupled λ/y_t/g_i system is integrated to mu_end.
     """
     t_start = np.log(mu_start)
     t_end = np.log(mu_end)
     dt = (t_end - t_start) / n_steps
 
     lam = lambda_start
-    yt = Y_T
-    g1, g2, g3 = G1_MZ, G2_MZ, G3_MZ
+    start_couplings = _run_sm_gauge_yukawa_to_scale(mu_start, n_steps=n_steps)
+    yt = start_couplings['yt']
+    g1 = start_couplings['g1']
+    g2 = start_couplings['g2']
+    g3 = start_couplings['g3']
 
     for _ in range(n_steps):
         b_lam = beta_lambda_sm(lam, yt, g1, g2, g3)
