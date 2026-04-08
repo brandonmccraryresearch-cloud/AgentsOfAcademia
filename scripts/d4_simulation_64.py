@@ -96,7 +96,10 @@ def compute_forces_harmonic_vec(disp, neighbor_idx, roots, J, root_hats=None):
     """
     Vectorized harmonic force computation.
 
-    F_i = −J Σ_δ (δ̂ · (u_{i+δ} − u_i)) δ̂
+    F_i = +J Σ_δ (δ̂ · (u_{i+δ} − u_i)) δ̂
+
+    (Positive sign: F = −∇U with U = (J/2) Σ (δ̂·Δu)², so −∂U/∂u_i has
+    the projection enter with a positive coefficient.)
     """
     N = disp.shape[0]
     forces = np.zeros_like(disp)
@@ -117,7 +120,7 @@ def compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4, root_hat
     """
     Vectorized anharmonic force computation.
 
-    F_i = −J Σ_δ (δ̂·Δu) δ̂ − (κ₄/6) Σ_δ (δ̂·Δu)³ δ̂
+    F_i = +J Σ_δ (δ̂·Δu) δ̂ + (κ₄/6) Σ_δ (δ̂·Δu)³ δ̂
 
     The quartic term generates a cubic force (derivative of x⁴/4! = x³/3!).
     """
@@ -289,7 +292,8 @@ def main():
     print()
 
     # Memory estimate
-    mem_bytes = N * 4 * 8 * 3 + N * 24 * 4  # disp + vel + forces + neighbors
+    index_itemsize = np.dtype(int).itemsize  # 8 on 64-bit platforms
+    mem_bytes = N * 4 * 8 * 3 + N * 24 * index_itemsize  # disp + vel + forces + neighbors
     mem_GB = mem_bytes / 1e9
     print(f"  Estimated memory: {mem_GB:.2f} GB")
 

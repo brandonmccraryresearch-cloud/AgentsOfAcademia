@@ -186,8 +186,7 @@ def sector_wavefunctions(roots):
     return sectors
 
 
-def yukawa_overlap_integral(psi_i_roots, psi_j_roots, all_roots, N_mc=50000,
-                              seed=42):
+def yukawa_overlap_integral(psi_i_roots, psi_j_roots, N_mc=50000, seed=42):
     """
     Compute the Yukawa overlap integral:
 
@@ -238,7 +237,7 @@ def compute_yukawa_matrix(roots, N_mc=50000, seed=42):
         for j in range(3):
             if len(sectors[i]) > 0 and len(sectors[j]) > 0:
                 Y[i, j] = yukawa_overlap_integral(
-                    sectors[i], sectors[j], roots, N_mc, seed + 10*i + j
+                    sectors[i], sectors[j], N_mc, seed + 10*i + j
                 )
 
     return Y
@@ -396,11 +395,11 @@ def d4_mass_ratios():
     m_t_pred = scale_u * m_t_koide
 
     return {
-        'down': (m_d_pred, m_s_pred, m_b_pred),
+        'down': (m_d_pred2, m_s_pred2, m_b_pred2),
         'up': (m_u_pred, m_c_pred, m_t_pred),
         'ratios': {
-            'md/ms': m_d_pred / m_s_pred,
-            'ms/mb': m_s_pred / m_b_pred,
+            'md/ms': m_d_pred2 / m_s_pred2,
+            'ms/mb': m_s_pred2 / m_b_pred2,
             'mu/mc': m_u_pred / m_c_pred,
             'mc/mt': m_c_pred / m_t_pred,
         },

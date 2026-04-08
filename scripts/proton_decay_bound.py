@@ -124,39 +124,50 @@ def proton_decay_rate(M_X, alpha_U, A_SD=2.5):
     return Gamma, tau_years
 
 
-def d4_total_suppression_factor(M_X):
+def d4_suppression_factor(M_X, include_artifact=False):
     """
-    Compute the total D₄ lattice suppression factor for proton decay.
+    Compute the D₄ lattice suppression factor for proton decay.
 
-    This combines two independent suppression mechanisms:
+    The primary suppression mechanism is:
 
-    1. D₄ 5-design angular averaging (f_5design):
+    1. D₄ 5-design angular averaging (f_5design = 1/64):
        The D₄ root system's spherical-design property causes angular
        averages to suppress dim-6 proton decay operators.
-       f_5design = (3/(d(d+2)))² = (1/8)² for d=4.
+       f_5design = (3/(d(d+2)))² = (1/8)² = 1/64 for d=4.
+
+    Optionally includes an additional lattice artifact suppression:
 
     2. Lattice artifact suppression (f_artifact):
-       The 24-fold coordination of D₄ means lattice artifacts are
-       suppressed by (a₀ M_X)^6 rather than (a₀ M_X)² as in
-       a hypercubic lattice.  f_artifact = (M_X/Λ)^6.
+       (M_X/Λ_UV)^6 from 24-fold D₄ coordination.
+       This is astronomically small for M_X ≪ Λ_UV and is NOT
+       included by default, as the manuscript describes the D₄
+       suppression as 1/64 from the 5-design property alone.
 
-    Returns the total suppression = f_5design × f_artifact.
+    Parameters
+    ----------
+    M_X : float
+        Leptoquark mass in GeV.
+    include_artifact : bool
+        If True, multiply by the additional (M_X/Λ_UV)^6 factor.
+        Default False (use 5-design only, consistent with manuscript).
+
+    Returns
+    -------
+    float
+        Total suppression factor (1/64 by default).
     """
     # 5-design suppression (angular averaging)
     # The dim-6 operator has angular structure that gets averaged
     # over the D₄ root directions. For a 5-design:
     # ⟨Y_l^m Y_l'^m'⟩ = 0 for l+l' ≤ 5, l,l' odd
     # This suppresses the operator by:
-    f_5design = (1.0 / 8.0)**2  # = (3/(4×6))² from 5-design ⟨x₁⁴⟩ = 1/8
+    f_5design = (1.0 / 8.0)**2  # = (3/(4×6))² = 1/64
 
-    # Lattice artifact suppression: (M_X/Λ)^6
-    f_artifact = (M_X / LAMBDA_UV)**6
+    if include_artifact:
+        f_artifact = (M_X / LAMBDA_UV)**6
+        return f_5design * f_artifact
 
-    # Total suppression is the product of the D₄ angular averaging
-    # and the additional high-scale lattice-artifact suppression.
-    total = f_5design * f_artifact
-
-    return total
+    return f_5design
 
 
 # ==================== Main ====================
@@ -227,9 +238,9 @@ def main():
     print(f"  Standard PS: τ_p = {tau_std:.2e} years")
 
     # D₄ suppression
-    f_D4 = d4_total_suppression_factor(M_PS_derived)
+    f_D4 = d4_suppression_factor(M_PS_derived)
     tau_D4 = tau_std / f_D4  # Suppression increases lifetime
-    print(f"  D₄ total suppression (5-design × artifact): f = {f_D4:.4e}")
+    print(f"  D₄ 5-design suppression: f = {f_D4:.4e} (= 1/64)")
     print(f"  D₄-corrected: τ_p = {tau_D4:.2e} years")
     print(f"  log₁₀(τ_p/yr) = {np.log10(tau_D4):.1f}")
     print()
@@ -266,7 +277,7 @@ def main():
         M = 10**log_M
         alpha = alpha_unified(M)
         _, tau = proton_decay_rate(M, alpha)
-        f = d4_total_suppression_factor(M)
+        f = d4_suppression_factor(M)
         tau_eff = tau / f
         if tau_eff > TAU_EXP:
             M_PS_min_D4 = M
