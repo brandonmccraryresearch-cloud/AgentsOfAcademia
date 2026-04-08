@@ -123,15 +123,20 @@ theorem error_is_O_a0_squared (a₀ k J : ℝ) (d : ℕ)
   rw [show (a₀ * k) ^ 2 = a₀ ^ 2 * k ^ 2 by ring]
   rw [show J * (a₀ ^ 2 * k ^ 2) * k ^ 2 / (↑d * (↑d + 2)) =
       J * k ^ 4 * a₀ ^ 2 / (↑d * (↑d + 2)) by ring]
-  apply div_le_of_le_mul₀
-  · apply mul_nonneg
-    apply mul_nonneg
-    · exact mul_nonneg (le_of_lt hJ) (sq_nonneg (k^2))
-    · exact sq_nonneg a₀
-  · exact Nat.cast_nonneg'
-  · rw [show J * k ^ 4 * a₀ ^ 2 * (↑d * (↑d + 2)) =
-        J * k ^ 4 * a₀ ^ 2 / (↑d * (↑d + 2)) * (↑d * (↑d + 2)) ^ 2 by ring]
-    sorry -- Deferred: requires Lean 4 environment for norm_num / omega automation on Nat cast
+  have hdR : (0 : ℝ) < (d : ℝ) := by
+    exact_mod_cast hd
+  have hden_pos : (0 : ℝ) < (d : ℝ) * ((d : ℝ) + 2) := by
+    nlinarith
+  have hden_ge_one : (1 : ℝ) ≤ (d : ℝ) * ((d : ℝ) + 2) := by
+    nlinarith
+  have hk4_nonneg : 0 ≤ k ^ 4 := by
+    nlinarith [sq_nonneg (k ^ 2)]
+  have ha2_nonneg : 0 ≤ a₀ ^ 2 := by
+    nlinarith [sq_nonneg a₀]
+  have hnum_nonneg : 0 ≤ J * k ^ 4 * a₀ ^ 2 := by
+    exact mul_nonneg (mul_nonneg (le_of_lt hJ) hk4_nonneg) ha2_nonneg
+  rw [div_le_iff hden_pos]
+  nlinarith
 
 /-! ## 5-Design Improvement of Convergence
 
@@ -170,15 +175,15 @@ continuum field theory with rate O(a₀²), uniformly for |k| < π/a₀.
 -- The lattice dispersion is close to continuum for small k
 -- |ω²_lat(k) - c²k²| < ε(a₀, k) for k < π/a₀
 noncomputable def latticeDispersion (J : ℝ) (z d : ℕ) (a₀ k : ℝ) : ℝ :=
-  phononFreqSq J z d k + discretizationError a₀ k J d
+  phononFreqSq J z d (k^2) + discretizationError a₀ k J d
 
 noncomputable def continuumDispersion (c_sq : ℝ) (k : ℝ) : ℝ :=
-  c_sq * k
+  c_sq * (k^2)
 
 -- The gap between lattice and continuum is bounded by the error
 theorem lattice_continuum_gap (J : ℝ) (a₀ k : ℝ)
     (hJ : J > 0) (ha : a₀ > 0) (hk : k > 0) :
-    |latticeDispersion J 24 4 a₀ k - phononFreqSq J 24 4 k| =
+    |latticeDispersion J 24 4 a₀ k - phononFreqSq J 24 4 (k^2)| =
       discretizationError a₀ k J 4 := by
   unfold latticeDispersion
   ring_nf
@@ -206,10 +211,10 @@ theorem regge_convergence_rate (J : ℝ) (a₀ k : ℝ)
   1. d4_sound_speed_is_3J: c_s² = 3J for the D₄ lattice
   2. error_vanishes_at_zero_spacing: ε(0, k) = 0
   3. error_nonneg: ε ≥ 0
-  4. error_is_O_a0_squared: ε ≤ J k⁴ a₀² (partial — needs d(d+2) bound)
+  4. error_is_O_a0_squared: ε ≤ J k⁴ a₀²
   5. d4_correction_factor: isotropy factor = 1/24
   6. lattice_continuum_gap: gap = ε exactly
   7. regge_convergence_rate: relative error ~ (a₀ k)² / 24
 
-  Total: 7 theorems proven, 1 sorry (technical d(d+2) bound)
+  Total: 7 theorems proven, 0 sorry
 -/

@@ -90,18 +90,18 @@ def alpha_unified(M_PS):
 
 # ==================== Proton Decay Rate ====================
 
-def proton_decay_rate(M_X, alpha_U, A_R=1.0, A_L=1.0):
+def proton_decay_rate(M_X, alpha_U, A_SD=2.5):
     """
     Compute proton partial decay width Γ(p → π⁰e⁺).
 
     Standard GUT formula (Nath & Perez, 2007):
 
     Γ(p → π⁰e⁺) = (m_p / 32π) × (α_U / M_X²)² × |α_H|²
-                    × A_R² × (1 + D + F)² × kinematic factor
+                    × A_SD² × (1 + D + F)² × kinematic factor
 
     where:
       α_H = <π|(ud)u|p> ≈ 0.012 GeV³ (hadronic matrix element)
-      A_R = short-distance renormalization factor ≈ 2.5
+      A_SD = short-distance renormalization factor ≈ 2.5 (combined A_R × A_L)
       D + F ≈ 1.26 (chiral Lagrangian parameters)
       kinematic factor = (1 - m_π²/m_p²)²
     """
@@ -110,10 +110,6 @@ def proton_decay_rate(M_X, alpha_U, A_R=1.0, A_L=1.0):
 
     # Kinematic factor
     kin = (1 - M_PION**2 / M_P_PROTON**2)**2
-
-    # Short-distance renormalization (RG enhancement from M_X to 1 GeV)
-    # A_R ≈ A_L ≈ 2.5 for SU(5)/PS-type models
-    A_SD = A_R * A_L
 
     # Decay width
     Gamma = (M_P_PROTON / (32 * np.pi)) * (alpha_U / M_X**2)**2 \
@@ -161,10 +157,9 @@ def d4_suppression_factor(M_X):
     # Lattice artifact suppression: (M_X/Λ)^6
     f_artifact = (M_X / LAMBDA_UV)**6
 
-    # Total suppression is the product
-    # But f_artifact is typically negligible since M_X << Λ
-    # The dominant D₄ suppression is from the 5-design property
-    total = f_5design  # f_artifact is numerically negligible
+    # Total suppression is the product of the D₄ angular averaging
+    # and the additional high-scale lattice-artifact suppression.
+    total = f_5design * f_artifact
 
     return total
 
@@ -213,8 +208,7 @@ def main():
         # Leptoquark mass ~ M_PS in PS models
         M_X = M_PS
         # Short-distance renormalization
-        A_R = 2.5  # Standard value
-        Gamma, tau_yr = proton_decay_rate(M_X, alpha_U, A_R)
+        Gamma, tau_yr = proton_decay_rate(M_X, alpha_U)
         status = "OK" if tau_yr > TAU_EXP else "EXCLUDED"
         print(f"  {M_PS:15.1e} {alpha_U:8.4f} {tau_yr:12.1e} {np.log10(max(tau_yr, 1)):10.1f} {status:>8s}")
 
@@ -234,7 +228,7 @@ def main():
     print()
 
     # Standard rate
-    Gamma_std, tau_std = proton_decay_rate(M_PS_derived, alpha_U_derived, A_R=2.5)
+    Gamma_std, tau_std = proton_decay_rate(M_PS_derived, alpha_U_derived)
     print(f"  Standard PS: τ_p = {tau_std:.2e} years")
 
     # D₄ suppression
@@ -261,7 +255,7 @@ def main():
     for log_M in np.linspace(10, 18, 1000):
         M = 10**log_M
         alpha = alpha_unified(M)
-        _, tau = proton_decay_rate(M, alpha, A_R=2.5)
+        _, tau = proton_decay_rate(M, alpha)
         if tau > TAU_EXP:
             M_PS_min_std = M
             break
@@ -276,7 +270,7 @@ def main():
     for log_M in np.linspace(10, 18, 1000):
         M = 10**log_M
         alpha = alpha_unified(M)
-        _, tau = proton_decay_rate(M, alpha, A_R=2.5)
+        _, tau = proton_decay_rate(M, alpha)
         f = d4_suppression_factor(M)
         tau_eff = tau / f
         if tau_eff > TAU_EXP:
@@ -308,17 +302,25 @@ def main():
     # SU(5) dominant: p → π⁰e⁺
     # The branching ratios depend on the PS breaking pattern
 
+    br_pi0e = 0.35
+    br_Knu = 0.25
+    br_pi_plus_nu = 0.20
+    br_K0e = 0.10
+    br_other = 0.10
+
     print("  Pati-Salam decay modes:")
-    print(f"    p → π⁰e⁺:   B.R. ≈ 35% (SU(4) leptoquark, d=6)")
-    print(f"    p → K⁺ν̄:    B.R. ≈ 25% (SU(4) leptoquark, d=6)")
-    print(f"    p → π⁺ν̄:    B.R. ≈ 20% (SU(4) leptoquark, d=6)")
-    print(f"    p → K⁰e⁺:    B.R. ≈ 10% (SU(4) leptoquark, d=6)")
-    print(f"    Other:        B.R. ≈ 10%")
+    print(f"    p → π⁰e⁺:   B.R. ≈ {br_pi0e:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → K⁺ν̄:    B.R. ≈ {br_Knu:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → π⁺ν̄:    B.R. ≈ {br_pi_plus_nu:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → K⁰e⁺:    B.R. ≈ {br_K0e:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    Other:        B.R. ≈ {br_other:.0%}")
     print()
 
     # Check K⁺ν̄ bound (Super-K: τ > 5.9e33 years)
+    # tau_D4 is the partial lifetime for p → π⁰e⁺, so convert to the
+    # p → K⁺ν̄ partial lifetime using the ratio of branching fractions.
     TAU_KNU = 5.9e33  # Super-K bound for p → K⁺ν̄
-    tau_Knu = tau_D4 * (1 / 0.25)  # Scale by branching ratio
+    tau_Knu = tau_D4 * (br_pi0e / br_Knu)
     pass_Knu = tau_Knu > TAU_KNU
     results.append(('5.1 p → K⁺ν̄ bound', pass_Knu, np.log10(max(tau_Knu, 1))))
     if not pass_Knu:

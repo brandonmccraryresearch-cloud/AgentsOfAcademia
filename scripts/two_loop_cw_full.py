@@ -589,20 +589,47 @@ def main():
     print("Part 6: Two-Loop vs One-Loop Improvement")
     print("-" * 60)
 
-    # One-loop comparison (SM only, no thresholds)
+    # Run the coupled one-loop SM RG system self-consistently so that the
+    # baseline does not freeze y_t or gauge couplings at their UV values.
+    def beta_g1_1loop(g1_val):
+        return (41.0 / 10.0) * g1_val**3 / (16 * np.pi**2)
+
+    def beta_g2_1loop(g2_val):
+        return (-19.0 / 6.0) * g2_val**3 / (16 * np.pi**2)
+
+    def beta_g3_1loop(g3_val):
+        return -7.0 * g3_val**3 / (16 * np.pi**2)
+
+    def beta_yt_1loop(yt_val, g1_val, g2_val, g3_val):
+        return yt_val / (16 * np.pi**2) * (
+            9.0 / 2.0 * yt_val**2
+            - 17.0 / 20.0 * g1_val**2
+            - 9.0 / 4.0 * g2_val**2
+            - 8.0 * g3_val**2
+        )
+
     lam_1loop = lambda_bare
-    yt, g1, g2, g3 = evolve_gauge_to_scale(LAMBDA_UV, n_steps=3000)
+    yt_1loop, g1_1loop, g2_1loop, g3_1loop = evolve_gauge_to_scale(LAMBDA_UV, n_steps=3000)
     t = np.log(M_Z / LAMBDA_UV)
     dt = t / 5000
     for _ in range(5000):
-        b = beta_lambda_1loop(lam_1loop, yt, g1, g2, g3)
-        lam_1loop += b * dt
+        b_lam = beta_lambda_1loop(lam_1loop, yt_1loop, g1_1loop, g2_1loop, g3_1loop)
+        b_yt = beta_yt_1loop(yt_1loop, g1_1loop, g2_1loop, g3_1loop)
+        b_g1 = beta_g1_1loop(g1_1loop)
+        b_g2 = beta_g2_1loop(g2_1loop)
+        b_g3 = beta_g3_1loop(g3_1loop)
+
+        lam_1loop += b_lam * dt
+        yt_1loop += b_yt * dt
+        g1_1loop += b_g1 * dt
+        g2_1loop += b_g2 * dt
+        g3_1loop += b_g3 * dt
 
     print(f"  One-loop only: λ(M_Z) = {lam_1loop:.6f}")
     print(f"  Two-loop (28 modes): λ(M_Z) = {best_lambda:.6f}")
     print(f"  Physical target: λ_phys = {LAMBDA_PHYS:.6f}")
 
-    if not np.isnan(lam_1loop) and lam_1loop > 0:
+    if np.isfinite(lam_1loop) and lam_1loop > 0:
         err_1loop = abs(lam_1loop - LAMBDA_PHYS) / LAMBDA_PHYS * 100
     else:
         err_1loop = 100.0

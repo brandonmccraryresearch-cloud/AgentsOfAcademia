@@ -85,7 +85,13 @@ def create_4d_lattice_vectorized(L):
 
 # ==================== Vectorized Forces ====================
 
-def compute_forces_harmonic_vec(disp, neighbor_idx, roots, J):
+def precompute_root_hats(roots):
+    """Precompute normalized root vectors (constant across timesteps)."""
+    root_norms = np.linalg.norm(roots, axis=1)
+    return roots / root_norms[:, np.newaxis]
+
+
+def compute_forces_harmonic_vec(disp, neighbor_idx, roots, J, root_hats=None):
     """
     Vectorized harmonic force computation.
 
@@ -94,8 +100,8 @@ def compute_forces_harmonic_vec(disp, neighbor_idx, roots, J):
     N = disp.shape[0]
     forces = np.zeros_like(disp)
 
-    root_norms = np.linalg.norm(roots, axis=1)
-    root_hats = roots / root_norms[:, np.newaxis]
+    if root_hats is None:
+        root_hats = precompute_root_hats(roots)
 
     for k in range(len(roots)):
         nb = neighbor_idx[:, k]
@@ -106,7 +112,7 @@ def compute_forces_harmonic_vec(disp, neighbor_idx, roots, J):
     return forces
 
 
-def compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4):
+def compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4, root_hats=None):
     """
     Vectorized anharmonic force computation.
 
@@ -117,8 +123,8 @@ def compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4):
     N = disp.shape[0]
     forces = np.zeros_like(disp)
 
-    root_norms = np.linalg.norm(roots, axis=1)
-    root_hats = roots / root_norms[:, np.newaxis]
+    if root_hats is None:
+        root_hats = precompute_root_hats(roots)
 
     for k in range(len(roots)):
         nb = neighbor_idx[:, k]
@@ -136,10 +142,10 @@ def compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4):
 
 # ==================== Potential Energy ====================
 
-def potential_energy_vec(disp, neighbor_idx, roots, J, kappa4=0):
+def potential_energy_vec(disp, neighbor_idx, roots, J, kappa4=0, root_hats=None):
     """Vectorized potential energy."""
-    root_norms = np.linalg.norm(roots, axis=1)
-    root_hats = roots / root_norms[:, np.newaxis]
+    if root_hats is None:
+        root_hats = precompute_root_hats(roots)
 
     E = 0.0
     for k in range(len(roots)):
@@ -161,14 +167,14 @@ def kinetic_energy_vec(vel):
 
 # ==================== Velocity Verlet ====================
 
-def vv_step(disp, vel, forces_old, neighbor_idx, roots, J, kappa4, dt):
+def vv_step(disp, vel, forces_old, neighbor_idx, roots, J, kappa4, dt, root_hats=None):
     """Single velocity Verlet step."""
     disp_new = disp + vel * dt + 0.5 * forces_old * dt**2
 
     if kappa4 != 0:
-        forces_new = compute_forces_anharmonic_vec(disp_new, neighbor_idx, roots, J, kappa4)
+        forces_new = compute_forces_anharmonic_vec(disp_new, neighbor_idx, roots, J, kappa4, root_hats)
     else:
-        forces_new = compute_forces_harmonic_vec(disp_new, neighbor_idx, roots, J)
+        forces_new = compute_forces_harmonic_vec(disp_new, neighbor_idx, roots, J, root_hats)
 
     vel_new = vel + 0.5 * (forces_old + forces_new) * dt
 
@@ -313,6 +319,7 @@ def main():
     print(f"  Created {L}⁴ = {N} sites in {t_create:.2f} s")
 
     roots = d4_root_vectors()
+    root_hats = precompute_root_hats(roots)
     print(f"  D₄ roots: {len(roots)} vectors, |δ| = √2")
 
     pass_lattice = N == L**4 and len(roots) == 24
@@ -346,7 +353,7 @@ def main():
     print(f"  Breathing-mode defect at center (amplitude = {defect_amplitude})")
 
     E_K = kinetic_energy_vec(vel)
-    E_P = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4)
+    E_P = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4, root_hats)
     E_total_init = E_K + E_P
     T_eff_init = 2 * E_K / (N * 4)
     print(f"  Initial E_K = {E_K:.4f}, E_P = {E_P:.4f}, E_total = {E_total_init:.6f}")
@@ -364,25 +371,25 @@ def main():
 
     # Initial forces
     if kappa4 != 0:
-        forces = compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4)
+        forces = compute_forces_anharmonic_vec(disp, neighbor_idx, roots, J, kappa4, root_hats)
     else:
-        forces = compute_forces_harmonic_vec(disp, neighbor_idx, roots, J)
+        forces = compute_forces_harmonic_vec(disp, neighbor_idx, roots, J, root_hats)
 
     t0 = time.time()
     for step in range(n_steps):
-        disp, vel, forces = vv_step(disp, vel, forces, neighbor_idx, roots, J, kappa4, dt)
+        disp, vel, forces = vv_step(disp, vel, forces, neighbor_idx, roots, J, kappa4, dt, root_hats)
 
         if args.nvt:
             T_curr = 2 * kinetic_energy_vec(vel) / (N * 4)
             vel = berendsen_thermostat(vel, T_init, T_curr, tau=10.0, dt=dt)
 
         E_K = kinetic_energy_vec(vel)
-        E_P = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4)
+        E_P = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4, root_hats)
         E_history[step] = E_K + E_P
         T_history[step] = 2 * E_K / (N * 4)
         defect_amp[step] = np.linalg.norm(disp[center_idx])
 
-        if step % (n_steps // 5) == 0:
+        if step % max(1, n_steps // 5) == 0:
             print(f"  Step {step:5d}: E = {E_history[step]:.6f}, T = {T_history[step]:.4f}, "
                   f"defect = {defect_amp[step]:.4f}")
 
@@ -448,8 +455,8 @@ def main():
         print("-" * 60)
 
         # Compare harmonic vs anharmonic energy
-        E_harmonic = potential_energy_vec(disp, neighbor_idx, roots, J, 0)
-        E_anharmonic = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4)
+        E_harmonic = potential_energy_vec(disp, neighbor_idx, roots, J, 0, root_hats)
+        E_anharmonic = potential_energy_vec(disp, neighbor_idx, roots, J, kappa4, root_hats)
         E_quartic = E_anharmonic - E_harmonic
         ratio = abs(E_quartic) / max(abs(E_harmonic), 1e-20)
 
