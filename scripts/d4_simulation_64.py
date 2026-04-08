@@ -88,6 +88,7 @@ def create_4d_lattice_vectorized(L):
 def precompute_root_hats(roots):
     """Precompute normalized root vectors (constant across timesteps)."""
     root_norms = np.linalg.norm(roots, axis=1)
+    root_norms = np.maximum(root_norms, 1e-12)  # guard against zero-norm
     return roots / root_norms[:, np.newaxis]
 
 
