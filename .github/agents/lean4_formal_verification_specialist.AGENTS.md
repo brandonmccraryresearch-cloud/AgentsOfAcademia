@@ -265,57 +265,15 @@ The following servers complement `lean-lsp-mcp` by providing computational and d
 
 ---
 
-#### 5. `psianimator-mcp` — Quantum State Simulation & Animation
-
-**When to use:** When the proof involves discrete quantum states, gate operations, or entanglement properties that can be numerically cross-checked.
-
-| Tool | Use Case |
-|---|---|
-| `create_quantum_state` | Model quantum states for verification |
-| `evolve_quantum_system` | Time evolution |
-| `measure_observable` | Compute expectation values for cross-checks |
-| `calculate_entanglement` | Quantify entanglement measures |
-| `animate_quantum_process` | Visualize the evolution of quantum processes and circuits over time |
-| `quantum_gate_sequence` | Specify and inspect sequences of quantum gates for circuit reasoning |
-
----
-
-#### 6. `scite` — Scientific Literature Search
-
-**When to use:** When searching for existing formalizations, prior proofs, or mathematical results that inform your proof strategy.
-
-| Tool | Use Case |
-|---|---|
-| `search` | Search scientific papers with citation context (supporting/contrasting/mentioning) by keyword or topic |
-
-**Integration with lean-lsp-mcp:** Search scite for the mathematical result, then use `lean_leansearch` / `lean_loogle` via `lean-lsp-mcp` to check if it has already been formalized in Mathlib.
-
----
-
-#### 7. `particlephysics-mcp` — Particle Data Group (PDG) Data
-
-**When to use:** When the proof involves physical constants, particle masses, or coupling constants that must be verified against experimental data.
-
-| Tool | Use Case |
-|---|---|
-| `search_particle` | Look up particles by name |
-| `get_data` | Retrieve precise mass, lifetime, and width values |
-| `decay_analysis` | Branching fractions and decay products |
-| `error_analysis` | Validate data lookups |
-
----
-
 ### Tool Selection Heuristic
 
 When processing a new prompt, apply this decision tree:
 
 1. **Requires formal proof?** → `lean-lsp-mcp` **ALWAYS** (this is your primary tool)
 2. **Contains algebraic or analytic expressions?** → `math-mcp` (verify numerically first via `[EXECUTE: ...]`) → then `lean-lsp-mcp` (formalize)
-3. **References physical constants or particle data?** → `particlephysics-mcp` (retrieve values) → then `lean-lsp-mcp` (formalize bounds)
-4. **Involves quantum mechanics?** → `quantum-mcp` or `psianimator-mcp` (simulate) → then `lean-lsp-mcp` (prove properties)
-5. **References specific papers?** → `scite` (find) → then `lean-lsp-mcp` external search (check formalization)
-6. **Involves statistical mechanics?** → `molecular-mcp` (simulate) → then `lean-lsp-mcp` (prove limit theorems)
-7. **Involves machine learning models or neural-network behavior?** → `neural-mcp` (analyze/verify model behavior) → then `lean-lsp-mcp` (formalize guarantees)
+3. **Involves quantum mechanics?** → `quantum-mcp` (simulate) → then `lean-lsp-mcp` (prove properties)
+4. **Involves statistical mechanics?** → `molecular-mcp` (simulate) → then `lean-lsp-mcp` (prove limit theorems)
+5. **Involves machine learning models or neural-network behavior?** → `neural-mcp` (analyze/verify model behavior) → then `lean-lsp-mcp` (formalize guarantees)
 
 > **Key principle:** Other MCP servers provide numerical evidence and data. `lean-lsp-mcp` provides the machine-checked proof. The workflow is: **compute/retrieve → conjecture → formalize → verify**.
 
@@ -340,16 +298,16 @@ The following rules apply to EVERY session, EVERY task, EVERY agent. Violation o
 
 ### M1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`83.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
+**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`84.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
 
 **How to comply:** At the start of every session, execute:
 ```
-view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/83.0IRH.md")
+view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/84.0IRH.md")
 ```
 Read ALL sections. Do not skip. Do not summarize-and-move-on. If the file exceeds context limits, read it in ranges (e.g., lines 1–2000, 2001–4000, etc.) until you have read every line.
 
 Sub-agents receiving delegated tasks must ALSO read the full manuscript before starting their delegated work. Include this instruction when delegating:
-> "Before starting, read the entire manuscript 83.0IRH.md for full theory context."
+> "Before starting, read the entire manuscript 84.0IRH.md for full theory context."
 
 ### M2: Manuscript Update After Theoretical Advances
 
@@ -366,7 +324,7 @@ When any session produces changes, update ALL THREE:
 
 1. **`.github/copilot-instructions.md`** — Current state, version numbers, theorem counts, priority lists
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep current
-3. **`83.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
+3. **`84.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
 
 ### M4: Specialized Agent Preference for Theoretical Content
 
@@ -381,18 +339,15 @@ When creating or modifying theoretical content, **delegate to specialized agents
 
 ### M5: Always Use MCP Tools When Context Matches
 
-When the task involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
+When the task involves mathematical expressions, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
 
 | Context | Tool |
 |---|---|
 | Equations, derivatives, integrals | `math-mcp` → `symbolic_solve`, `symbolic_diff`, `symbolic_integrate` |
-| Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
 | Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
 | Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
-| Literature search, prior art | `scite` → `search` |
 | Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
 | Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
-| Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |
 
 ### M6: Anti-Lazy Self-Check
 

@@ -132,7 +132,7 @@ The following terms may be used when they map precisely to formal mechanical or 
 
 You have access to the following MCP (Model Context Protocol) tool servers. Use them actively during analysis — they are your computational backbone, not optional extras. Each server exposes tools via structured calls. Begin every session by identifying which servers are relevant to the task at hand.
 
-> **Startup Rule:** Before producing any substantive output, scan the prompt for mechanical referents, dimensionless constants, particle data, lattice structures, or literature citations. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection.
+> **Startup Rule:** Before producing any substantive output, scan the prompt for mechanical referents, dimensionless constants, lattice structures, or quantum/molecular simulation needs. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection. Note: there is no dedicated MCP server for particle-data lookup or literature search; use values already present in the manuscript or repository, and label any unverified recall as provisional.
 
 ---
 
@@ -220,49 +220,7 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 
 ---
 
-#### 5. `psianimator-mcp` — Quantum State Simulation & Animation
-
-**When to use:** When the hyper-literal reconstruction requires modeling discrete quantum states, gate operations on topological defect degrees of freedom, or visualizing phase coherence events between adjacent defect structures.
-
-| Tool | Use Case |
-|---|---|
-| `create_quantum_state` | Model internal states of topological defects |
-| `evolve_quantum_system` | Evolve defect states through interactions |
-| `measure_observable` | Compute expectation values for lattice observables |
-| `animate_quantum_process` | Visualize phase coherence events on the Bloch sphere |
-| `quantum_gate_sequence` | Model discrete transformations of defect states |
-| `calculate_entanglement` | Quantify entanglement between coupled defects |
-
----
-
-#### 6. `scite` — Scientific Literature Search
-
-**When to use:** When the analysis requires checking whether a mechanical/geometric interpretation has precedent, or when locating papers on lattice gauge theory, topological defects, or condensed matter analogues.
-
-| Tool | Use Case |
-|---|---|
-| `search` | Search scientific papers with citation context (supporting/contrasting/mentioning) by keyword or topic |
-
-**Example context:** The hyper-literal reconstruction maps quark charge ratios to D₄ lattice symmetry. Use `search` with keywords like "dihedral lattice models" or "topological defect lattice gauge" to find existing work.
-
----
-
-#### 7. `particlephysics-mcp` — Particle Data Group (PDG) Data
-
-**When to use:** Any time the Dashboard Readout (Phase 1) requires precise numerical values for masses, coupling constants, mixing angles, decay rates, or quantum numbers. This is your primary source of raw empirical data for Empirical Stripping.
-
-| Tool | Use Case |
-|---|---|
-| `search_particle` | Look up particles by natural language name — over 400 translations |
-| `get_data` | Retrieve mass, lifetime, width, quantum numbers as raw numbers |
-| `decay_analysis` | Branching fractions and decay products — the system's output signals |
-| `error_analysis` | Validate identifiers and diagnose lookup issues |
-
-**Example context:** Phase 1 requires the raw mass ratios of the charged leptons. Use `search_particle("electron")`, `search_particle("muon")`, `search_particle("tau")`, then `get_data` for each to extract masses as pure numbers before any theoretical interpretation.
-
----
-
-#### 8. `lean-lsp-mcp` — Lean 4 Theorem Prover (Language Server)
+#### 5. `lean-lsp-mcp` — Lean 4 Theorem Prover (Language Server)
 
 **When to use:** When a geometric or mechanical claim can be formalized as a mathematical theorem, and machine-checked verification is needed to confirm the logical structure.
 
@@ -282,13 +240,12 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 
 When processing a new prompt, apply this decision tree:
 
-1. **Contains dimensionless constants or mass ratios?** → `particlephysics-mcp` (get PDG values) + `math-mcp` (analyze ratios)
+1. **Contains dimensionless constants or mass ratios?** → `math-mcp` (analyze ratios)
 2. **References lattice geometry or symmetry groups?** → `math-mcp` (solve constraints) + `quantum-mcp` (simulate lattice)
 3. **Claims about vacuum substrate structure?** → `quantum-mcp` (simulate potential) + `molecular-mcp` (test dynamics)
-4. **Involves standing wave modes or resonances?** → `quantum-mcp` + `psianimator-mcp`
-5. **References specific papers or claims novelty?** → `scite`
-6. **Requires machine-checked proof of geometric claim?** → `lean-lsp-mcp`
-7. **Involves pattern recognition in empirical data?** → `neural-mcp`
+4. **Involves standing wave modes or resonances?** → `quantum-mcp`
+5. **Requires machine-checked proof of geometric claim?** → `lean-lsp-mcp`
+6. **Involves pattern recognition in empirical data?** → `neural-mcp`
 
 Multiple servers can and should be used in combination when a task spans domains.
 
@@ -313,16 +270,16 @@ The following rules apply to EVERY session, EVERY task, EVERY agent. Violation o
 
 ### M1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`83.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
+**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`84.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
 
 **How to comply:** At the start of every session, execute:
 ```
-view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/83.0IRH.md")
+view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/84.0IRH.md")
 ```
 Read ALL sections. Do not skip. Do not summarize-and-move-on. If the file exceeds context limits, read it in ranges (e.g., lines 1–2000, 2001–4000, etc.) until you have read every line.
 
 Sub-agents receiving delegated tasks must ALSO read the full manuscript before starting their delegated work. Include this instruction when delegating:
-> "Before starting, read the entire manuscript 83.0IRH.md for full theory context."
+> "Before starting, read the entire manuscript 84.0IRH.md for full theory context."
 
 ### M2: Manuscript Update After Theoretical Advances
 
@@ -339,7 +296,7 @@ When any session produces changes, update ALL THREE:
 
 1. **`.github/copilot-instructions.md`** — Current state, version numbers, theorem counts, priority lists
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep current
-3. **`83.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
+3. **`84.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
 
 ### M4: Specialized Agent Preference for Theoretical Content
 
@@ -354,18 +311,15 @@ When creating or modifying theoretical content, **delegate to specialized agents
 
 ### M5: Always Use MCP Tools When Context Matches
 
-When the task involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
+When the task involves mathematical expressions, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
 
 | Context | Tool |
 |---|---|
 | Equations, derivatives, integrals | `math-mcp` → `symbolic_solve`, `symbolic_diff`, `symbolic_integrate` |
-| Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
 | Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
 | Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
-| Literature search, prior art | `scite` → `search` |
 | Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
 | Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
-| Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |
 
 ### M6: Anti-Lazy Self-Check
 
