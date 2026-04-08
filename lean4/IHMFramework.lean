@@ -19,3 +19,5 @@ import IHMFramework.Goldstone
 import IHMFramework.GaugeInvariance
 -- v84.0 additions
 import IHMFramework.ReggeContinuumLimit
+-- v85.0 additions
+import IHMFramework.NonAbelianGauge
