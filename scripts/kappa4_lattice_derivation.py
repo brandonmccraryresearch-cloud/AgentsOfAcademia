@@ -512,11 +512,15 @@ def main():
 
     print()
     # Best estimate: geometric mean of independent methods.
-    # abs() is defensive — all physical κ₄ values should be positive
-    # (stability of the lattice requires κ₄ > 0). If any method yielded
-    # negative κ₄, it would indicate a breakdown of that approximation.
+    # Lattice stability requires κ₄ > 0. Check explicitly.
     kappa4_values = [m[1] for m in methods]
-    kappa4_best = np.exp(np.mean(np.log(np.abs(kappa4_values))))
+    negative_methods = [(m[0], m[1]) for m in methods if m[1] <= 0]
+    if negative_methods:
+        for name, val in negative_methods:
+            print(f"  WARNING: {name} yielded κ₄ = {val:.6f} ≤ 0 (unphysical)")
+        kappa4_values = [v for v in kappa4_values if v > 0]
+        assert len(kappa4_values) > 0, "All methods yielded negative κ₄"
+    kappa4_best = np.exp(np.mean(np.log(kappa4_values)))
     print(f"  Best estimate (geometric mean): κ₄ = {kappa4_best:.6f}")
     print(f"  Ratio κ₄/λ_phys = {kappa4_best / LAMBDA_PHYS:.4f}")
     print()

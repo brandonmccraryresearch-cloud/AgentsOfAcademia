@@ -46,9 +46,9 @@ open Real
     We work with the trace of the plaquette product directly,
     which is the gauge-invariant observable. -/
 structure NAGaugeLink where
-  /-- Real part of the trace contribution -/
+  /-- Real part of the trace (reduced representation for plaquette action, not full link) -/
   traceRe : ℝ
-  /-- Imaginary part of the trace contribution -/
+  /-- Imaginary part of the trace (reduced representation for plaquette action, not full link) -/
   traceIm : ℝ
 
 /-- The identity link (unit element). Tr(1) = N for SU(N). -/

@@ -346,11 +346,11 @@ When Priorities 1-4 close:
 3. Include all 37 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
-### Open Problem Status (as of v84.0 Session 11)
+### Open Problem Status (as of v85.0 Session 12)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
-| 1 | α BZ integral | **Gap 0.95% (Session 6: V₃≡0, I_SE=0.071)** | Three-loop or lattice MC |
+| 1 | α BZ integral | **Gap 0.044% (Session 12: Padé + two-loop)** | Three-loop lattice MC confirmation |
 | 2 | M_PS tension | **Gap 4→2 decades (Session 11: 3 methods)** | Full PS two-loop beta functions |
 | 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
 | 4 | CKM magnitudes | **Fritzsch 5.8%, Yukawa overlaps (S11)** | Lattice Dirac equation |
@@ -358,10 +358,10 @@ When Priorities 1-4 close:
 | 6 | 4D simulation | **Anharmonic + scaling (Session 11): 7/7 PASS** | GPU acceleration for 64⁴ |
 | 7 | Regge continuum | **7 theorems, 0 sorry (Session 11)** | Complete |
 | 8 | Two-loop unification | **Spread 0.4; M_PS ~ 10¹⁴ derived (S8)** | Consistent with proton decay bound |
-| 9 | Z_λ effective potential | **RG-improved Z_λ = 0.21 (Session 8)** | Derive κ₄ from lattice action |
+| 9 | Z_λ effective potential | **RG-improved Z_λ = 0.21; κ₄ derived (S12)** | Two-loop SO(8) correction |
 | 10 | ρ_Λ spectral density | **BZ integral + triality + α⁵⁷/(4π) (S8)** | Derive f_supp mechanism |
 | 11 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Complete |
-| 12 | D₄ anharmonic κ₄ / force constant J | g²=2/(Ja₀⁴) derived; J open | Lattice perturbation theory |
+| 12 | D₄ anharmonic κ₄ / force constant J | **κ₄≈0.70 derived (Session 12): 4 methods** | Two-loop SO(8) correction to λ |
 | 13 | Circularity resolution | **PROVEN (Lean 4)** | Complete |
 | 14 | D₄ uniqueness | **GLOBAL MIN d=2–8 (Session 7)** | Complete; gap=0.825 |
 | 15 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
@@ -374,4 +374,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v84.0 complete; 35 scripts, 125+ theorems** | Priority 1-4 closure → submit |
+| 25 | Manuscript / arXiv | **v85.0 complete; 37 scripts, 183+ theorems** | Priority 2,4 closure → submit |
