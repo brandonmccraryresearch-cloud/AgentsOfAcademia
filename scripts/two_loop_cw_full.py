@@ -609,7 +609,16 @@ def main():
         )
 
     lam_1loop = lambda_bare
-    yt_1loop, g1_1loop, g2_1loop, g3_1loop = evolve_gauge_to_scale(LAMBDA_UV, n_steps=3000)
+    # Evolve gauge + Yukawa with purely 1-loop β-functions so the
+    # baseline is self-consistently one-loop throughout.
+    yt_1loop, g1_1loop, g2_1loop, g3_1loop = Y_T, G1_MZ, G2_MZ, G3_MZ
+    t_uv = np.log(LAMBDA_UV / M_Z)
+    dt_init = t_uv / 3000
+    for _ in range(3000):
+        yt_1loop += beta_yt_1loop(yt_1loop, g1_1loop, g2_1loop, g3_1loop) * dt_init
+        g1_1loop += beta_g1_1loop(g1_1loop) * dt_init
+        g2_1loop += beta_g2_1loop(g2_1loop) * dt_init
+        g3_1loop += beta_g3_1loop(g3_1loop) * dt_init
     t = np.log(M_Z / LAMBDA_UV)
     dt = t / 5000
     for _ in range(5000):

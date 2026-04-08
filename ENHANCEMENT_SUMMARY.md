@@ -157,7 +157,7 @@ python3 test_agent.py 82.0theaceinthehole.md
 - ✅ Scientific packages: NumPy, SciPy
 
 **Configured:**
-- ✅ All 9 MCP servers
+- ✅ All 6 MCP servers
 - ✅ 4 AI agent personas
 - ✅ 3 computational scripts
 - ✅ Lean 4 IHMFramework project
@@ -255,13 +255,13 @@ python3 test_agent.py <document.md>
 **Before:**
 - Manual dependency management
 - No integrated test framework
-- 8 MCP servers
+- 5 MCP servers
 - Separate workflow components
 
 **After:**
 - ✅ Automated setup script
 - ✅ Comprehensive test agent
-- ✅ 9 MCP servers (Context7 added)
+- ✅ 6 MCP servers (Context7 added)
 - ✅ Unified orchestration system
 - ✅ Complete documentation
 - ✅ Validated with critical review
@@ -281,7 +281,7 @@ python3 test_agent.py <document.md>
 
 The Academic Research Assistant repository has been successfully enhanced with:
 1. Comprehensive environment setup automation
-2. Context7 MCP server integration (9 servers total)
+2. Context7 MCP server integration (6 servers total)
 3. Meta-agent test framework with three-persona analysis
 4. Complete documentation and orchestration tools
 5. Validated through successful critical review of main research document

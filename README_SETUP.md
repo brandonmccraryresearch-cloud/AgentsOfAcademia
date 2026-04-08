@@ -6,7 +6,7 @@ This repository is a comprehensive academic research assistant for solving front
 
 - **AI Agents**: Expert Research Assistant, Lean 4 Specialist, HLRE Agent, Meta Agent
 - **Lean 4**: Formal verification and theorem proving
-- **MCP Servers**: 9 specialized servers for computations
+- **MCP Servers**: 6 specialized servers for computations
 - **Python Scripts**: Numerical verification and simulations
 - **Research Framework**: Intrinsic Resonance Holography (IRH) theory
 
@@ -25,7 +25,7 @@ This will install:
 - ✅ Lean 4 with elan toolchain
 - ✅ Node.js and NPM
 - ✅ All Python scientific packages
-- ✅ All 9 MCP servers
+- ✅ All 6 MCP servers
 - ✅ Research computational scripts
 
 ### 2. Activate Environment (Each Session)

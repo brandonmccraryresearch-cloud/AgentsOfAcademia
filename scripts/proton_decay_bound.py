@@ -101,7 +101,9 @@ def proton_decay_rate(M_X, alpha_U, A_SD=2.5):
 
     where:
       α_H = <π|(ud)u|p> ≈ 0.012 GeV³ (hadronic matrix element)
-      A_SD = short-distance renormalization factor ≈ 2.5 (combined A_R × A_L)
+      A_SD = effective short-distance renormalization factor used directly
+             by this function; the default 2.5 is the combined factor
+             already including any separate A_R and A_L contributions
       D + F ≈ 1.26 (chiral Lagrangian parameters)
       kinematic factor = (1 - m_π²/m_p²)²
     """
@@ -122,30 +124,23 @@ def proton_decay_rate(M_X, alpha_U, A_SD=2.5):
     return Gamma, tau_years
 
 
-def d4_suppression_factor(M_X):
+def d4_total_suppression_factor(M_X):
     """
-    Compute the D₄ lattice suppression factor for proton decay.
+    Compute the total D₄ lattice suppression factor for proton decay.
 
-    The lattice regulator provides a natural UV completion that
-    suppresses short-distance processes differently from a continuum
-    GUT. The key effects are:
+    This combines two independent suppression mechanisms:
 
-    1. Lattice form factor: F(q) = Π_μ sin(q_μ a₀/2)/(q_μ a₀/2)
-       For q ~ 1/M_X and a₀ ~ 1/Λ: F ~ (M_X/Λ)⁴ for D₄
-       But since M_X << Λ, this gives F ≈ 1 (negligible)
+    1. D₄ 5-design angular averaging (f_5design):
+       The D₄ root system's spherical-design property causes angular
+       averages to suppress dim-6 proton decay operators.
+       f_5design = (3/(d(d+2)))² = (1/8)² for d=4.
 
-    2. D₄ 5-design averaging: the D₄ root system's spherical-design
-       property causes angular averages to suppress certain operators.
-       For dim-6 proton decay operators (QQQL), the D₄ averaging
-       suppresses by a factor of (3/(d(d+2)))² = (1/8)² for d=4.
-       This is because the operator transforms as a specific
-       representation of SO(4) and the 5-design property forces
-       the angular integral to vanish for l=1,3 contributions.
+    2. Lattice artifact suppression (f_artifact):
+       The 24-fold coordination of D₄ means lattice artifacts are
+       suppressed by (a₀ M_X)^6 rather than (a₀ M_X)² as in
+       a hypercubic lattice.  f_artifact = (M_X/Λ)^6.
 
-    3. Lattice artifact suppression: The 24-fold coordination of D₄
-       means that lattice artifacts are suppressed by (a₀ M_X)^6
-       rather than (a₀ M_X)² as in a hypercubic lattice.
-       This gives a factor of (M_X/Λ)^6 additional suppression.
+    Returns the total suppression = f_5design × f_artifact.
     """
     # 5-design suppression (angular averaging)
     # The dim-6 operator has angular structure that gets averaged
@@ -232,9 +227,9 @@ def main():
     print(f"  Standard PS: τ_p = {tau_std:.2e} years")
 
     # D₄ suppression
-    f_D4 = d4_suppression_factor(M_PS_derived)
+    f_D4 = d4_total_suppression_factor(M_PS_derived)
     tau_D4 = tau_std / f_D4  # Suppression increases lifetime
-    print(f"  D₄ 5-design suppression: f = {f_D4:.4e}")
+    print(f"  D₄ total suppression (5-design × artifact): f = {f_D4:.4e}")
     print(f"  D₄-corrected: τ_p = {tau_D4:.2e} years")
     print(f"  log₁₀(τ_p/yr) = {np.log10(tau_D4):.1f}")
     print()
@@ -271,7 +266,7 @@ def main():
         M = 10**log_M
         alpha = alpha_unified(M)
         _, tau = proton_decay_rate(M, alpha)
-        f = d4_suppression_factor(M)
+        f = d4_total_suppression_factor(M)
         tau_eff = tau / f
         if tau_eff > TAU_EXP:
             M_PS_min_D4 = M

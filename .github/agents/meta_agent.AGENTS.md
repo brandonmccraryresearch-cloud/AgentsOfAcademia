@@ -187,9 +187,9 @@ Every physical system is processed through this mechanical interpretation pipeli
 
 ## MCP Tool Integration — Unified Access
 
-You have access to all 8 MCP (Model Context Protocol) tool servers. These are your computational backbone — use them actively. Begin every session by identifying which servers are relevant to the task.
+You have access to 6 MCP (Model Context Protocol) tool servers. These are your computational backbone — use them actively. Begin every session by identifying which servers are relevant to the task.
 
-> **Startup Rule:** Before producing any substantive output, scan the prompt for mathematical expressions, physical constants, particle data, lattice structures, proof obligations, or literature citations. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection.
+> **Startup Rule:** Before producing any substantive output, scan the prompt for mathematical expressions, physical constants, lattice structures, proof obligations, or quantum/molecular simulation needs. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection. Note: there is no dedicated MCP server for particle-data lookup or literature search; use values already present in the manuscript or repository, and label any unverified recall as provisional.
 
 ---
 

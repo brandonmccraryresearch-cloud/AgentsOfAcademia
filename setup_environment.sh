@@ -5,7 +5,7 @@
 # This script ensures all dependencies are installed for:
 # - AI Agents (Expert Research Assistant, HLRE, Lean 4 Specialist, Meta Agent)
 # - Lean 4 Formal Verification System
-# - All 8 MCP Servers + Context7
+# - All 6 MCP Servers + Context7
 # - Python computational scripts
 # - Research document processing
 
@@ -158,9 +158,9 @@ else
 fi
 
 # ============================================================
-# 4. INSTALL NODE.JS and NPM (for arxiv-search-mcp)
+# 4. INSTALL NODE.JS and NPM (for npx-based MCP servers)
 # ============================================================
-log "Step 4: Setting up Node.js..."
+log "Step 4: Setting up Node.js (for npx-based MCP servers)..."
 
 if ! check_command node; then
     log "Installing Node.js..."

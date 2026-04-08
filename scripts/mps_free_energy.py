@@ -87,8 +87,7 @@ def lattice_gauge_coupling():
     # Run α_EM to M_lat using one-loop with convention
     # dα/d ln μ = b · α² / (2π), so QED has b_EM > 0.
     alpha_em_MZ = 1.0 / 127.951
-    b_em = (4.0/3) * (3 * (2/3)**2 + 3 * (1/3)**2 + 1)  # fermion contribution
-    # Simplified: b_EM ≈ 80/(9π)
+    b_em = (4.0/3) * (3 * (2/3)**2 + 3 * (1/3)**2 + 1)  # fermion contribution; b_EM = 32/9
     t = np.log(LAMBDA_UV / M_Z)
     alpha_em_lat = alpha_em_MZ / (1 - alpha_em_MZ * b_em / (2 * np.pi) * t)
 

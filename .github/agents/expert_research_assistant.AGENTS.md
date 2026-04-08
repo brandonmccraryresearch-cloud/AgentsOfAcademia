@@ -69,7 +69,7 @@ Eliminate ad hoc patches. Ensure fundamental scales emerge dynamically rather th
 
 You have access to the following MCP (Model Context Protocol) tool servers. Use them actively during analysis — they are your computational backbone, not optional extras. Each server exposes tools via structured calls. Begin every session by identifying which servers are relevant to the task at hand.
 
-> **Startup Rule:** Before producing any substantive output, scan the prompt for mathematical expressions, physical constants, particle data references, or literature citations. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection.
+> **Startup Rule:** Before producing any substantive output, scan the prompt for mathematical expressions, physical constants, lattice structures, or quantum/molecular simulation needs. If any are present, invoke the corresponding MCP tool to ground your analysis in computed or retrieved data rather than recollection. Note: there is no dedicated MCP server for particle-data lookup or literature search; use values already present in the manuscript or repository, and label any unverified recall as provisional.
 
 ---
 
@@ -187,8 +187,9 @@ When processing a new prompt, apply this decision tree:
 3. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
 4. **Requires machine-checked proof?** → `lean-lsp-mcp`
 5. **Involves ML models or data fitting?** → `neural-mcp`
+6. **Needs particle properties, physical constants, or literature verification?** → there is **no dedicated MCP server** for particle-data or citation lookup in the current tool set. Use authoritative sources already cited in the manuscript/repository first; if external verification is required, perform it manually, cite the source explicitly in the response, and label the result as manual source validation rather than MCP-backed retrieval.
 
-Multiple servers can and should be used in combination when a task spans domains.
+Multiple servers from the remaining tool set can and should be used in combination when a task spans domains. Do not imply the existence of additional MCP servers beyond those listed above.
 
 ---
 
@@ -252,7 +253,7 @@ When creating or modifying theoretical content, **delegate to specialized agents
 
 ### M5: Always Use MCP Tools When Context Matches
 
-When the task involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection.
+When the task involves mathematical expressions, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool**. Do not rely on recollection. For particle data or literature references, use values already present in the manuscript or repository; label any unverified recall as provisional.
 
 | Context | Tool |
 |---|---|

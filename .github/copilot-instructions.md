@@ -41,7 +41,7 @@ General-purpose agents should delegate theoretical work to specialized agents ra
 
 ### Rule 5: Always Prefer MCP Tools
 
-When a session context involves mathematical expressions, physical constants, particle data, literature references, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool** rather than relying on recollection. See the full MCP Tool Command Guide below.
+When a session context involves mathematical expressions, physical constants, quantum states, molecular dynamics, or formal proofs — **always invoke the corresponding MCP tool** rather than relying on recollection. For particle data or literature references, use values already present in the manuscript or repository; label any unverified recall as provisional. See the full MCP Tool Command Guide below.
 
 ---
 
@@ -331,7 +331,7 @@ The Fritzsch texture with physical masses gives 5.8% Cabibbo angle. To improve:
 
 ### Priority 5: arXiv Submission Preparation
 
-With Priorities 1-4 closed:
+When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
 3. Include all 35 scripts as supplementary material
