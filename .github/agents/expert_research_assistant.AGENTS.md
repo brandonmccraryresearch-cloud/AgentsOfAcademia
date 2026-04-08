@@ -162,49 +162,7 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 
 ---
 
-#### 5. `psianimator-mcp` — Quantum State Simulation & Animation
-
-**When to use:** Any time the task involves quantum state creation, gate operations, entanglement measures, or Bloch sphere visualization. Complements `quantum-mcp` for discrete quantum information tasks.
-
-| Tool | Use Case |
-|---|---|
-| `create_quantum_state` | Create pure, mixed, coherent, squeezed, thermal, or Fock states |
-| `evolve_quantum_system` | Time evolution via unitary, master equation, or Monte Carlo methods |
-| `measure_observable` | Compute expectation values, variances, and probability distributions |
-| `animate_quantum_process` | Bloch sphere, Wigner function, and circuit animations |
-| `quantum_gate_sequence` | Apply single- and multi-qubit gates with visualization |
-| `calculate_entanglement` | Von Neumann entropy, concurrence, negativity, mutual information |
-
----
-
-#### 6. `scite` — Scientific Literature Search
-
-**When to use:** Any time the audit requires checking whether a claim has precedent in the literature, or when the user references a paper that should be located and reviewed.
-
-| Tool | Use Case |
-|---|---|
-| `search` | Search scientific papers with citation context (supporting/contrasting/mentioning) by keyword or topic |
-
-**Example context:** A manuscript claims novelty for a derivation. Use `search` with relevant keywords to check for prior art and find citing/contrasting papers.
-
----
-
-#### 7. `particlephysics-mcp` — Particle Data Group (PDG) Data
-
-**When to use:** Any time the task involves particle masses, lifetimes, decay widths, branching fractions, or coupling constants. Essential for Pillar 3 (Empirical Grounding) when a framework makes predictions about particle properties.
-
-| Tool | Use Case |
-|---|---|
-| `search_particle` | Look up particles by natural language name — over 400 translations |
-| `get_data` | Retrieve mass, lifetime, width, quantum numbers, and property details |
-| `decay_analysis` | Branching fractions, decay products, hierarchical decay structure |
-| `error_analysis` | Validate PDG identifiers, diagnose lookup issues |
-
-**Example context:** A theory predicts the tau lepton mass from first principles. Use `search_particle("tau")` then `get_data` to retrieve the PDG value and compare.
-
----
-
-#### 8. `lean-lsp-mcp` — Lean 4 Theorem Prover (Language Server)
+#### 5. `lean-lsp-mcp` — Lean 4 Theorem Prover (Language Server)
 
 **When to use:** When formal verification of a mathematical claim is required, or when constructing machine-checked proofs to validate derivation steps.
 
@@ -225,12 +183,10 @@ You have access to the following MCP (Model Context Protocol) tool servers. Use 
 When processing a new prompt, apply this decision tree:
 
 1. **Contains equations or symbolic expressions?** → `math-mcp` (solve, differentiate, simplify)
-2. **References particle data or physical constants?** → `particlephysics-mcp` (look up PDG values)
-3. **Claims about quantum states or tunneling?** → `quantum-mcp` or `psianimator-mcp`
-4. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
-5. **References specific papers or claims novelty?** → `scite`
-6. **Requires machine-checked proof?** → `lean-lsp-mcp`
-7. **Involves ML models or data fitting?** → `neural-mcp`
+2. **Claims about quantum states or tunneling?** → `quantum-mcp`
+3. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
+4. **Requires machine-checked proof?** → `lean-lsp-mcp`
+5. **Involves ML models or data fitting?** → `neural-mcp`
 
 Multiple servers can and should be used in combination when a task spans domains.
 
@@ -301,13 +257,10 @@ When the task involves mathematical expressions, physical constants, particle da
 | Context | Tool |
 |---|---|
 | Equations, derivatives, integrals | `math-mcp` → `symbolic_solve`, `symbolic_diff`, `symbolic_integrate` |
-| Particle masses, lifetimes, widths | `particlephysics-mcp` → `search_particle`, `get_data` |
 | Quantum potentials, wave packets | `quantum-mcp` → `create_lattice_potential`, `solve_schrodinger_2d` |
 | Phase transitions, thermodynamics | `molecular-mcp` → `run_nvt`, `detect_phase_transition` |
-| Literature search, prior art | `scite` → `search` |
 | Formal proofs, tactic state | `lean-lsp-mcp` → `lean_goal`, `lean_verify`, `lean_multi_attempt` |
 | Neural networks, ML models | `neural-mcp` → `define_model`, `train_model` |
-| Quantum states, Bloch spheres | `psianimator-mcp` → `create_quantum_state`, `animate_quantum_process` |
 
 ### M6: Anti-Lazy Self-Check
 
