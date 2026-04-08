@@ -32,7 +32,7 @@ inputs:
   manuscript:
     description: "Manuscript filename"
     required: false
-    default: '83.0IRH.md'
+    default: '84.0IRH.md'
 
 runs:
   using: "composite"

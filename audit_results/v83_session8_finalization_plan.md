@@ -156,7 +156,7 @@ For every equation in the manuscript:
 - [ ] `.github/copilot-instructions.md` matches current state
 - [ ] `lean4/lakefile.toml` lists all 10 Lean files
 - [ ] `lean4/IHMFramework.lean` imports all 10 files
-- [ ] All workflow files reference correct manuscript name (83.0IRH.md)
+- [ ] All workflow files reference correct manuscript name (84.0IRH.md)
 
 ### C.5 Specific Instructions for Agents
 

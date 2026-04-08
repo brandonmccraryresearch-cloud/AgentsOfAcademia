@@ -255,16 +255,16 @@ The following rules apply to EVERY session, EVERY task, EVERY agent. Violation o
 
 ### M1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`83.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
+**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`84.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
 
 **How to comply:** At the start of every session, execute:
 ```
-view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/83.0IRH.md")
+view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/84.0IRH.md")
 ```
 Read ALL sections. Do not skip. Do not summarize-and-move-on. If the file exceeds context limits, read it in ranges (e.g., lines 1–2000, 2001–4000, etc.) until you have read every line.
 
 Sub-agents receiving delegated tasks must ALSO read the full manuscript before starting their delegated work. Include this instruction when delegating:
-> "Before starting, read the entire manuscript 83.0IRH.md for full theory context."
+> "Before starting, read the entire manuscript 84.0IRH.md for full theory context."
 
 ### M2: Manuscript Update After Theoretical Advances
 
@@ -281,7 +281,7 @@ When any session produces changes, update ALL THREE:
 
 1. **`.github/copilot-instructions.md`** — Current state, version numbers, theorem counts, priority lists
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep current
-3. **`83.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
+3. **`84.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
 
 ### M4: Specialized Agent Preference for Theoretical Content
 

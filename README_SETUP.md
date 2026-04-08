@@ -94,7 +94,7 @@ Configuration: `/app/mcp-servers/all-servers.json`
 ## Research Framework
 
 ### Main Theory Document
-- **File**: `83.0IRH.md` (v83.0, ~600 pages)
+- **File**: `84.0IRH.md` (v83.0, ~600 pages)
 - **Topic**: Intrinsic Resonance Holography (IRH)
 - **Focus**: Unified field theory deriving constants from D₄ lattice geometry
 
