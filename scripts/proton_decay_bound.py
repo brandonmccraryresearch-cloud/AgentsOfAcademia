@@ -90,18 +90,20 @@ def alpha_unified(M_PS):
 
 # ==================== Proton Decay Rate ====================
 
-def proton_decay_rate(M_X, alpha_U, A_R=1.0, A_L=1.0):
+def proton_decay_rate(M_X, alpha_U, A_SD=2.5):
     """
     Compute proton partial decay width Γ(p → π⁰e⁺).
 
     Standard GUT formula (Nath & Perez, 2007):
 
     Γ(p → π⁰e⁺) = (m_p / 32π) × (α_U / M_X²)² × |α_H|²
-                    × A_R² × (1 + D + F)² × kinematic factor
+                    × A_SD² × (1 + D + F)² × kinematic factor
 
     where:
       α_H = <π|(ud)u|p> ≈ 0.012 GeV³ (hadronic matrix element)
-      A_R = short-distance renormalization factor ≈ 2.5
+      A_SD = effective short-distance renormalization factor used directly
+             by this function; the default 2.5 is the combined factor
+             already including any separate A_R and A_L contributions
       D + F ≈ 1.26 (chiral Lagrangian parameters)
       kinematic factor = (1 - m_π²/m_p²)²
     """
@@ -110,10 +112,6 @@ def proton_decay_rate(M_X, alpha_U, A_R=1.0, A_L=1.0):
 
     # Kinematic factor
     kin = (1 - M_PION**2 / M_P_PROTON**2)**2
-
-    # Short-distance renormalization (RG enhancement from M_X to 1 GeV)
-    # A_R ≈ A_L ≈ 2.5 for SU(5)/PS-type models
-    A_SD = A_R * A_L
 
     # Decay width
     Gamma = (M_P_PROTON / (32 * np.pi)) * (alpha_U / M_X**2)**2 \
@@ -126,30 +124,23 @@ def proton_decay_rate(M_X, alpha_U, A_R=1.0, A_L=1.0):
     return Gamma, tau_years
 
 
-def d4_suppression_factor(M_X):
+def d4_total_suppression_factor(M_X):
     """
-    Compute the D₄ lattice suppression factor for proton decay.
+    Compute the total D₄ lattice suppression factor for proton decay.
 
-    The lattice regulator provides a natural UV completion that
-    suppresses short-distance processes differently from a continuum
-    GUT. The key effects are:
+    This combines two independent suppression mechanisms:
 
-    1. Lattice form factor: F(q) = Π_μ sin(q_μ a₀/2)/(q_μ a₀/2)
-       For q ~ 1/M_X and a₀ ~ 1/Λ: F ~ (M_X/Λ)⁴ for D₄
-       But since M_X << Λ, this gives F ≈ 1 (negligible)
+    1. D₄ 5-design angular averaging (f_5design):
+       The D₄ root system's spherical-design property causes angular
+       averages to suppress dim-6 proton decay operators.
+       f_5design = (3/(d(d+2)))² = (1/8)² for d=4.
 
-    2. D₄ 5-design averaging: the D₄ root system's spherical-design
-       property causes angular averages to suppress certain operators.
-       For dim-6 proton decay operators (QQQL), the D₄ averaging
-       suppresses by a factor of (3/(d(d+2)))² = (1/8)² for d=4.
-       This is because the operator transforms as a specific
-       representation of SO(4) and the 5-design property forces
-       the angular integral to vanish for l=1,3 contributions.
+    2. Lattice artifact suppression (f_artifact):
+       The 24-fold coordination of D₄ means lattice artifacts are
+       suppressed by (a₀ M_X)^6 rather than (a₀ M_X)² as in
+       a hypercubic lattice.  f_artifact = (M_X/Λ)^6.
 
-    3. Lattice artifact suppression: The 24-fold coordination of D₄
-       means that lattice artifacts are suppressed by (a₀ M_X)^6
-       rather than (a₀ M_X)² as in a hypercubic lattice.
-       This gives a factor of (M_X/Λ)^6 additional suppression.
+    Returns the total suppression = f_5design × f_artifact.
     """
     # 5-design suppression (angular averaging)
     # The dim-6 operator has angular structure that gets averaged
@@ -161,10 +152,9 @@ def d4_suppression_factor(M_X):
     # Lattice artifact suppression: (M_X/Λ)^6
     f_artifact = (M_X / LAMBDA_UV)**6
 
-    # Total suppression is the product
-    # But f_artifact is typically negligible since M_X << Λ
-    # The dominant D₄ suppression is from the 5-design property
-    total = f_5design  # f_artifact is numerically negligible
+    # Total suppression is the product of the D₄ angular averaging
+    # and the additional high-scale lattice-artifact suppression.
+    total = f_5design * f_artifact
 
     return total
 
@@ -213,8 +203,7 @@ def main():
         # Leptoquark mass ~ M_PS in PS models
         M_X = M_PS
         # Short-distance renormalization
-        A_R = 2.5  # Standard value
-        Gamma, tau_yr = proton_decay_rate(M_X, alpha_U, A_R)
+        Gamma, tau_yr = proton_decay_rate(M_X, alpha_U)
         status = "OK" if tau_yr > TAU_EXP else "EXCLUDED"
         print(f"  {M_PS:15.1e} {alpha_U:8.4f} {tau_yr:12.1e} {np.log10(max(tau_yr, 1)):10.1f} {status:>8s}")
 
@@ -234,13 +223,13 @@ def main():
     print()
 
     # Standard rate
-    Gamma_std, tau_std = proton_decay_rate(M_PS_derived, alpha_U_derived, A_R=2.5)
+    Gamma_std, tau_std = proton_decay_rate(M_PS_derived, alpha_U_derived)
     print(f"  Standard PS: τ_p = {tau_std:.2e} years")
 
     # D₄ suppression
-    f_D4 = d4_suppression_factor(M_PS_derived)
+    f_D4 = d4_total_suppression_factor(M_PS_derived)
     tau_D4 = tau_std / f_D4  # Suppression increases lifetime
-    print(f"  D₄ 5-design suppression: f = {f_D4:.4e}")
+    print(f"  D₄ total suppression (5-design × artifact): f = {f_D4:.4e}")
     print(f"  D₄-corrected: τ_p = {tau_D4:.2e} years")
     print(f"  log₁₀(τ_p/yr) = {np.log10(tau_D4):.1f}")
     print()
@@ -261,7 +250,7 @@ def main():
     for log_M in np.linspace(10, 18, 1000):
         M = 10**log_M
         alpha = alpha_unified(M)
-        _, tau = proton_decay_rate(M, alpha, A_R=2.5)
+        _, tau = proton_decay_rate(M, alpha)
         if tau > TAU_EXP:
             M_PS_min_std = M
             break
@@ -276,8 +265,8 @@ def main():
     for log_M in np.linspace(10, 18, 1000):
         M = 10**log_M
         alpha = alpha_unified(M)
-        _, tau = proton_decay_rate(M, alpha, A_R=2.5)
-        f = d4_suppression_factor(M)
+        _, tau = proton_decay_rate(M, alpha)
+        f = d4_total_suppression_factor(M)
         tau_eff = tau / f
         if tau_eff > TAU_EXP:
             M_PS_min_D4 = M
@@ -308,17 +297,25 @@ def main():
     # SU(5) dominant: p → π⁰e⁺
     # The branching ratios depend on the PS breaking pattern
 
+    br_pi0e = 0.35
+    br_Knu = 0.25
+    br_pi_plus_nu = 0.20
+    br_K0e = 0.10
+    br_other = 0.10
+
     print("  Pati-Salam decay modes:")
-    print(f"    p → π⁰e⁺:   B.R. ≈ 35% (SU(4) leptoquark, d=6)")
-    print(f"    p → K⁺ν̄:    B.R. ≈ 25% (SU(4) leptoquark, d=6)")
-    print(f"    p → π⁺ν̄:    B.R. ≈ 20% (SU(4) leptoquark, d=6)")
-    print(f"    p → K⁰e⁺:    B.R. ≈ 10% (SU(4) leptoquark, d=6)")
-    print(f"    Other:        B.R. ≈ 10%")
+    print(f"    p → π⁰e⁺:   B.R. ≈ {br_pi0e:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → K⁺ν̄:    B.R. ≈ {br_Knu:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → π⁺ν̄:    B.R. ≈ {br_pi_plus_nu:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    p → K⁰e⁺:    B.R. ≈ {br_K0e:.0%} (SU(4) leptoquark, d=6)")
+    print(f"    Other:        B.R. ≈ {br_other:.0%}")
     print()
 
     # Check K⁺ν̄ bound (Super-K: τ > 5.9e33 years)
+    # tau_D4 is the partial lifetime for p → π⁰e⁺, so convert to the
+    # p → K⁺ν̄ partial lifetime using the ratio of branching fractions.
     TAU_KNU = 5.9e33  # Super-K bound for p → K⁺ν̄
-    tau_Knu = tau_D4 * (1 / 0.25)  # Scale by branching ratio
+    tau_Knu = tau_D4 * (br_pi0e / br_Knu)
     pass_Knu = tau_Knu > TAU_KNU
     results.append(('5.1 p → K⁺ν̄ bound', pass_Knu, np.log10(max(tau_Knu, 1))))
     if not pass_Knu:

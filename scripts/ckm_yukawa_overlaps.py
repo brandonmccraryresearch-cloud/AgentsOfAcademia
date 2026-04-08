@@ -5,8 +5,10 @@ Dynamical CKM Magnitudes: Yukawa Overlap Integrals on Triality Orbifold
 
 Extends the CKM analysis from Session 8 (ckm_magnitudes.py) by computing
 Yukawa coupling overlap integrals on the D₄ triality orbifold. The goal
-is to derive the FULL 3×3 CKM matrix from mass ratios alone, without
-using PDG quark masses as input.
+is to derive the FULL 3×3 CKM matrix from D₄-derived mass ratios, though
+the current implementation uses PDG quark masses as input for comparison
+and validation. A fully ab initio derivation requires solving the lattice
+Dirac equation for triality-sector wavefunctions (see Priority 4).
 
 Physical picture:
   The D₄ root lattice has an S₃ triality automorphism group that permutes

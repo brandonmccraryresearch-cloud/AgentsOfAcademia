@@ -5,7 +5,7 @@
 # This script ensures all dependencies are installed for:
 # - AI Agents (Expert Research Assistant, HLRE, Lean 4 Specialist, Meta Agent)
 # - Lean 4 Formal Verification System
-# - All 8 MCP Servers + Context7
+# - All 6 MCP Servers + Context7
 # - Python computational scripts
 # - Research document processing
 
@@ -158,9 +158,9 @@ else
 fi
 
 # ============================================================
-# 4. INSTALL NODE.JS and NPM (for arxiv-search-mcp)
+# 4. INSTALL NODE.JS and NPM (for npx-based MCP servers)
 # ============================================================
-log "Step 4: Setting up Node.js..."
+log "Step 4: Setting up Node.js (for npx-based MCP servers)..."
 
 if ! check_command node; then
     log "Installing Node.js..."
@@ -231,11 +231,8 @@ info "  1. math-mcp (scicomp-math-mcp)"
 info "  2. quantum-mcp (scicomp-quantum-mcp)"
 info "  3. molecular-mcp (scicomp-molecular-mcp)"
 info "  4. neural-mcp (scicomp-neural-mcp)"
-info "  5. psianimator-mcp"
-info "  6. arxiv-search-mcp"
-info "  7. particlephysics-mcp"
-info "  8. lean-lsp-mcp"
-info "  9. context7-mcp (NEW)"
+info "  5. lean-lsp-mcp"
+info "  6. context7-mcp"
 
 # ============================================================
 # 7. INSTALL CONTEXT7 MCP SERVER
