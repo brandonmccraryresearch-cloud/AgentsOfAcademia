@@ -17,3 +17,5 @@ import IHMFramework.MeasureUniqueness
 import IHMFramework.D4Uniqueness
 import IHMFramework.Goldstone
 import IHMFramework.GaugeInvariance
+-- v84.0 additions
+import IHMFramework.ReggeContinuumLimit
