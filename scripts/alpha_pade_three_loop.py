@@ -357,7 +357,9 @@ def full_pade_analysis(f1, delta_f2, delta_f3_estimates):
     results['richardson'] = richardson
 
     # Direct Padé approximants using c₀, c₁, c₂ as Taylor coefficients
-    # of f(α) = c₀ + c₁α + c₂α² at α = α_phys
+    # of f(α) = c₀ + c₁α + c₂α² evaluated at α = α_phys.
+    # The pre-multiplication by alpha_eff converts coefficients to
+    # the contribution at the physical coupling: c_n × α^n.
     pade_11_val = pade_11(c0, c1 * alpha_eff, c2 * alpha_eff**2)
     pade_02_val = pade_02(c0, c1 * alpha_eff, c2 * alpha_eff**2)
     pade_01_val = pade_01(c0, c1 * alpha_eff)
@@ -544,14 +546,9 @@ def main():
     for name in ['pade_01', 'pade_11', 'pade_02']:
         val = pade_results[name]
         gap_pct = abs(1.0 - val / TARGET_F) * 100
-        label = name.replace('pade_', '[').replace('_', '/') + ']'
-        # Fix label formatting
-        if name == 'pade_01':
-            label = '[0/1]'
-        elif name == 'pade_11':
-            label = '[1/1]'
-        elif name == 'pade_02':
-            label = '[0/2]'
+        # Map internal names to standard Padé notation
+        pade_labels = {'pade_01': '[0/1]', 'pade_11': '[1/1]', 'pade_02': '[0/2]'}
+        label = pade_labels[name]
         print(f"    Padé {label:6s}         = {val:.8f}  (gap {gap_pct:.4f}%)")
 
     # Find best Padé result

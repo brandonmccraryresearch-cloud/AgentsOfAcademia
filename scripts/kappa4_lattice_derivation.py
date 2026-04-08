@@ -511,7 +511,10 @@ def main():
         print(f"  {name:35s} {val:10.6f} {ratio:10.4f}")
 
     print()
-    # Best estimate: geometric mean of independent methods
+    # Best estimate: geometric mean of independent methods.
+    # abs() is defensive — all physical κ₄ values should be positive
+    # (stability of the lattice requires κ₄ > 0). If any method yielded
+    # negative κ₄, it would indicate a breakdown of that approximation.
     kappa4_values = [m[1] for m in methods]
     kappa4_best = np.exp(np.mean(np.log(np.abs(kappa4_values))))
     print(f"  Best estimate (geometric mean): κ₄ = {kappa4_best:.6f}")
