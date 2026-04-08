@@ -27,7 +27,7 @@
     "lean-lsp-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["lean-lsp-mcp"],
+      "args": ["lean-lsp"],
       "env": {
         "LEAN_PROJECT_PATH": "."
       },
