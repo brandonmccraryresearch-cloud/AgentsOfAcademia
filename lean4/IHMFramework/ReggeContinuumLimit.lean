@@ -216,5 +216,5 @@ theorem regge_convergence_rate (J : ℝ) (a₀ k : ℝ)
   6. lattice_continuum_gap: gap = ε exactly
   7. regge_convergence_rate: relative error ~ (a₀ k)² / 24
 
-  Total: 7 theorems proven, 0 sorry
+  Total: 7 theorems proven, all complete (zero sorries)
 -/

@@ -13,4 +13,4 @@ scope = "leanprover-community"
 
 [[lean_lib]]
 name = "IHMFramework"
-globs = ["IHMFramework", "IHMFramework.Basic", "IHMFramework.V2Basic", "IHMFramework.V2Problems", "IHMFramework.FiveDesign", "IHMFramework.Circularity", "IHMFramework.LiebRobinson", "IHMFramework.MeasureUniqueness", "IHMFramework.D4Uniqueness", "IHMFramework.Goldstone", "IHMFramework.GaugeInvariance"]
+globs = ["IHMFramework", "IHMFramework.Basic", "IHMFramework.V2Basic", "IHMFramework.V2Problems", "IHMFramework.FiveDesign", "IHMFramework.Circularity", "IHMFramework.LiebRobinson", "IHMFramework.MeasureUniqueness", "IHMFramework.D4Uniqueness", "IHMFramework.Goldstone", "IHMFramework.GaugeInvariance", "IHMFramework.ReggeContinuumLimit"]
