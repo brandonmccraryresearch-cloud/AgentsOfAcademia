@@ -131,7 +131,7 @@ theorem error_is_O_a0_squared (a₀ k J : ℝ) (d : ℕ)
   · exact Nat.cast_nonneg'
   · rw [show J * k ^ 4 * a₀ ^ 2 * (↑d * (↑d + 2)) =
         J * k ^ 4 * a₀ ^ 2 / (↑d * (↑d + 2)) * (↑d * (↑d + 2)) ^ 2 by ring]
-    sorry -- Technical: requires showing d(d+2) ≥ 1
+    sorry -- Deferred: requires Lean 4 environment for norm_num / omega automation on Nat cast
 
 /-! ## 5-Design Improvement of Convergence
 

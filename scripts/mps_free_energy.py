@@ -368,7 +368,7 @@ def main():
     v_RG, g2R_at_MPS = rg_improved_mps(g_U_sq, LAMBDA_UV)
     print(f"  Self-consistent v_R(RG) = {v_RG:.3e} GeV")
     print(f"  log₁₀(M_PS) = {np.log10(v_RG):.2f}")
-    print(f"  g²_{'{2R}'}(M_PS) = {g2R_at_MPS:.6f}")
+    print(f"  g²_{{2R}}(M_PS) = {g2R_at_MPS:.6f}")
     print()
 
     pass_rg = v_RG > 1e8 and v_RG < 1e18
