@@ -1,32 +1,5 @@
 {
   "mcpServers": {
-    "psianimator-mcp": {
-      "type": "stdio",
-      "command": "python3",
-      "args": ["-m", "psianimator_mcp.cli", "serve"],
-      "env": {
-        "PSIANIMATOR_CONFIG": "~/.config/psianimator-mcp/config.json"
-      },
-      "tools": ["*"]
-    },
-    "scite": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://api.scite.ai/mcp"],
-      "tools": ["*"]
-    },
-    "particlephysics-mcp": {
-      "type": "stdio",
-      "command": "uv",
-      "args": [
-        "tool",
-        "run",
-        "--from",
-        "git+https://github.com/uzerone/ParticlePhysics-MCP-Server.git",
-        "pp-mcp-server"
-      ],
-      "tools": ["*"]
-    },
     "math-mcp": {
       "type": "stdio",
       "command": "uvx",

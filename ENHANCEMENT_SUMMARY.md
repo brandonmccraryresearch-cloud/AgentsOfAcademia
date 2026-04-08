@@ -105,20 +105,17 @@
 
 **Recommendation:** CONTINUE DEVELOPMENT with focus on open calculations
 
-## 📦 MCP Servers (9 Total)
+## 📦 MCP Servers (6 Total)
 
 ### Scientific Computing
 1. **math-mcp** - Symbolic algebra, numerical computing
 2. **quantum-mcp** - Wave mechanics, Schrödinger simulations
 3. **molecular-mcp** - Classical molecular dynamics
 4. **neural-mcp** - Neural network training
-5. **psianimator-mcp** - Quantum state simulation
 
 ### Research Tools
-6. **scite** - Scientific literature search (citation intelligence)
-7. **particlephysics-mcp** - Particle Data Group data
-8. **lean-lsp-mcp** - Lean 4 theorem prover
-9. **context7-mcp** - Real-time library documentation (**NEW**)
+5. **lean-lsp-mcp** - Lean 4 theorem prover
+6. **context7-mcp** - Real-time library documentation
 
 ## 🚀 Quick Start Guide
 

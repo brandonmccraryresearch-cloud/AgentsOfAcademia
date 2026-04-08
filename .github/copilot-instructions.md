@@ -207,49 +207,15 @@ This repository uses multiple Model Context Protocol (MCP) servers for scientifi
 | `lean_declaration_file` | `lean_declaration_file(file_path="...", symbol="d4_is_five_design")` | Find declaration location | Navigate codebase |
 | `lean_run_code` | `lean_run_code(code="import Mathlib\n#check Nat.add_comm")` | Run code snippets | Quick experiments |
 
-#### 6. `psianimator-mcp` — Quantum State Simulation & Animation
-
-**When to use:** Quantum state creation, gate operations, entanglement, Bloch sphere visualization.
-
-| Tool | Command Pattern | Use Case | Example |
-|---|---|---|---|
-| `create_quantum_state` | Create pure, mixed, coherent, squeezed, thermal, or Fock states | State preparation | Initialize qubit states |
-| `evolve_quantum_system` | Time evolution via unitary, master equation, or Monte Carlo | Dynamics | Open quantum systems |
-| `measure_observable` | Compute expectation values, variances, probability distributions | Measurement | Test operator predictions |
-| `animate_quantum_process` | Bloch sphere, Wigner function, circuit animations | Visualization | Publication figures |
-| `quantum_gate_sequence` | Apply single- and multi-qubit gates | Gate operations | Circuit design |
-| `calculate_entanglement` | Von Neumann entropy, concurrence, negativity | Entanglement | Quantify correlations |
-
-#### 7. `scite` — Scientific Literature Search
-
-**When to use:** Checking prior art, locating referenced papers, verifying novelty claims, finding citation context (supporting/contrasting/mentioning).
-
-| Tool | Command Pattern | Use Case | Example |
-|---|---|---|---|
-| `search` | `search(query="D4 lattice phonon fine structure constant")` | Search scientific papers | Find related work with citation context |
-
-#### 8. `particlephysics-mcp` — Particle Data Group (PDG) Data
-
-**When to use:** Particle masses, lifetimes, decay widths, branching fractions, coupling constants.
-
-| Tool | Command Pattern | Use Case | Example |
-|---|---|---|---|
-| `search_particle` | `search_particle("tau lepton")` | Look up particles | Find PDG identifier |
-| `get_data` | `get_data(particle_id="...")` | Retrieve properties | Mass, lifetime, width |
-| `decay_analysis` | `decay_analysis(particle_id="...")` | Decay structure | Branching fractions |
-| `error_analysis` | `error_analysis(identifier="...")` | Validate lookups | Diagnose data issues |
-
 ### Tool Selection Heuristic
 
 When processing a new prompt, apply this decision tree:
 
 1. **Contains equations or symbolic expressions?** → `math-mcp`
-2. **References particle data or physical constants?** → `particlephysics-mcp`
-3. **Claims about quantum states or tunneling?** → `quantum-mcp` or `psianimator-mcp`
-4. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
-5. **References specific papers or claims novelty?** → `scite`
-6. **Requires machine-checked proof?** → `lean-lsp-mcp`
-7. **Involves ML models or data fitting?** → `neural-mcp`
+2. **Claims about quantum states or tunneling?** → `quantum-mcp`
+3. **Claims about statistical mechanics or phase transitions?** → `molecular-mcp`
+4. **Requires machine-checked proof?** → `lean-lsp-mcp`
+5. **Involves ML models or data fitting?** → `neural-mcp`
 
 Multiple servers can and should be used in combination when a task spans domains.
 

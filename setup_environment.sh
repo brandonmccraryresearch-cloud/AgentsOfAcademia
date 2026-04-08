@@ -231,11 +231,8 @@ info "  1. math-mcp (scicomp-math-mcp)"
 info "  2. quantum-mcp (scicomp-quantum-mcp)"
 info "  3. molecular-mcp (scicomp-molecular-mcp)"
 info "  4. neural-mcp (scicomp-neural-mcp)"
-info "  5. psianimator-mcp"
-info "  6. arxiv-search-mcp"
-info "  7. particlephysics-mcp"
-info "  8. lean-lsp-mcp"
-info "  9. context7-mcp (NEW)"
+info "  5. lean-lsp-mcp"
+info "  6. context7-mcp"
 
 # ============================================================
 # 7. INSTALL CONTEXT7 MCP SERVER

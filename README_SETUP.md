@@ -52,20 +52,17 @@ python scripts/bz_integral.py --samples 10000
 
 ## MCP Servers
 
-The research assistant integrates 9 MCP (Model Context Protocol) servers:
+The research assistant integrates 6 MCP (Model Context Protocol) servers:
 
 ### Scientific Computing
 1. **math-mcp**: Symbolic algebra, numerical computing, optimization
 2. **quantum-mcp**: Wave mechanics, Schrödinger simulations
 3. **molecular-mcp**: Classical molecular dynamics
 4. **neural-mcp**: Neural network training and evaluation
-5. **psianimator-mcp**: Quantum state simulation and animation
 
 ### Research Tools
-6. **scite**: Scientific literature search (citation intelligence)
-7. **particlephysics-mcp**: Particle Data Group (PDG) data access
-8. **lean-lsp-mcp**: Lean 4 theorem prover language server
-9. **context7-mcp**: Real-time library documentation (NEW!)
+5. **lean-lsp-mcp**: Lean 4 theorem prover language server
+6. **context7-mcp**: Real-time library documentation
 
 Configuration: `/app/mcp-servers/all-servers.json`
 
@@ -198,7 +195,7 @@ source $HOME/.elan/env
 # For uvx-based servers
 uvx --version  # Check uvx is installed
 
-# For npx-based servers (scite, context7)
+# For npx-based servers (context7)
 npm --version  # Check npm is installed
 ```
 
