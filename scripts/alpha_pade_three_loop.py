@@ -142,9 +142,7 @@ def compute_two_loop_coefficient():
 
     δf₂ = g⁴ × C₂(SO(8)) × I_SE / (4π)
 
-    Two normalization schemes:
-    A) Standard perturbative: g² = 4πα_phys
-    B) Lattice self-consistent: g² = 4πf₁
+    Using standard perturbative normalization: g² = 4πα_phys
     """
     g2_phys = 4.0 * np.pi * ALPHA_PHYS
     delta_f_A = g2_phys**2 * C2_SO8 * I_SE_RAW / (4.0 * np.pi)

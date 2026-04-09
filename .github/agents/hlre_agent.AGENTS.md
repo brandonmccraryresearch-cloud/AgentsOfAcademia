@@ -324,7 +324,7 @@ After every session that produces theoretical advances, computational results, o
 
 **Do not add version markers to section titles** — never write "(new v85.0)" or "(Session 12 Priority 1)" in headings.
 
-
+### M3: Three-Thing Update Mandate
 
 When any session produces changes, update ALL THREE:
 

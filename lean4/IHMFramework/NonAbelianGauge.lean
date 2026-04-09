@@ -1,26 +1,35 @@
 /-
-  IHM-HRIIP: Non-Abelian Gauge Invariance on the D₄ Lattice
+  IHM-HRIIP: Plaquette Gauge Invariance via Abelianized Phase Model
 
-  Extends GaugeInvariance.lean to the non-Abelian SU(N) case.
-  Formalizes the Wilson plaquette action for non-Abelian gauge theory
-  on the D₄ lattice, proving gauge invariance of the Wilson action.
+  Extends GaugeInvariance.lean to a model that captures the essential
+  algebraic structure of non-Abelian Wilson plaquette gauge invariance.
 
-  Key results:
-  1. Non-Abelian link variables compose via matrix multiplication
-  2. The plaquette trace is gauge-invariant (telescopic cancellation
-     with cyclic trace property)
-  3. The Wilson action (sum over plaquettes) is gauge-invariant
-  4. Connection to D₄ lattice structure (6 plaquette orientations per site)
+  Scope and limitations:
+  This file works with an abelianized (linearized) phase representation
+  of plaquette link variables. Gauge transformations act additively on
+  real-valued phases, and invariance follows from telescopic cancellation
+  — the same mechanism underlying Abelian and, at the phase level,
+  non-Abelian gauge invariance.
+
+  A full non-Abelian SU(N) proof would additionally require:
+  - An abstract group with conjugation (U → g U g⁻¹ per site)
+  - Cyclic trace: Tr(U₁ U₂ … Uₙ) = Tr(U₂ … Uₙ U₁)
+  - Unitarity: g g⁻¹ = 1
+  These ingredients are beyond the current Mathlib formalization scope
+  and are left for future work (see Chapter XIV §XIV.3 roadmap).
+
+  Key results proven here:
+  1. Link phases compose additively (abelianized model)
+  2. The plaquette phase is invariant under additive gauge transformations
+     (telescopic cancellation of corner phases)
+  3. The Wilson plaquette action cos(θ_P) is gauge-invariant
+  4. The invariance extends to N-link closed loops
 
   Physical significance:
   The D₄ lattice phonon dynamics generate gauge fields on the links.
-  For the SO(8) → SM cascade, we need non-Abelian gauge invariance
-  (not just U(1)). This file proves the non-Abelian Wilson action
-  is exactly gauge-invariant on any lattice, including D₄.
-
-  This formalization works with abstract group-like structures to
-  avoid Mathlib dependency issues with matrix groups, while still
-  capturing the essential algebraic content.
+  For the SO(8) → SM cascade, we need gauge invariance of the Wilson
+  action. This file formalizes the phase-level invariance that underlies
+  the full non-Abelian Wilson action gauge invariance.
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -28,15 +37,19 @@ import IHMFramework.Basic
 
 open Real
 
-/-! ## Non-Abelian Gauge Link Variables
+/-! ## Gauge Link Variables (Abelianized Phase Model)
 
-  In non-Abelian gauge theory, link variables are elements of
-  a group G (e.g., SU(N)). The key operations are:
-  - Composition: U₁ · U₂ (group multiplication)
-  - Inversion: U⁻¹ (group inverse)
-  - Trace: Tr(U) (for the plaquette action)
+  In the abelianized model, link variables are represented by
+  real-valued phases. The key operations are:
+  - Composition: additive phase combination
+  - Gauge transformation: additive phase shift per site (telescopic)
+  - Plaquette action: cos(sum of link phases around plaquette)
 
-  We formalize this using abstract algebraic properties.
+  This captures the essential algebraic content of gauge invariance
+  — specifically, the telescopic cancellation of site-dependent phases —
+  without requiring the full matrix group structure of SU(N).
+  The latter (conjugation, cyclic trace, unitarity) is left for future
+  Lean 4 development using Mathlib matrix groups.
 -/
 
 /-- A non-Abelian gauge link represented by a real-valued "trace"

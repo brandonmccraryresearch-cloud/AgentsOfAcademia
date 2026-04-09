@@ -32,7 +32,11 @@ Session 12 responds to Review 5's four prioritized recommendations. The primary 
 
 - Renamed `84.0IRH.md` → `85.0IRH.md` via `git mv`
 - Added version header with v85.0 changes
-- Added §C.42 (α Padé), §C.43 (κ₄), §C.44 (non-Abelian gauge), §C.45 (summary)
+- Integrated new results into topically relevant main body chapters per M2.1 mandate:
+  - α Padé results → Chapter II §II.3 (fine-structure constant)
+  - κ₄ derivation → Chapter VIII §VIII.4 (Higgs effective potential)
+  - Non-Abelian gauge invariance → Chapter IV §IV.4 (gauge symmetry)
+  - (No §C.x appendix sections added — Appendix C pattern dissolved in v85.0)
 - Updated script census: 35 → 37
 - Updated theorem count: 125+ → 142+
 - Updated Lean file count: 11 → 12

@@ -144,7 +144,7 @@ def compute_bond_potential_coefficients():
     #           = κ₄/8 × φ⁴
 
     results['vertex_factor'] = Z_COORD * (1.0 / 8.0)  # = 3 from 5-design
-    results['effective_quartic_coeff'] = results['vertex_factor'] / 24.0  # = 1/8
+    results['bond_quartic_avg'] = results['vertex_factor'] / 24.0  # = 1/8; angular average per bond, distinct from G₄(D₄)
 
     return results
 
@@ -404,7 +404,7 @@ def main():
     print(f"  J (normalized):     {bond['J_normalized']}")
     print(f"  κ₃:                 {bond['kappa3']} (vanishes by centrosymmetry)")
     print(f"  Vertex factor:      z × ⟨δ̂⁴⟩ = {bond['vertex_factor']:.4f}")
-    print(f"  Effective coeff:    G₄ = vertex/(4!) = {bond['effective_quartic_coeff']:.6f}")
+    print(f"  Bond quartic avg:   Γ₄_bond = vertex/(4!) = {bond['bond_quartic_avg']:.6f}  [angular avg per bond; ≠ G₄(D₄)=0.5]")
     test("κ₃ = 0 by centrosymmetry", bond['kappa3'] == 0.0)
     print()
 
