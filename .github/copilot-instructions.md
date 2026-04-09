@@ -15,7 +15,9 @@ The current manuscript is **`85.0IRH.md`** (v85.0). After every agent session th
 - **Only finalized theoretical content** goes into the manuscript — never in-progress drafts, debug output, or intermediate results.
 - **Paper style and syntax** must be maintained — LaTeX-compatible markdown, section numbering, citation format.
 - **Never truncate or cut existing content** — changes are always **additions** or **edits** to existing sections, never deletions of established material.
+- **Integrate results into relevant main body chapters** — do NOT append new results as appendix sections. New computational results belong in the chapter where they are topically relevant (e.g., α integral results go in Chapter II, Higgs results in Chapter VIII, CKM results in Chapter X). Only truly supplementary material (long derivation details, raw data tables, formal proofs) belongs in appendices.
 - **Additions must be complete** — full derivations, complete equations, proper cross-references. No placeholder text.
+- **Do not add version markers to section titles** — avoid annotations like "(new v85.0, Review5 Priority 1)" in heading text.
 - If the session work does not yet rise to publication-quality, record it in `audit_results/` instead and note the pending manuscript integration.
 
 ### Rule 3: Three-Thing Update Mandate
