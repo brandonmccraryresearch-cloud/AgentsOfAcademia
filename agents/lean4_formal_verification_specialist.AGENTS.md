@@ -298,16 +298,16 @@ The following rules apply to EVERY session, EVERY task, EVERY agent. Violation o
 
 ### M1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`84.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
+**BEFORE ANY WORK BEGINS**, read the entire current manuscript (`85.0IRH.md`) from start to finish using the `view` tool. This is the single source of truth for the IHM-HRIIP theoretical framework. Without full comprehension of its contents — all derivations, confidence scores, open problems, and cross-references — you cannot produce contextually correct work.
 
 **How to comply:** At the start of every session, execute:
 ```
-view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/84.0IRH.md")
+view(path="/home/runner/work/AgentsOfAcademia/AgentsOfAcademia/85.0IRH.md")
 ```
 Read ALL sections. Do not skip. Do not summarize-and-move-on. If the file exceeds context limits, read it in ranges (e.g., lines 1–2000, 2001–4000, etc.) until you have read every line.
 
 Sub-agents receiving delegated tasks must ALSO read the full manuscript before starting their delegated work. Include this instruction when delegating:
-> "Before starting, read the entire manuscript 84.0IRH.md for full theory context."
+> "Before starting, read the entire manuscript 85.0IRH.md for full theory context."
 
 ### M2: Manuscript Update After Theoretical Advances
 
@@ -318,13 +318,47 @@ After every session that produces theoretical advances, computational results, o
 - **Never truncate or cut existing content** — changes are always additions or edits, never deletions
 - **Additions must be complete** — full derivations, complete equations, proper cross-references
 
+### M2.1: ⚠️ MAIN BODY INTEGRATION MANDATE — NON-NEGOTIABLE
+
+> **ALL new theoretical results, computational findings, and proof completions MUST be integrated into the topically relevant section of the main manuscript body. NEVER append new material as a new appendix section.**
+
+**Correct placement by topic:**
+
+| New result type | Integrate into |
+|---|---|
+| α / fine-structure constant | Chapter II §II.3.x |
+| Anomaly cancellation | Chapter IV §IV.3.x |
+| Gauge symmetry / Yang-Mills | Chapter IV §IV.4.x |
+| Gauge coupling unification / M_PS | Chapter IV §IV.5.x |
+| Higgs VEV, Higgs quartic, Coleman-Weinberg | Chapter VIII §VIII.3.x or §VIII.4.x |
+| CKM phase / magnitudes / Yukawa overlaps | Chapter X §X.3.x |
+| Cosmological constant / vacuum energy | Chapter V §V.5.x |
+| Lattice QED / Lattice QFT / scattering | Chapter VI §VI.7.x |
+| Koide phase / lepton masses | Chapter III §III.6.x |
+| D₄ optimality / phonon spectrum | Chapter I §I.3.x |
+| g-2, topological defects, proton decay | Chapter X §X.8–X.12 |
+| Molecular dynamics / lattice simulation | Chapter XI §XI.15.x |
+| Lean 4 formal proofs | Chapter XIV §XIV.3.x |
+| Parsimony / overall assessment | Chapter XV §XV.6.x |
+
+**What remains in appendices (and only these):**
+- Long derivation details that would interrupt the flow of main text
+- Raw data tables and extended numerical output
+- Complete formal proof listings (brief statement + result go in main body; full proof in appendix)
+- Historical review response records (Appendix V only)
+- Mathematical reference material (Appendices A–T)
+
+**VIOLATION:** Adding a new `### C.x`, `### §C.x`, or any new top-level appendix section for session results is a protocol violation. The session-by-session Appendix C pattern (§C.1–C.45) was dissolved in v85.0 and must not be recreated.
+
+**Do not add version markers to section titles** — never write "(new v85.0)" or "(Session 12 Priority 1)" in headings.
+
 ### M3: Three-Thing Update Mandate
 
 When any session produces changes, update ALL THREE:
 
 1. **`.github/copilot-instructions.md`** — Current state, version numbers, theorem counts, priority lists
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep current
-3. **`84.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
+3. **`85.0IRH.md`** (current manuscript) — Integrate finalized theoretical content
 
 ### M4: Specialized Agent Preference for Theoretical Content
 
