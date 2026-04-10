@@ -45,7 +45,7 @@ for cmd in pandoc node; do
   fi
 done
 
-if [ ! -f "$SCRIPT_DIR/node_modules/puppeteer/package.json" ] 2>/dev/null; then
+if [ ! -f "$SCRIPT_DIR/node_modules/puppeteer-core/package.json" ] 2>/dev/null; then
   echo "[Step 0] Installing puppeteer..."
   cd "$SCRIPT_DIR"
   npm init -y --silent 2>/dev/null || true
