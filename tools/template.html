@@ -37,6 +37,9 @@ window.MathJax = {
 </script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4.1.1/tex-svg.js"></script>
 <style>
+/* ===== Web Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Math&display=swap');
+
 /* ===== Page & Print Setup ===== */
 @page {
   size: letter;
@@ -57,8 +60,9 @@ window.MathJax = {
   --accent-color: #2c5282;
   --border-color: #cbd5e0;
   --bg-subtle: #f7fafc;
-  --font-serif: "Georgia", "Times New Roman", "Palatino Linotype", serif;
-  --font-sans: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  --font-serif: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-math: "Noto Sans Math", "Noto Sans", serif;
   --font-mono: "Consolas", "Monaco", "Courier New", monospace;
 }
 
@@ -255,6 +259,7 @@ pre code {
 
 /* ===== Math Rendering ===== */
 mjx-container {
+  font-family: var(--font-math);
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
