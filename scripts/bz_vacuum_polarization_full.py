@@ -38,7 +38,7 @@ Usage:
     python bz_vacuum_polarization_full.py                           # Default
     python bz_vacuum_polarization_full.py --method mc --samples 500000000
     python bz_vacuum_polarization_full.py --method qmc --qmc-samples 10000000
-    python bz_vacuum_polarization_full.py --precision double
+    python bz_vacuum_polarization_full.py --no-harmonic             # Skip expansion
     python bz_vacuum_polarization_full.py --strict                  # CI mode
 """
 
@@ -153,20 +153,25 @@ if HAS_NUMBA:
         Π_μμ(0) = ∫ d⁴q/(2π)⁴ * sin⁴(q_μ/2) / [4 Σ sin²(q_ρ/2)]²
 
         Returns (sum_trace, sum_diag[4], sum_offdiag, count).
+        Uses scalar reductions to avoid data races with prange.
         """
-        sum_trace = 0.0
-        sum_diag = np.zeros(4)
+        sum_diag0 = 0.0
+        sum_diag1 = 0.0
+        sum_diag2 = 0.0
+        sum_diag3 = 0.0
         sum_offdiag = 0.0
         count = 0
         for idx in prange(n_samples):
             # Inverse propagator: ω² = 4 Σ sin²(q_μ/2)
-            omega_sq = 0.0
-            sq_half = np.zeros(4)
-            for mu in range(4):
-                s = np.sin(q_samples[idx, mu] * 0.5)
-                sq_half[mu] = s * s
-                omega_sq += s * s
-            omega_sq *= 4.0
+            s0 = np.sin(q_samples[idx, 0] * 0.5)
+            s1 = np.sin(q_samples[idx, 1] * 0.5)
+            s2 = np.sin(q_samples[idx, 2] * 0.5)
+            s3 = np.sin(q_samples[idx, 3] * 0.5)
+            sq0 = s0 * s0
+            sq1 = s1 * s1
+            sq2 = s2 * s2
+            sq3 = s3 * s3
+            omega_sq = 4.0 * (sq0 + sq1 + sq2 + sq3)
 
             if omega_sq < 1e-20:
                 continue
@@ -174,14 +179,16 @@ if HAS_NUMBA:
             inv_omega4 = 1.0 / (omega_sq * omega_sq)
 
             # Diagonal: Π_μμ = sin⁴(q_μ/2) / ω⁴
-            for mu in range(4):
-                val = sq_half[mu] * sq_half[mu] * inv_omega4
-                sum_diag[mu] += val
-                sum_trace += val
+            sum_diag0 += sq0 * sq0 * inv_omega4
+            sum_diag1 += sq1 * sq1 * inv_omega4
+            sum_diag2 += sq2 * sq2 * inv_omega4
+            sum_diag3 += sq3 * sq3 * inv_omega4
 
             # Off-diagonal (for Ward check): Π_01 = sin²(q₀/2)sin²(q₁/2)/ω⁴
-            sum_offdiag += sq_half[0] * sq_half[1] * inv_omega4
+            sum_offdiag += sq0 * sq1 * inv_omega4
 
+        sum_diag = np.array([sum_diag0, sum_diag1, sum_diag2, sum_diag3])
+        sum_trace = sum_diag0 + sum_diag1 + sum_diag2 + sum_diag3
         return sum_trace, sum_diag, sum_offdiag, count
 
     @njit(parallel=True, cache=True)
@@ -195,38 +202,55 @@ if HAS_NUMBA:
         Total Π = Σ_{i<j} ∫ V²_{ij} / ω⁴ d⁴q/(2π)⁴
 
         Returns (sum_total, channel_sums[6], count).
+        Uses per-channel scalar reductions to avoid data races with prange.
         """
-        sum_total = 0.0
-        # 6 channels: (0,1),(0,2),(0,3),(1,2),(1,3),(2,3)
-        channel_sums = np.zeros(6)
+        # 6 channels: (0,1),(0,2),(0,3),(1,2),(1,3),(2,3) — scalar accumulators
+        ch01 = 0.0
+        ch02 = 0.0
+        ch03 = 0.0
+        ch12 = 0.0
+        ch13 = 0.0
+        ch23 = 0.0
         count = 0
 
         for idx in prange(n_samples):
-            omega_sq = 0.0
-            q = np.zeros(4)
-            for mu in range(4):
-                q[mu] = q_samples[idx, mu]
-                s = np.sin(q[mu] * 0.5)
-                omega_sq += s * s
-            omega_sq *= 4.0
+            s0 = np.sin(q_samples[idx, 0] * 0.5)
+            s1 = np.sin(q_samples[idx, 1] * 0.5)
+            s2 = np.sin(q_samples[idx, 2] * 0.5)
+            s3 = np.sin(q_samples[idx, 3] * 0.5)
+            omega_sq = 4.0 * (s0*s0 + s1*s1 + s2*s2 + s3*s3)
 
             if omega_sq < 1e-20:
                 continue
             count += 1
             inv_omega4 = 1.0 / (omega_sq * omega_sq)
 
-            ch = 0
-            for i in range(4):
-                for j in range(i + 1, 4):
-                    # Vertex from 4 root vectors: (±eᵢ ± eⱼ)
-                    sp = np.sin(q[i] + q[j])
-                    sm = np.sin(q[i] - q[j])
-                    v_sq = 2.0 * (sp * sp + sm * sm)
-                    val = v_sq * inv_omega4
-                    channel_sums[ch] += val
-                    sum_total += val
-                    ch += 1
+            q0 = q_samples[idx, 0]
+            q1 = q_samples[idx, 1]
+            q2 = q_samples[idx, 2]
+            q3 = q_samples[idx, 3]
 
+            # Channel (0,1)
+            sp = np.sin(q0 + q1); sm = np.sin(q0 - q1)
+            ch01 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+            # Channel (0,2)
+            sp = np.sin(q0 + q2); sm = np.sin(q0 - q2)
+            ch02 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+            # Channel (0,3)
+            sp = np.sin(q0 + q3); sm = np.sin(q0 - q3)
+            ch03 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+            # Channel (1,2)
+            sp = np.sin(q1 + q2); sm = np.sin(q1 - q2)
+            ch12 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+            # Channel (1,3)
+            sp = np.sin(q1 + q3); sm = np.sin(q1 - q3)
+            ch13 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+            # Channel (2,3)
+            sp = np.sin(q2 + q3); sm = np.sin(q2 - q3)
+            ch23 += 2.0 * (sp*sp + sm*sm) * inv_omega4
+
+        channel_sums = np.array([ch01, ch02, ch03, ch12, ch13, ch23])
+        sum_total = ch01 + ch02 + ch03 + ch12 + ch13 + ch23
         return sum_total, channel_sums, count
 
     @njit(parallel=True, cache=True)
@@ -237,32 +261,37 @@ if HAS_NUMBA:
         V²_i = 4 sin⁴(qᵢ)  for each Cartan direction i=0,1,2,3
 
         Returns (sum_total, cartan_sums[4], count).
+        Uses per-component scalar reductions to avoid data races with prange.
         """
-        sum_total = 0.0
-        cartan_sums = np.zeros(4)
+        c0 = 0.0
+        c1 = 0.0
+        c2 = 0.0
+        c3 = 0.0
         count = 0
 
         for idx in prange(n_samples):
-            omega_sq = 0.0
-            q = np.zeros(4)
-            for mu in range(4):
-                q[mu] = q_samples[idx, mu]
-                s = np.sin(q[mu] * 0.5)
-                omega_sq += s * s
-            omega_sq *= 4.0
+            s0 = np.sin(q_samples[idx, 0] * 0.5)
+            s1 = np.sin(q_samples[idx, 1] * 0.5)
+            s2 = np.sin(q_samples[idx, 2] * 0.5)
+            s3 = np.sin(q_samples[idx, 3] * 0.5)
+            omega_sq = 4.0 * (s0*s0 + s1*s1 + s2*s2 + s3*s3)
 
             if omega_sq < 1e-20:
                 continue
             count += 1
             inv_omega4 = 1.0 / (omega_sq * omega_sq)
 
-            for i in range(4):
-                s4 = np.sin(q[i])
-                v_sq = 4.0 * s4 * s4 * s4 * s4
-                val = v_sq * inv_omega4
-                cartan_sums[i] += val
-                sum_total += val
+            sq = np.sin(q_samples[idx, 0])
+            c0 += 4.0 * sq * sq * sq * sq * inv_omega4
+            sq = np.sin(q_samples[idx, 1])
+            c1 += 4.0 * sq * sq * sq * sq * inv_omega4
+            sq = np.sin(q_samples[idx, 2])
+            c2 += 4.0 * sq * sq * sq * sq * inv_omega4
+            sq = np.sin(q_samples[idx, 3])
+            c3 += 4.0 * sq * sq * sq * sq * inv_omega4
 
+        cartan_sums = np.array([c0, c1, c2, c3])
+        sum_total = c0 + c1 + c2 + c3
         return sum_total, cartan_sums, count
 
 else:
@@ -516,6 +545,7 @@ def qmc_integrate(n_samples, seed=42):
         'multi_frac': multi_frac,
         'full_frac': full_frac,
         'f_resummed': f_resummed,
+        'n_root_vectors': n_root,
         'n_adjoint': n_adjoint,
     }
 
@@ -551,22 +581,37 @@ def ward_identity_check(n_samples=5_000_000, seed=42):
     inv_omega4 = np.zeros(n_samples)
     inv_omega4[mask] = 1.0 / (omega_sq[mask]**2)
 
+    # Compute means over valid samples only (mask=True) to avoid bias
+    valid_sq_half = sq_half[mask]
+    valid_inv_omega4 = inv_omega4[mask]
+
     # Diagonal components Π_μμ(0) = <sin⁴(q_μ/2) / ω⁴>
-    diag = np.array([np.mean(sq_half[:, mu]**2 * inv_omega4) for mu in range(4)])
+    diag = np.array([
+        np.mean(valid_sq_half[:, mu]**2 * valid_inv_omega4)
+        for mu in range(4)
+    ])
     isotropy_spread = np.std(diag) / np.mean(diag) if np.mean(diag) > 0 else 0.0
 
     # ---- Check 2: Off-diagonal structure ----
     # Π_μν(0) = <sin²(q_μ/2) sin²(q_ν/2) / ω⁴> for μ≠ν
-    offdiag_01 = np.mean(sq_half[:, 0] * sq_half[:, 1] * inv_omega4)
-    offdiag_02 = np.mean(sq_half[:, 0] * sq_half[:, 2] * inv_omega4)
+    offdiag_01 = np.mean(valid_sq_half[:, 0] * valid_sq_half[:, 1] * valid_inv_omega4)
+    offdiag_02 = np.mean(valid_sq_half[:, 0] * valid_sq_half[:, 2] * valid_inv_omega4)
     offdiag_isotropy = abs(offdiag_01 - offdiag_02) / max(abs(offdiag_01), 1e-30)
 
     # ---- Check 3: UV finiteness ----
     # The integral should converge (no divergence as we add more samples)
     # Split into two halves and compare
     n_half = n_samples // 2
-    half1_val = np.mean(sq_half[:n_half, 0]**2 * inv_omega4[:n_half])
-    half2_val = np.mean(sq_half[n_half:, 0]**2 * inv_omega4[n_half:])
+    half1_mask = mask[:n_half]
+    half2_mask = mask[n_half:]
+    half1_val = (
+        np.mean(sq_half[:n_half, 0][half1_mask]**2 * inv_omega4[:n_half][half1_mask])
+        if np.any(half1_mask) else 0.0
+    )
+    half2_val = (
+        np.mean(sq_half[n_half:, 0][half2_mask]**2 * inv_omega4[n_half:][half2_mask])
+        if np.any(half2_mask) else 0.0
+    )
     uv_stability = abs(half1_val - half2_val) / max(abs(half1_val), 1e-30)
 
     # At k=0, the lattice Ward identity k_μ Π_μν(0) = 0 × Π_μν = 0 trivially
@@ -758,12 +803,12 @@ def main():
                         help='MC samples (default: 50M)')
     parser.add_argument('--qmc-samples', type=int, default=5_000_000,
                         help='QMC samples (default: 5M)')
-    parser.add_argument('--precision', choices=['single', 'double'],
-                        default='double', help='Floating-point precision')
     parser.add_argument('--strict', action='store_true',
                         help='CI mode: exit non-zero on failure')
     parser.add_argument('--no-plot', action='store_true',
                         help='Skip convergence plot generation')
+    parser.add_argument('--no-harmonic', action='store_true',
+                        help='Skip analytic harmonic expansion')
     args = parser.parse_args()
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -875,28 +920,29 @@ def main():
         print()
 
     # ===== Analytic Harmonic Expansion =====
-    print("Analytic Harmonic Expansion (D₄ harmonics, degree ≤ 5)")
-    print("=" * 76)
-    harmonic = analytic_harmonic_expansion()
+    if not args.no_harmonic:
+        print("Analytic Harmonic Expansion (D₄ harmonics, degree ≤ 5)")
+        print("=" * 76)
+        harmonic = analytic_harmonic_expansion()
 
-    print(f"\n  | {'Term':30s} | {'Degree':6s} | {'Contribution':14s} | {'Cumulative α⁻¹':16s} |")
-    print(f"  | {'-'*30} | {'-'*6} | {'-'*14} | {'-'*16} |")
+        print(f"\n  | {'Term':30s} | {'Degree':6s} | {'Contribution':14s} | {'Cumulative α⁻¹':16s} |")
+        print(f"  | {'-'*30} | {'-'*6} | {'-'*14} | {'-'*16} |")
 
-    cumul = 137.0
-    d0 = harmonic['degree_0']['contribution']
-    cumul += d0
-    print(f"  | {'Channel count (degree 0)':30s} | {'0':6s} | {d0:14.10f} | {cumul:16.10f} |")
+        cumul = 137.0
+        d0 = harmonic['degree_0']['contribution']
+        cumul += d0
+        print(f"  | {'Channel count (degree 0)':30s} | {'0':6s} | {d0:14.10f} | {cumul:16.10f} |")
 
-    d2 = harmonic['degree_2']['contribution']
-    print(f"  | {'Quadratic (vanishes)':30s} | {'2':6s} | {d2:14.10f} | {cumul:16.10f} |")
+        d2 = harmonic['degree_2']['contribution']
+        print(f"  | {'Quadratic (vanishes)':30s} | {'2':6s} | {d2:14.10f} | {cumul:16.10f} |")
 
-    d4 = harmonic['degree_4']['contribution']
-    cumul_d4 = 137.0 + d4
-    print(f"  | {'Degree 4 correction':30s} | {'4':6s} | {d4:14.10f} | {cumul_d4:16.10f} |")
-    print()
-    print(f"  Total root-vector Π/(4π) = {harmonic['total_root_frac']:.10f}")
-    print(f"  Number of channels: {harmonic['n_channels']} (emergent)")
-    print()
+        d4 = harmonic['degree_4']['contribution']
+        cumul_d4 = 137.0 + d4
+        print(f"  | {'Degree 4 correction':30s} | {'4':6s} | {d4:14.10f} | {cumul_d4:16.10f} |")
+        print()
+        print(f"  Total root-vector Π/(4π) = {harmonic['total_root_frac']:.10f}")
+        print(f"  Number of channels: {harmonic['n_channels']} (emergent)")
+        print()
 
     # ===== Ward Identity Check =====
     print("Ward Identity & Lattice Symmetry Check")
@@ -979,9 +1025,12 @@ def main():
     print("=" * 76)
     print("=== RAW INTEGRAL RESULT (NO FORMULA USED) ===")
     print("=" * 76)
-    print(f"  tr Π(0) [bare]       = {res['bare_trace']:.10f}")
-    print(f"  tr Π(0) [multi-ch]   = {res['multi_total']:.10f}")
-    print(f"  tr Π(0) [full adj]   = {res['full_so8']:.10f}")
+    if all(k in res for k in ('bare_trace', 'multi_total', 'full_so8')):
+        print(f"  tr Π(0) [bare]       = {res['bare_trace']:.10f}")
+        print(f"  tr Π(0) [multi-ch]   = {res['multi_total']:.10f}")
+        print(f"  tr Π(0) [full adj]   = {res['full_so8']:.10f}")
+    else:
+        print("  Raw trace outputs unavailable for selected integration method.")
     print()
     print(f"  Fractional correction = trΠ(0)/(4π):")
     print(f"    Level 1 (bare):       {frac_bare:.10f}")
@@ -1006,30 +1055,37 @@ def main():
         print(f"    {label:10s}: ±{ppb:.0f} ppb ({pct:.4f}%)")
     print()
     print(f"  Samples used: {res['n_samples']:,}")
-    print(f"  Lattice structure: {res['n_root_vectors']} root vectors, "
+    n_rv = res.get('n_root_vectors', '?')
+    print(f"  Lattice structure: {n_rv} root vectors, "
           f"{res['n_adjoint']} total generators (all emergent from D₄ geometry)")
     print(f"  Runtime: {t_total:.2f} s")
     print()
 
     # ===== Save Raw Results =====
     output_npz = os.path.join(script_dir, 'bz_vacuum_polarization_full_output.npz')
-    np.savez(output_npz,
-             tr_pi_bare=res['bare_trace'],
-             tr_pi_multi=res['multi_total'],
-             tr_pi_full=res['full_so8'],
-             frac_bare=frac_bare,
-             frac_multi=frac_multi,
-             frac_full=frac_full,
-             frac_resummed=frac_resummed,
-             alpha_raw_bare=alpha_inv_bare,
-             alpha_raw_multi=alpha_inv_multi,
-             alpha_raw_full=alpha_inv_full,
-             alpha_raw_resummed=alpha_inv_resummed,
-             alpha_raw_geom=alpha_inv_geom,
-             samples=res['n_samples'],
-             times=t_total,
-             n_root_vectors=res['n_root_vectors'],
-             n_adjoint=res['n_adjoint'])
+    save_data = dict(
+        frac_bare=frac_bare,
+        frac_multi=frac_multi,
+        frac_full=frac_full,
+        frac_resummed=frac_resummed,
+        alpha_raw_bare=alpha_inv_bare,
+        alpha_raw_multi=alpha_inv_multi,
+        alpha_raw_full=alpha_inv_full,
+        alpha_raw_resummed=alpha_inv_resummed,
+        alpha_raw_geom=alpha_inv_geom,
+        samples=res['n_samples'],
+        times=t_total,
+        n_adjoint=res['n_adjoint'],
+    )
+    if 'bare_trace' in res:
+        save_data['tr_pi_bare'] = res['bare_trace']
+    if 'multi_total' in res:
+        save_data['tr_pi_multi'] = res['multi_total']
+    if 'full_so8' in res:
+        save_data['tr_pi_full'] = res['full_so8']
+    if 'n_root_vectors' in res:
+        save_data['n_root_vectors'] = res['n_root_vectors']
+    np.savez(output_npz, **save_data)
     print(f"  Results saved to {output_npz}")
 
     # ===== Summary Table =====
