@@ -37,7 +37,7 @@ All parameters in lattice units: a₀ = 1.0, J = 1.0, M* = 1.0.
 Usage:
     python bz_vacuum_polarization_full.py                           # Default
     python bz_vacuum_polarization_full.py --method mc --samples 500000000
-    python bz_vacuum_polarization_full.py --method qmc --samples 10000000
+    python bz_vacuum_polarization_full.py --method qmc --qmc-samples 10000000
     python bz_vacuum_polarization_full.py --precision double
     python bz_vacuum_polarization_full.py --strict                  # CI mode
 """
