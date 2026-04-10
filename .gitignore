@@ -11,3 +11,9 @@ lake-packages/
 # Environment files
 *.env
 *.env.*
+
+# Build artifacts
+tools/node_modules/
+*.pdf
+*.html
+!/tools/template.html
