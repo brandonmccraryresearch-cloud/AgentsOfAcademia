@@ -88,7 +88,6 @@ theorem moment_ratio_universal (d : ℕ) (hd : (0 : ℝ) < d) (hd2 : (0 : ℝ) <
   unfold targetQuarticMoment targetMixedMoment
   have hprod : (0 : ℝ) < (d : ℝ) * ((d : ℝ) + 2) := mul_pos hd hd2
   field_simp
-  ring
 
 /-! ## Measure Uniqueness from Moment Conditions
 
@@ -124,16 +123,15 @@ theorem quadratic_isotropy_d4 :
     (12 : ℝ) * (1 / 2) / 24 = 1 / 4 := by
   norm_num
 
-/-- Moment matching at 4th order implies elastic isotropy, not by itself
-    a universal Poisson-ratio formula. In particular, for the D₄ case studied
-    here, the physically relevant isotropic invariant used elsewhere in the
-    manuscript is ν = 1/4.
+/- Moment matching at 4th order implies elastic isotropy, not by itself
+   a universal Poisson-ratio formula. In particular, for the D₄ case studied
+   here, the physically relevant isotropic invariant used elsewhere in the
+   manuscript is ν = 1/4.
 
-    The elastic isotropy theorem: if the 4th moments match the uniform
-    measure, then the elastic tensor C_{ijkl} is isotropic, i.e.,
-    C_{ijkl} = λ δᵢⱼ δₖₗ + μ (δᵢₖ δⱼₗ + δᵢₗ δⱼₖ)
-    with only two independent elastic constants λ and μ.
--/
+   The elastic isotropy theorem: if the 4th moments match the uniform
+   measure, then the elastic tensor C_{ijkl} is isotropic, i.e.,
+   C_{ijkl} = λ δᵢⱼ δₖₗ + μ (δᵢₖ δⱼₗ + δᵢₗ δⱼₖ)
+   with only two independent elastic constants λ and μ. -/
 
 /-- The number of independent elastic constants for an isotropic
     d-dimensional medium is exactly 2 (Lamé parameters λ, μ),

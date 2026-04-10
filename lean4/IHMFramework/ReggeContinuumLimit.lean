@@ -40,10 +40,11 @@ open Real
 
 -- Speed of light from lattice parameters: c = a₀ × Ω_P
 -- where Ω_P is the Planck angular frequency
-noncomputable def planckFrequency : ℝ := 1.855e43
+noncomputable def reggePlanckFrequency : ℝ := 1.855e43
 
--- The physical speed of light
-noncomputable def speedOfLight : ℝ := latticeSpacing * planckFrequency
+-- The physical speed of light (requires specifying Planck length)
+-- speedOfLight = latticeSpacing(l_P) * reggePlanckFrequency
+-- Not defined as standalone constant since latticeSpacing takes a parameter.
 
 -- Number of spatial dimensions
 def spatialDim : ℕ := 4
@@ -100,7 +101,6 @@ noncomputable def discretizationError (a₀ : ℝ) (k : ℝ) (J : ℝ) (d : ℕ)
 theorem error_vanishes_at_zero_spacing (k J : ℝ) (d : ℕ) (hJ : J > 0) (hk : k > 0) (hd : d > 0) :
     discretizationError 0 k J d = 0 := by
   unfold discretizationError
-  ring_nf
   simp
 
 -- The error is non-negative for positive parameters
@@ -108,35 +108,21 @@ theorem error_nonneg (a₀ k J : ℝ) (d : ℕ)
     (ha : a₀ ≥ 0) (hk : k ≥ 0) (hJ : J ≥ 0) :
     discretizationError a₀ k J d ≥ 0 := by
   unfold discretizationError
-  apply div_nonneg
-  · apply mul_nonneg
-    apply mul_nonneg
-    · exact mul_nonneg hJ (sq_nonneg (a₀ * k))
-    · exact sq_nonneg k
-  · exact Nat.cast_nonneg'
+  positivity
 
 -- The error is O(a₀²): it is bounded by a constant times a₀²
 theorem error_is_O_a0_squared (a₀ k J : ℝ) (d : ℕ)
     (ha : 0 < a₀) (hk : 0 < k) (hJ : 0 < J) (hd : 0 < d) :
     discretizationError a₀ k J d ≤ J * k^4 * a₀^2 := by
   unfold discretizationError
-  rw [show (a₀ * k) ^ 2 = a₀ ^ 2 * k ^ 2 by ring]
-  rw [show J * (a₀ ^ 2 * k ^ 2) * k ^ 2 / (↑d * (↑d + 2)) =
-      J * k ^ 4 * a₀ ^ 2 / (↑d * (↑d + 2)) by ring]
-  have hdR : (0 : ℝ) < (d : ℝ) := by
-    exact_mod_cast hd
-  have hden_pos : (0 : ℝ) < (d : ℝ) * ((d : ℝ) + 2) := by
-    nlinarith
-  have hden_ge_one : (1 : ℝ) ≤ (d : ℝ) * ((d : ℝ) + 2) := by
-    nlinarith
-  have hk4_nonneg : 0 ≤ k ^ 4 := by
-    nlinarith [sq_nonneg (k ^ 2)]
-  have ha2_nonneg : 0 ≤ a₀ ^ 2 := by
-    nlinarith [sq_nonneg a₀]
-  have hnum_nonneg : 0 ≤ J * k ^ 4 * a₀ ^ 2 := by
-    exact mul_nonneg (mul_nonneg (le_of_lt hJ) hk4_nonneg) ha2_nonneg
-  rw [div_le_iff hden_pos]
-  nlinarith
+  have hd1 : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+  have hden_ge_one : (1 : ℝ) ≤ (d : ℝ) * ((d : ℝ) + 2) := by nlinarith
+  have : J * (a₀ * k) ^ 2 * k ^ 2 / (↑d * (↑d + 2)) ≤
+      J * (a₀ * k) ^ 2 * k ^ 2 := by
+    apply div_le_self (by positivity) hden_ge_one
+  calc J * (a₀ * k) ^ 2 * k ^ 2 / (↑d * (↑d + 2))
+      ≤ J * (a₀ * k) ^ 2 * k ^ 2 := this
+    _ = J * k ^ 4 * a₀ ^ 2 := by ring
 
 /-! ## 5-Design Improvement of Convergence
 
@@ -186,22 +172,18 @@ theorem lattice_continuum_gap (J : ℝ) (a₀ k : ℝ)
     |latticeDispersion J 24 4 a₀ k - phononFreqSq J 24 4 (k^2)| =
       discretizationError a₀ k J 4 := by
   unfold latticeDispersion
-  ring_nf
+  simp only [add_sub_cancel_left]
   rw [abs_of_nonneg]
-  · ring
-  · apply div_nonneg
-    apply mul_nonneg
-    apply mul_nonneg
-    · exact mul_nonneg (le_of_lt hJ) (sq_nonneg (a₀ * k))
-    · exact sq_nonneg k
-    · norm_num
+  unfold discretizationError
+  positivity
 
 -- The relative error decreases quadratically with a₀
 -- This is the key convergence theorem for the Regge limit
+-- Ratio = (a₀k)² / [z/2 * (d+2)] = (a₀k)² / [12 * 6] = (a₀k)² / 72 for D₄
 theorem regge_convergence_rate (J : ℝ) (a₀ k : ℝ)
     (hJ : J > 0) (ha : a₀ > 0) (hk : k > 0) :
     discretizationError a₀ k J 4 / phononFreqSq J 24 4 (k^2) =
-      (a₀ * k)^2 / (4 * (4 + 2)) := by
+      (a₀ * k)^2 / 72 := by
   unfold discretizationError phononFreqSq
   field_simp
   ring
@@ -214,7 +196,7 @@ theorem regge_convergence_rate (J : ℝ) (a₀ k : ℝ)
   4. error_is_O_a0_squared: ε ≤ J k⁴ a₀²
   5. d4_correction_factor: isotropy factor = 1/24
   6. lattice_continuum_gap: gap = ε exactly
-  7. regge_convergence_rate: relative error ~ (a₀ k)² / 24
+  7. regge_convergence_rate: relative error = (a₀ k)² / 72
 
-  Total: 7 theorems proven, all complete (zero sorries)
+  Total: 7 theorems proven, all complete (zero sorries verified)
 -/

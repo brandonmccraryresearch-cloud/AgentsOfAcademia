@@ -54,8 +54,7 @@ def d4CoordReal : ℝ := 24
 
 /-- The D₄ coordination number is positive. -/
 theorem d4CoordReal_pos : (0 : ℝ) < d4CoordReal := by
-  simp [d4CoordReal]
-  norm_num
+  norm_num [d4CoordReal]
 
 /-! ## Lieb-Robinson Velocity Bound
 
@@ -115,19 +114,19 @@ theorem liebRobinson_d4 (J : LatticeInteraction) (a₀ : ℝ) :
     The factor of 2 comes from the dynamical matrix convention
     D_αβ(k) = J Σ_δ (δ_α δ_β / |δ|²) [1 - cos(k·δ)], where
     1 - cos(k·δ) ≈ (k·δ)²/2 at small k. -/
-noncomputable def phononVelocitySq (J : LatticeInteraction) : ℝ :=
+noncomputable def lrPhononVelocitySq (J : LatticeInteraction) : ℝ :=
   J.coupling * d4CoordReal / (2 * 4)
 
 /-- The phonon velocity squared equals 3J. -/
-theorem phononVelocitySq_val (J : LatticeInteraction) :
-    phononVelocitySq J = 3 * J.coupling := by
-  unfold phononVelocitySq d4CoordReal
+theorem lrPhononVelocitySq_val (J : LatticeInteraction) :
+    lrPhononVelocitySq J = 3 * J.coupling := by
+  unfold lrPhononVelocitySq d4CoordReal
   ring
 
 /-- The phonon velocity squared is positive. -/
-theorem phononVelocitySq_pos (J : LatticeInteraction) :
-    0 < phononVelocitySq J := by
-  rw [phononVelocitySq_val]
+theorem lrPhononVelocitySq_pos (J : LatticeInteraction) :
+    0 < lrPhononVelocitySq J := by
+  rw [lrPhononVelocitySq_val]
   linarith [J.coupling_pos]
 
 /-! ## Causal Cone Structure
@@ -185,6 +184,6 @@ theorem lrExponent_neg_outside_cone (v_LR μ t d : ℝ)
 theorem lr_exceeds_phonon (J : LatticeInteraction) (a₀ : ℝ) (ha : 0 < a₀)
     (hJ1 : 1 ≤ J.coupling) :
     (liebRobinsonVelocity J d4CoordReal a₀) ^ 2 >
-    phononVelocitySq J * a₀ ^ 2 := by
-  rw [liebRobinson_d4, phononVelocitySq_val]
+    lrPhononVelocitySq J * a₀ ^ 2 := by
+  rw [liebRobinson_d4, lrPhononVelocitySq_val]
   nlinarith [sq_nonneg a₀, sq_nonneg J.coupling, J.coupling_pos]

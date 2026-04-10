@@ -144,3 +144,4 @@ theorem phonon_bandwidth_ratio (J : ℝ) (hJ : 0 < J) :
     maxPhononFreqSq J / soundVelocitySq J = 4 := by
   rw [maxPhononFreqSq_val, soundVelocitySq_val]
   field_simp
+  ring
