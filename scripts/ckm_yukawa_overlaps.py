@@ -287,7 +287,14 @@ def compute_dirac_yukawa_matrix(roots, sectors, gamma, m_bare_d, m_bare_u,
     Y_d = np.zeros((3, 3), dtype=complex)
     Y_u = np.zeros((3, 3), dtype=complex)
 
-    sector_list = [sectors[s] for s in range(3)]
+    root_set = {tuple(np.asarray(root).tolist()) for root in roots}
+    sector_list = [np.asarray(sectors[s]) for s in range(3)]
+    for s, sector in enumerate(sector_list):
+        for vec in sector:
+            if tuple(np.asarray(vec).tolist()) not in root_set:
+                raise ValueError(
+                    f"Sector {s} contains a vector that is not present in roots: {vec}"
+                )
 
     for n in range(N_mc):
         k = k_samples[n]
