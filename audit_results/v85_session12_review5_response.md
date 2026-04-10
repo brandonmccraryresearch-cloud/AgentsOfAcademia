@@ -30,7 +30,7 @@ Session 12 responds to Review 5's four prioritized recommendations. The primary 
 
 ### Manuscript (v84.0 → v85.0)
 
-- Renamed `84.0IRH.md` → `86.0IRH.md` via `git mv`
+- Renamed `84.0IRH.md → 85.0IRH.md` via `git mv`
 - Added version header with v85.0 changes
 - Integrated new results into topically relevant main body chapters per M2.1 mandate:
   - α Padé results → Chapter II §II.3 (fine-structure constant)
@@ -86,7 +86,7 @@ The full two-loop PS beta functions with SO(8) hidden-sector representations req
 
 ## Files Modified
 
-1. `84.0IRH.md` → `86.0IRH.md` (renamed + content updates)
+1. `84.0IRH.md → 85.0IRH.md` (renamed + content updates)
 2. `scripts/alpha_pade_three_loop.py` (new)
 3. `scripts/kappa4_lattice_derivation.py` (new)
 4. `lean4/IHMFramework/NonAbelianGauge.lean` (new)

@@ -391,11 +391,10 @@ def d4_bare_masses():
 
     # Up sector: the quark-lepton symmetry of Pati-Salam maps
     # the lepton mass hierarchy phase to the up-quark sector.
-    # The electron/muon mass ratio gives the up/charm scaling:
+    # The electron/muon mass ratio gives one estimate:
     #   m_u/m_c ≈ (m_e/m_μ) × sin²(θ₀) ≈ 0.00484 × 0.0487 ≈ 0.000236
-    # However, this is too small. Instead, use the direct PS relation:
-    #   m_u/m_c ≈ sin²(θ₀) × sin²(θ₀) = sin⁴(θ₀) ≈ 0.00237
-    # This gives m_u/m_c close to the PDG value 0.0017.
+    # This is smaller than PDG 0.0017. Instead, use the PS relation:
+    #   m_u/m_c ≈ sin⁴(θ₀) ≈ 0.00237 (PDG: 0.0017, err 41%)
     mu_mc = np.sin(theta_0)**4  # ≈ 0.00237
     mc_mt = M_C / M_T  # 0.00735
 

@@ -267,10 +267,11 @@ def measure_z_lambda(disp_history, neighbor_idx, roots, J, kappa4, root_hats, L)
 
     Z_λ = <u⁴> / <u²>² = χ₄ / χ₂²
 
-    For a free (harmonic) field: Z_λ = 3 (Gaussian Wick contraction).
-    For the D₄ lattice with κ₄ anharmonicity:
-      Z_λ(D₄) = 3 × (1 − κ₄/(z×J) + ...) ≈ 3 × (1 − 0.70/24)
-    The correction from κ₄ drives Z_λ below 3.
+    For a free (harmonic) field: Z_λ_raw = 3 (Gaussian Wick contraction).
+    For the D₄ lattice with κ₄ anharmonicity, the kurtosis deviates from 3.
+    The *physical* Z_λ = (m_h/m_bare)² ≈ 0.21 is the CW renormalization
+    factor, extracted by rescaling the kurtosis deficit:
+      Z_λ(phys) = Z_λ_CW × (1 + (kurtosis - 3)/3)
 
     The physical Z_λ = (m_h/m_bare)² ≈ 0.21 is the renormalization
     factor from the bare lattice coupling to the physical Higgs quartic.
