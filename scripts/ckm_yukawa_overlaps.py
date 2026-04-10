@@ -91,24 +91,6 @@ def d4_roots():
     return np.array(roots)
 
 
-def triality_permutation_matrix():
-    """
-    Construct the Z₃ triality automorphism σ.
-
-    σ permutes D₄ Dynkin nodes: α₁ → α₃ → α₄ → α₁ (fixing α₂).
-    In weight basis of R⁴: rotation by 2π/3 in the (e₃,e₄) subspace.
-    """
-    omega = 2 * np.pi / 3
-    c = np.cos(omega)
-    s = np.sin(omega)
-    sigma = np.array([
-        [1, 0,  0,  0],
-        [0, 1,  0,  0],
-        [0, 0,  c, -s],
-        [0, 0,  s,  c],
-    ], dtype=float)
-    return sigma
-
 
 # ==================== Triality Sector Decomposition ====================
 

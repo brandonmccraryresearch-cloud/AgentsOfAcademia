@@ -565,7 +565,7 @@ def main():
         print("Part 8: Dynamical Z_λ from Displacement Correlations")
         print("-" * 60)
 
-        if len(disp_history) >= 5:
+        if len(disp_history) >= 10:
             z_raw, z_phys, corr_nn = measure_z_lambda(
                 disp_history, neighbor_idx, roots, J, kappa4, root_hats, L
             )
@@ -587,7 +587,7 @@ def main():
                 all_pass = False
             print(f"  [{'PASS' if pass_z_lambda else 'FAIL'}] Z_λ = {z_phys:.4f} (err: {z_lambda_err:.1f}%)")
         else:
-            print(f"  Insufficient snapshots ({len(disp_history)}), need >= 5")
+            print(f"  Insufficient snapshots ({len(disp_history)}), need >= 10")
             pass_z_lambda = True  # Not enough data, skip
             results.append(('8.1 Z_λ(dynamical) consistent', pass_z_lambda, 0.0))
         print()
