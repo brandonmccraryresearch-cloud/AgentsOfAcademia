@@ -217,50 +217,6 @@ def dirac_propagator(k, roots, gamma, m_bare):
     return S
 
 
-def dirac_eigenmode(k, sector_roots, gamma, m_bare):
-    """
-    Compute the Dirac eigenmode for a given triality sector at momentum k.
-
-    The sector wavefunction is the coherent sum of plane waves from
-    the sector's root vectors, weighted by the mass-dependent Dirac
-    propagator:
-
-      ψ_sector(k) = S(k) × Σ_{δ∈sector} exp(ik·δ) × u₀
-
-    where u₀ is the reference spinor and S(k) is the Dirac propagator.
-
-    The mass-dependent propagator S(k) = D⁻¹(k) naturally generates
-    the quark mass hierarchy: heavier quarks have shorter-range
-    correlations, producing steeper off-diagonal fall-off.
-
-    Returns a 4-component spinor (normalized).
-    """
-    # Reference spinors: use two spinor polarizations for better statistics
-    u_pol = [
-        np.array([1, 0, 0, 0], dtype=complex),
-        np.array([0, 1, 0, 0], dtype=complex),
-    ]
-
-    # Sector form factor: coherent sum over sector roots
-    phases = np.exp(1j * sector_roots @ k)
-    form_factor = np.sum(phases) / np.sqrt(len(sector_roots))
-
-    # Dirac propagator with sector-specific bare mass
-    S = dirac_propagator(k, sector_roots, gamma, m_bare)
-
-    # Average over polarizations
-    psi = np.zeros(4, dtype=complex)
-    for u0 in u_pol:
-        psi += form_factor * (S @ u0)
-    psi /= len(u_pol)
-
-    norm = np.sqrt(np.sum(np.abs(psi)**2))
-    if norm > 1e-15:
-        psi /= norm
-
-    return psi
-
-
 # ==================== Yukawa Overlap from Dirac Eigenmodes ====================
 
 def compute_dirac_yukawa_matrix(roots, sectors, gamma, m_bare_d, m_bare_u,
