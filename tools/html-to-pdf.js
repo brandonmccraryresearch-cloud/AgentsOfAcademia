@@ -11,6 +11,26 @@ const puppeteer = require('puppeteer-core');
 const path = require('path');
 const fs = require('fs');
 
+function resolveChromiumPath() {
+  // Honor explicit env var overrides first (set by CI or build-pdf.sh)
+  const envVars = ['PUPPETEER_EXECUTABLE_PATH', 'CHROME_PATH', 'CHROMIUM_PATH'];
+  for (const v of envVars) {
+    if (process.env[v]) return process.env[v];
+  }
+  // Fall back to common names on PATH
+  const { execFileSync } = require('child_process');
+  for (const name of ['chromium', 'chromium-browser', 'google-chrome', 'google-chrome-stable']) {
+    try {
+      const p = execFileSync('which', [name], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+      if (p) return p;
+    } catch (_) { /* not found */ }
+  }
+  throw new Error(
+    'Chromium/Chrome executable not found. Install Chromium or set PUPPETEER_EXECUTABLE_PATH, ' +
+    'CHROME_PATH, or CHROMIUM_PATH to the browser binary.'
+  );
+}
+
 async function htmlToPdf(inputHtml, outputPdf) {
   const absoluteInput = path.resolve(inputHtml);
   
@@ -22,6 +42,8 @@ async function htmlToPdf(inputHtml, outputPdf) {
   console.log(`Input:  ${absoluteInput}`);
   console.log(`Output: ${outputPdf}`);
   
+  const chromiumPath = resolveChromiumPath();
+  console.log(`Chromium: ${chromiumPath}`);
   const browser = await puppeteer.launch({
     headless: true,
     args: [
@@ -31,7 +53,7 @@ async function htmlToPdf(inputHtml, outputPdf) {
       '--disable-gpu',
       '--font-render-hinting=none',
     ],
-    executablePath: '/usr/bin/chromium'
+    executablePath: chromiumPath
   });
 
   const page = await browser.newPage();

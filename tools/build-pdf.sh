@@ -24,7 +24,12 @@ BASENAME="$(basename "$INPUT" .md)"
 
 HTML_OUT="$REPO_DIR/${BASENAME}.html"
 TEMPLATE="$SCRIPT_DIR/template.html"
-PREPROCESSED="/tmp/${BASENAME}_preprocessed.md"
+PREPROCESSED="$(mktemp "/tmp/${BASENAME}_preprocessed.XXXXXX.md")"
+
+cleanup_preprocessed() {
+  rm -f "$PREPROCESSED"
+}
+trap cleanup_preprocessed EXIT
 
 echo "================================================================"
 echo "  IRH Manuscript PDF Builder"
@@ -45,11 +50,49 @@ for cmd in pandoc node; do
   fi
 done
 
-if [ ! -f "$SCRIPT_DIR/node_modules/puppeteer-core/package.json" ] 2>/dev/null; then
-  echo "[Step 0] Installing puppeteer..."
+# Detect Chromium executable — check env vars first, then common names on PATH
+CHROMIUM_BIN=""
+for browser_var in PUPPETEER_EXECUTABLE_PATH CHROME_PATH CHROMIUM_PATH; do
+  browser_path="${!browser_var:-}"
+  if [ -n "$browser_path" ]; then
+    if [ -x "$browser_path" ]; then
+      CHROMIUM_BIN="$browser_path"
+      break
+    else
+      echo "ERROR: '$browser_var' is set to '$browser_path', but that file is not executable."
+      exit 1
+    fi
+  fi
+done
+
+if [ -z "$CHROMIUM_BIN" ]; then
+  for browser_cmd in chromium chromium-browser google-chrome google-chrome-stable; do
+    if command -v "$browser_cmd" &>/dev/null; then
+      CHROMIUM_BIN="$(command -v "$browser_cmd")"
+      break
+    fi
+  done
+fi
+
+if [ -z "$CHROMIUM_BIN" ]; then
+  echo "ERROR: Chromium/Chrome is required for PDF generation but was not found."
+  echo "Install Chromium/Google Chrome, or set PUPPETEER_EXECUTABLE_PATH, CHROME_PATH, or CHROMIUM_PATH."
+  exit 1
+fi
+export PUPPETEER_EXECUTABLE_PATH="$CHROMIUM_BIN"
+echo "[Step 0] Chromium: $CHROMIUM_BIN"
+
+if [ ! -f "$SCRIPT_DIR/node_modules/puppeteer-core/package.json" ]; then
+  echo "[Step 0] Installing puppeteer-core..."
   cd "$SCRIPT_DIR"
-  npm init -y --silent 2>/dev/null || true
-  npm install puppeteer-core 2>&1 | tail -3
+  if [ -f "$SCRIPT_DIR/package-lock.json" ]; then
+    npm ci
+  elif [ -f "$SCRIPT_DIR/package.json" ]; then
+    npm install
+  else
+    npm init -y --silent
+    npm install puppeteer-core
+  fi
   cd "$REPO_DIR"
 fi
 
@@ -59,11 +102,10 @@ echo "[Step 0] Dependencies OK."
 echo ""
 echo "[Step 1] Preprocessing markdown..."
 
-# The manuscript uses standard markdown with $...$ for inline math and $$...$$ 
-# for display math. We need to handle a few edge cases:
-# 1. Pipe characters inside table cells that contain math
-# 2. Emoji characters (✅, ⚠️, 🔶) that may not render in all fonts
-# 3. Ensure blank lines around display math blocks
+# Current preprocessing is intentionally minimal:
+# 1. Copy the manuscript to a temporary working file
+# 2. Ensure the file ends with a trailing newline for downstream tools
+# More advanced markdown normalization should be implemented here only if needed.
 
 cp "$INPUT" "$PREPROCESSED"
 
@@ -112,9 +154,6 @@ else
   echo "ERROR: PDF generation failed."
   exit 1
 fi
-
-# Cleanup
-rm -f "$PREPROCESSED"
 
 echo ""
 echo "Done."
