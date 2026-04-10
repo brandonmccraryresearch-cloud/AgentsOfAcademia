@@ -52,7 +52,7 @@ $$
 - 24 root vectors (from D₄ lattice geometry)
 - 6 coordinate-pair channels (from C(4,2) combinatorics)
 - 28 total adjoint generators (24 root + 4 Cartan — rank of the space)
-- Best α⁻¹ ≈ 137.0363 (within 1961 ppb of CODATA)
+- Best α⁻¹ ≈ 137.03627 (within 1961 ppb of CODATA)
 
 ### Quasi-Monte Carlo (10⁷ Halton samples)
 

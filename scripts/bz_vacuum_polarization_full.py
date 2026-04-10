@@ -337,6 +337,13 @@ def mc_integrate(n_samples, seed=42, batch_size=10_000_000):
     """
     rng = np.random.default_rng(seed)
 
+    # Compute geometry-derived constants ONCE (not per batch)
+    roots = d4_root_vectors()
+    n_root_gen = len(roots)  # Emergent from lattice geometry
+    n_cartan_gen = 4  # rank of the lattice (dimension of space)
+    n_total_gen = n_root_gen + n_cartan_gen
+    cartan_weight = n_cartan_gen / n_total_gen
+
     # Accumulators
     total_bare_trace = 0.0
     total_bare_diag = np.zeros(4)
@@ -386,13 +393,7 @@ def mc_integrate(n_samples, seed=42, batch_size=10_000_000):
         if total_count > 0:
             bare_avg = total_bare_trace / total_count
             multi_avg = total_multi / total_count
-            # Cartan weight: n_cartan / n_total_generators
-            # n_cartan = 4, n_root_generators = 24, n_total = n_cartan + 24
-            # But we derive this from lattice geometry:
-            n_root_gen = len(d4_root_vectors())  # = 24 from geometry
-            n_cartan_gen = 4  # rank of the lattice (dimension of space)
-            n_total_gen = n_root_gen + n_cartan_gen
-            cartan_weight = n_cartan_gen / n_total_gen
+            # Cartan weight derived from lattice geometry at loop start
             full_avg = multi_avg + cartan_weight * (total_cartan / total_count)
 
             running_bare.append(bare_avg / (4.0 * np.pi))
@@ -411,11 +412,10 @@ def mc_integrate(n_samples, seed=42, batch_size=10_000_000):
     cartan_channels = total_cartan_ch / n
 
     # Compute n_total from geometry (no hard-coded group dimensions)
-    roots = d4_root_vectors()
-    n_root = len(roots)  # 24 from lattice geometry
-    n_cartan = 4  # spatial dimension = rank
-    n_adjoint = n_root + n_cartan  # emerges as 28
-    cartan_frac = n_cartan / n_adjoint
+    n_root = n_root_gen
+    n_cartan = n_cartan_gen
+    n_adjoint = n_total_gen
+    cartan_frac = cartan_weight
 
     full_so8 = multi_total + cartan_frac * cartan_total
 
