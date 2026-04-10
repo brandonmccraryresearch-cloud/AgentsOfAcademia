@@ -257,14 +257,14 @@ Multiple servers can and should be used in combination when a task spans domains
 
 ### Lean 4 Project
 
-The Lean 4 project lives in `lean4/` with `lakefile.toml`. It uses Mathlib and requires Lean v4.29.0-rc6 (via `lean-toolchain`). Build with:
+The Lean 4 project lives in `lean4/` with `lakefile.toml`. It uses Mathlib and requires Lean v4.30.0-rc1 (via `lean-toolchain`). Build with:
 
 ```bash
 cd lean4/
 lake update && lake build
 ```
 
-Current state: 142+ verified theorems across 12 files (Basic.lean: 17, V2Basic.lean: 7, V2Problems.lean: 7, FiveDesign.lean: 9, Circularity.lean: 6, LiebRobinson.lean: 14, MeasureUniqueness.lean: 13, D4Uniqueness.lean: 13, Goldstone.lean: 15, GaugeInvariance.lean: 17, ReggeContinuumLimit.lean: 7, NonAbelianGauge.lean: 17). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`.
+Current state: 182 verified declarations across 12 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 12, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
 
 ## Agent Architecture
 
@@ -316,7 +316,7 @@ The manuscript is at v85.0. Session 12 responds to Review 5 recommendations:
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
-| Lean 4 | **142+ theorems, 0 sorry** | Build verified across 12 files |
+| Lean 4 | **182 declarations, 0 sorry** | Build verified across 12 files (v4.30.0-rc1) |
 | Scripts | **37 total, all pass** | 2 new Session 12 scripts |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
@@ -408,4 +408,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v85.0 complete; 37 scripts, 183+ theorems** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v85.0 complete; 37 scripts, 182 declarations** | Priority 2,4 closure → submit |
