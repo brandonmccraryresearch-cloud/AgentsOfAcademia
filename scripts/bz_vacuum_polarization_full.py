@@ -386,6 +386,12 @@ def mc_integrate(n_samples, seed=42, batch_size=10_000_000):
         total_cartan += ct
         total_cartan_ch += cc
 
+        if bc != mc_count or bc != cc_count:
+            raise ValueError(
+                "Inconsistent accepted-sample counts across MC kernels "
+                f"for batch {batch_idx}: bare={bc}, "
+                f"multichannel={mc_count}, cartan={cc_count}"
+            )
         total_count += bc
         processed += this_batch
 
