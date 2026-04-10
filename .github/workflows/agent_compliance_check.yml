@@ -30,7 +30,7 @@ on:
       - 'scripts/**'
       - 'lean4/**'
       - 'audit_results/**'
-      - '85.0IRH.md'
+      - '86.0IRH.md'
       - '.github/copilot-instructions.md'
       - '.github/agents/**'
       - 'agents/**'
@@ -41,7 +41,7 @@ permissions:
   contents: read
 
 env:
-  MANUSCRIPT: "85.0IRH.md"
+  MANUSCRIPT: "86.0IRH.md"
 
 jobs:
   # ============================================================================

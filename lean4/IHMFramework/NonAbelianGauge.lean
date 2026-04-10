@@ -118,7 +118,6 @@ def telescopicSum (g : NAGaugeTransform) : ℝ :=
 theorem telescopic_cancellation (g : NAGaugeTransform) :
     telescopicSum g = 0 := by
   simp [telescopicSum]
-  ring
 
 /-! ## Wilson Action for Non-Abelian Theory
 
@@ -146,7 +145,8 @@ noncomputable def wilsonPlaquetteAction (theta : ℝ) : ℝ :=
 theorem wilsonPlaquette_nonneg (theta : ℝ) :
     0 ≤ wilsonPlaquetteAction theta := by
   unfold wilsonPlaquetteAction
-  linarith [Real.neg_one_le_cos theta]
+  have := Real.cos_le_one theta
+  linarith
 
 /-- The Wilson action vanishes for the trivial configuration (θ = 0). -/
 theorem wilsonPlaquette_zero_at_trivial :
@@ -212,7 +212,6 @@ def telescopicSum3 (g₁ g₂ g₃ : ℝ) : ℝ :=
 theorem telescopic3_zero (g₁ g₂ g₃ : ℝ) :
     telescopicSum3 g₁ g₂ g₃ = 0 := by
   simp [telescopicSum3]
-  ring
 
 /-- Telescopic sum for 6 sites (hexagonal plaquette). -/
 def telescopicSum6 (g₁ g₂ g₃ g₄ g₅ g₆ : ℝ) : ℝ :=
@@ -223,7 +222,6 @@ def telescopicSum6 (g₁ g₂ g₃ g₄ g₅ g₆ : ℝ) : ℝ :=
 theorem telescopic6_zero (g₁ g₂ g₃ g₄ g₅ g₆ : ℝ) :
     telescopicSum6 g₁ g₂ g₃ g₄ g₅ g₆ = 0 := by
   simp [telescopicSum6]
-  ring
 
 /-! ## D₄ Lattice Structure Constants
 
