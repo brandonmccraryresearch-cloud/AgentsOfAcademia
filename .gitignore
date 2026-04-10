@@ -11,3 +11,10 @@ lake-packages/
 # Environment files
 *.env
 *.env.*
+
+# Build artifacts
+tools/node_modules/
+tools/package-lock.json
+*.pdf
+*.html
+!/tools/template.html
