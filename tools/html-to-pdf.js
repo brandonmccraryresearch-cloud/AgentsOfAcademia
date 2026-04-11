@@ -81,7 +81,7 @@ async function htmlToPdf(inputHtml, outputPdf) {
     console.warn('MathJax timeout - proceeding with current state. Some equations may not be rendered.');
   }
 
-  // Additional wait for SVG rendering to settle
+  // Additional wait for CHTML rendering to settle
   await new Promise(resolve => setTimeout(resolve, 5000));
 
   // Generate PDF
