@@ -61,12 +61,15 @@ async function htmlToPdf(inputHtml, outputPdf) {
   // Set a large viewport for proper rendering
   await page.setViewport({ width: 1200, height: 800 });
 
+  // Disable navigation timeout globally so MathJax CDN requests don't block PDF generation
+  page.setDefaultNavigationTimeout(0);
+
   // Navigate to the HTML file
   const fileUrl = `file://${absoluteInput}`;
   console.log('Loading HTML...');
   await page.goto(fileUrl, { 
-    waitUntil: 'networkidle0',
-    timeout: 120000  // 2 minutes for large files
+    waitUntil: 'networkidle2',  // allow up to 2 in-flight requests (e.g. MathJax CDN)
+    timeout: 0  // disable timeout; MathJax rendering on large docs can take several minutes
   });
 
   // Wait for MathJax to finish rendering
