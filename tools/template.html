@@ -16,9 +16,9 @@ window.MathJax = {
       text: ['\\textrm{#1}', 1]
     }
   },
-  svg: {
-    fontCache: 'global',
-    scale: 1.0
+  chtml: {
+    scale: 1.0,
+    matchFontHeight: true
   },
   options: {
     skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
@@ -35,7 +35,7 @@ window.MathJax = {
   }
 };
 </script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4.1.1/tex-svg.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4.1.1/tex-chtml.js"></script>
 <style>
 /* ===== Web Fonts ===== */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Math&display=swap');
@@ -258,11 +258,21 @@ pre code {
 }
 
 /* ===== Math Rendering ===== */
+/*
+ * MathJax CHTML mode renders math as HTML elements, so CSS font-family
+ * applies. We override MathJax's own TeX/STIX web-font declarations with
+ * Noto Sans Math so all math glyphs are rendered in the desired typeface.
+ */
 mjx-container {
-  font-family: var(--font-math);
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
+}
+
+mjx-container,
+mjx-math,
+mjx-math * {
+  font-family: var(--font-math) !important;
 }
 
 mjx-container[display="true"] {

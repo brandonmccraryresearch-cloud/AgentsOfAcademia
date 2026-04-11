@@ -80,8 +80,19 @@ jobs:
             "$CHROMIUM_PACKAGE" \
             fonts-liberation \
             fonts-noto \
+            fonts-noto-extra \
             fonts-noto-cjk \
             fonts-freefont-ttf
+
+          # Refresh font cache so Chromium can discover all installed fonts,
+          # including Noto Sans Math (contained in fonts-noto-extra).
+          fc-cache -f -v
+          echo 'Font match for "Noto Sans Math":'
+          fc-match "Noto Sans Math"
+          if ! fc-list | grep -i "Noto Sans Math"; then
+            echo 'Required font "Noto Sans Math" is not discoverable after installation.' >&2
+            exit 1
+          fi
 
           CHROMIUM_PATH="$(command -v chromium || command -v chromium-browser || true)"
           if [ -z "$CHROMIUM_PATH" ]; then
