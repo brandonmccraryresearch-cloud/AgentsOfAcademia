@@ -153,6 +153,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/kappa4_lattice_derivation.py` | κ₄ from D₄ bond potential (Session 12) | 11/11 PASS, 4 methods |
 | `scripts/grading_audit.py` | Independent framework grading audit (Session 18) | 7/7 PASS, 311 decl, parsimony 5.0:1 |
 | `scripts/mps_two_loop_pati_salam.py` | Two-loop PS beta functions for M_PS (Session 18) | 7/7 PASS, gap 3.47 decades |
+| `scripts/alpha_convergence_study.py` | α BZ integral convergence analysis (Session 18) | 6/6 PASS, 1/√N confirmed |
 
 ## MCP Server Usage
 
@@ -323,7 +324,7 @@ The manuscript is at v86.0. Session 13 executes the 86Review actionable directiv
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **50 total, all pass** | grading_audit.py 7/7 PASS |
+| Scripts | **52 total, all pass** | grading_audit.py 7/7 PASS |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -391,7 +392,7 @@ When Priorities 1-4 close:
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
 | 1 | α BZ integral | **Gap 0.044% (Session 12: Padé + two-loop)** | Three-loop lattice MC confirmation |
-| 2 | M_PS tension | **Gap 4→2 decades (Session 11: 3 methods)** | Full PS two-loop beta functions |
+| 2 | M_PS tension | **Gap 3.47 decades; two-loop PS beta (Session 18)** | Full PS threshold matching |
 | 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
 | 4 | CKM magnitudes | **V_us=0.164, lattice Dirac, 7/7 PASS (Session 13)** | QCD running corrections |
 | 5 | Proton decay | **Constrains M_PS > 2×10¹⁴ (Session 11)** | Resolves M_PS in favor of CW analytic |
@@ -414,4 +415,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v86.0 complete; 50 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v86.0 complete; 52 scripts, 311 declarations** | Priority 2,4 closure → submit |
