@@ -320,9 +320,21 @@ After every session that produces theoretical advances, computational results, o
 - Historical review response records (Appendix V only)
 - Mathematical reference material (Appendices A–T)
 
-**VIOLATION:** Adding a new `### C.x`, `### §C.x`, or any new top-level appendix section for session results is a protocol violation. The session-by-session Appendix C pattern (§C.1–C.45) was dissolved in v85.0 and must not be recreated.
+**VIOLATION:** Adding a new `### C.x`, `### §C.x`, or any new top-level appendix section for session results is a protocol violation. The session-by-session Appendix C pattern (§C.1–C.45) was dissolved and must not be recreated.
 
-**Do not add version markers to section titles** — never write "(new v85.0)" or "(Session 12 Priority 1)" in headings.
+### M2.2: ⚠️ NO VERSION OR SESSION MARKERS IN MANUSCRIPT — NON-NEGOTIABLE
+
+> **The ONLY place a version marker (e.g., "v86.0") may appear in the manuscript is in the preamble/header block (title, date, version line). Version and session markers MUST NOT appear anywhere else in the document.**
+
+The manuscript must read as a professional academic paper. The following are **strictly prohibited** anywhere outside the preamble:
+
+- Version annotations: `v75.0`, `v78.0`, `v83.0`, `v86.0`, etc.
+- Session annotations: `Session 3`, `Session 12`, `Session 20`, etc.
+- Update markers: `**v86.0 update:**`, `**v79.0 Response:**`, `(added v75.0)`, `(v80.0, Review4 §2)`, etc.
+- Grade evolution markers: `Grade: C+ → D+ → B+` (use only the current grade)
+- Inline version-change commentary: "The v74.0 formula...", "In v75.0, this was resolved...", etc.
+
+**Correct practice:** Integrate results directly as if writing the paper fresh. State results in present tense. If a result supersedes an earlier one, simply state the correct result without narrating the correction history. Use `audit_results/` or git commit messages for version tracking.
 
 ### M3: Three-Thing Update Mandate
 

@@ -18,6 +18,7 @@ The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session th
 - **Integrate results into relevant main body chapters** — do NOT append new results as appendix sections. New computational results belong in the chapter where they are topically relevant (e.g., α integral results go in Chapter II, Higgs results in Chapter VIII, CKM results in Chapter X). Only truly supplementary material (long derivation details, raw data tables, formal proofs) belongs in appendices.
 - **Additions must be complete** — full derivations, complete equations, proper cross-references. No placeholder text.
 - **Do not add version markers to section titles** — avoid annotations like "(new v85.0, Review5 Priority 1)" in heading text.
+- **Do not add version or session markers anywhere in the manuscript body** — see Rule 2.2 below.
 - If the session work does not yet rise to publication-quality, record it in `audit_results/` instead and note the pending manuscript integration.
 
 ### Rule 2.1: ⚠️ MAIN BODY INTEGRATION MANDATE — NON-NEGOTIABLE
@@ -51,6 +52,30 @@ The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session th
 - Mathematical reference material (Appendices A–T)
 
 **VIOLATION:** Adding a new `### C.x`, `### §C.x`, or any new top-level appendix section for session results is a protocol violation. The session-by-session Appendix C pattern (§C.1–C.45) was dissolved in v85.0 and must not be recreated.
+
+### Rule 2.2: ⚠️ NO VERSION OR SESSION MARKERS IN MANUSCRIPT — NON-NEGOTIABLE
+
+> **The ONLY place a version marker (e.g., "v86.0") may appear in the manuscript is in the preamble/header block (title, date, version line). Version and session markers MUST NOT appear anywhere else in the document.**
+
+The manuscript must read as a professional academic paper at all times. The following are **strictly prohibited** anywhere outside the preamble:
+
+- Version annotations: `v75.0`, `v78.0`, `v83.0`, `v86.0`, etc.
+- Session annotations: `Session 3`, `Session 12`, `Session 20`, etc.
+- Update markers: `**v86.0 update:**`, `**v79.0 Response:**`, `(added v75.0)`, `(v80.0, Review4 §2)`, etc.
+- Grade evolution markers: `Grade: C+ → D+ → B+` (use only the current grade)
+- Inline version-change commentary: "The v74.0 formula...", "In v75.0, this was resolved...", "upgraded from Session 2", etc.
+
+**Correct practice:**
+- Integrate new results directly into the relevant section as if the paper were being written fresh
+- State results in present tense without referring to when they were added
+- If a result supersedes or corrects an earlier one, simply state the correct result — do not narrate the correction history
+- Use `audit_results/` or commit messages to track version-by-version changes, not the manuscript itself
+
+**Example — WRONG:**
+> **v86.0 corrections (Session 20):** The Ward-identity estimator has been corrected to normalize by accepted samples.
+
+**Example — CORRECT:**
+> The Ward-identity estimator normalizes by the number of accepted samples to avoid systematic bias from the rejection rate.
 
 ### Rule 3: Three-Thing Update Mandate
 
@@ -151,6 +176,12 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/d4_simulation_64.py` | 4D simulation with derived κ₄=0.70, Z_λ measurement (Session 13) | 8/8 PASS, Z_λ=0.108 |
 | `scripts/alpha_pade_three_loop.py` | Padé three-loop BZ integral analysis (Session 12) | 9/9 PASS, gap 0.95%→0.044% |
 | `scripts/kappa4_lattice_derivation.py` | κ₄ from D₄ bond potential (Session 12) | 11/11 PASS, 4 methods |
+| `scripts/grading_audit.py` | Independent framework grading audit (Session 18) | 7/7 PASS, 311 decl, parsimony 5.0:1 |
+| `scripts/mps_two_loop_pati_salam.py` | Two-loop PS beta functions for M_PS (Session 18) | 7/7 PASS, gap 3.47 decades |
+| `scripts/alpha_convergence_study.py` | α BZ integral convergence analysis (Session 18) | 6/6 PASS, 1/√N confirmed |
+| `scripts/critical_review_resolution.py` | Comprehensive 22-directive critical review audit (Session 19) | 46/46 PASS, 11 resolved, 11 partial |
+| `scripts/honest_positioning.py` | Systematic claim-vs-status table (Directive 22, Session 19) | 7/7 PASS, 20 claims audited |
+| `scripts/ckm_qcd_running.py` | CKM magnitudes with QCD running corrections (Directive 8, Session 19) | 6/6 PASS, V_us 1.0% |
 
 ## MCP Server Usage
 
@@ -264,7 +295,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 182 verified declarations across 12 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 12, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
+Current state: 311 verified declarations across 15 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
 
 ## Agent Architecture
 
@@ -289,9 +320,23 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v86.0, 2026-04-10 — Session 13: 86Review Directives)
+### Current State (v86.0, 2026-04-12 — Session 19: Critical Review Resolution)
 
-The manuscript is at v86.0. Session 13 executes the 86Review actionable directives (Phases 1–2):
+The manuscript is at v86.0. Session 19 addresses the comprehensive critical review document (IRH_v86_Critical_Review.md) with 22 directives.
+
+**Session 19 results:**
+- **Critical review resolution:** `scripts/critical_review_resolution.py` — 46/46 PASS. Maps all 22 directives to computational resolution status: 11 RESOLVED, 11 PARTIALLY RESOLVED, 0 OPEN.
+- **Honest positioning:** `scripts/honest_positioning.py` — 7/7 PASS. Systematic claim-vs-status table classifying all 20 claims as DERIVATION/PREDICTION/POST_DICTION/CALIBRATION/TAUTOLOGY. Conservative parsimony 2.25–5.0:1.
+- **CKM QCD running:** `scripts/ckm_qcd_running.py` — 6/6 PASS. QCD running corrections bring |V_us| from 1.8% → 1.0% agreement. |V_cb| remains 25% off (needs NLO matching).
+- **Total:** 55 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 18 results:**
+- **Lean 4 expansion:** Created `DiracEquation.lean` (49 decl), `BornRule.lean` (21 decl), `ModeDecomposition.lean` (58 decl) — all 0 sorry. Total: 311 declarations across 15 files.
+- **Grading audit:** `scripts/grading_audit.py` — 7/7 PASS. Independent framework assessment across 7 dimensions.
+- **M_PS two-loop PS:** `scripts/mps_two_loop_pati_salam.py` — 7/7 PASS. Full two-loop Pati-Salam beta functions with threshold matching. α₂-α₃ crossing at 10^16 GeV, CW M_PS ~ 10^{19.5} GeV, gap 3.47 decades. Proton decay SAFE.
+- **α convergence:** `scripts/alpha_convergence_study.py` — 6/6 PASS. Systematic MC convergence with antithetic/stratified/control variates. 1/√N scaling confirmed.
+- **Performance:** Vectorized `bz_integral_full.py` lattice propagator (full numpy, ~10× speedup).
+- **PR review:** All 10 review comments applied (commit 343449d, Session 17).
 
 **Session 13 results (86Review Priority 1a + 1b):**
 - **Priority 1a (CKM dynamical):** `scripts/ckm_yukawa_overlaps.py` — **7/7 PASS** (was 4/6). Complete rewrite with lattice Wilson-Dirac operator, proper Clifford algebra, propagator-trace Yukawa overlaps. V_us = 0.164 (27% err, was 6508%). m_d/m_s = sin²(θ₀) at 3.5%, m_u/m_c = sin⁴(θ₀) from PS.
@@ -320,8 +365,8 @@ The manuscript is at v86.0. Session 13 executes the 86Review actionable directiv
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
-| Lean 4 | **182 declarations, 0 sorry** | Build verified across 12 files (v4.30.0-rc1) |
-| Scripts | **37 total, all pass** | 2 new Session 12 scripts |
+| Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
+| Scripts | **55 total, all pass** | critical_review_resolution.py 46/46 PASS |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -389,7 +434,7 @@ When Priorities 1-4 close:
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
 | 1 | α BZ integral | **Gap 0.044% (Session 12: Padé + two-loop)** | Three-loop lattice MC confirmation |
-| 2 | M_PS tension | **Gap 4→2 decades (Session 11: 3 methods)** | Full PS two-loop beta functions |
+| 2 | M_PS tension | **Gap 3.47 decades; two-loop PS beta (Session 18)** | Full PS threshold matching |
 | 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
 | 4 | CKM magnitudes | **V_us=0.164, lattice Dirac, 7/7 PASS (Session 13)** | QCD running corrections |
 | 5 | Proton decay | **Constrains M_PS > 2×10¹⁴ (Session 11)** | Resolves M_PS in favor of CW analytic |
@@ -412,4 +457,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v85.0 complete; 37 scripts, 182 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v86.0 complete; 52 scripts, 311 declarations** | Priority 2,4 closure → submit |
