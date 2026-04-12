@@ -72,9 +72,9 @@ theorem weylGroup_factored : z2_factor * s4_factor = weylGroupOrder := by
   - 8 roots of the form ±eᵢ ± eⱼ (i < j, same sign): type I
   - 16 roots of the form (±1, ±1, ±1, ±1)/√2 ... actually no.
 
-  Correcting: The D₄ root system in R⁴ consists of:
+  The D₄ root system in R⁴ consists of:
     {±eᵢ ± eⱼ : 1 ≤ i < j ≤ 4}
-  giving C(4,2) × 4 = 24 roots total (2 sign choices for each).
+  giving C(4,2) × 4 = 24 roots total (2 sign choices for each of the 2 slots).
 
   These are exactly the nearest-neighbor vectors of the D₄ lattice.
 -/

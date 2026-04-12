@@ -214,11 +214,11 @@ def main():
     # Higgs mechanism, cosmological constant, anomaly cancellation,
     # Goldstone theorem, g-2, etc.
     free_params = 2  # J, a₀ (minimal set)
-    n_predictions = total_obs  # Number of observables covered
-    parsimony = n_predictions / free_params if free_params > 0 else 0
+    n_observables_covered = total_obs
+    parsimony = n_observables_covered / free_params if free_params > 0 else 0
 
     print(f"   Free parameters: {free_params} (J, a₀)")
-    print(f"   Independent predictions: {n_predictions}")
+    print(f"   SM observables covered: {n_observables_covered}")
     print(f"   Parsimony ratio: {parsimony:.1f}:1")
 
     check(f"Parsimony ratio ≥ 3:1",

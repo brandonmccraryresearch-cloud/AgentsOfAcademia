@@ -337,7 +337,8 @@ def main():
     # the UV completion scale where the lattice description takes over.
     any_negative = any(a < 0 for a in alpha_inv_ps_planck)
     if any_negative:
-        print("   [INFO] α₄ enters non-perturbative regime above M_PS")
+        neg_labels = [f"α_{i+1}" for i, a in enumerate(alpha_inv_ps_planck) if a < 0]
+        print(f"   [INFO] {', '.join(neg_labels)} enters non-perturbative regime above M_PS")
         print("   This signals the transition to the D₄ lattice description.")
 
     check("PS RG evolution completed (perturbative or non-perturbative)",
@@ -409,6 +410,8 @@ def main():
 
     g4_at_mps = np.sqrt(4 * np.pi * alpha4_ps_mps) if alpha4_ps_mps > 0 else 0
     b_eff = abs(b_one_ps[0])  # Use magnitude for exponent
+    log_mps_cw = None
+    mps_gap_decades = None
 
     if g4_at_mps > 0 and b_eff > 0:
         # CW dimensional transmutation: v_R = Λ × exp(-8π²/(b_eff × g²))
@@ -445,14 +448,14 @@ def main():
     print(f"\n  SM-optimized M_PS (min spread): 10^{best_log_mps:.2f} GeV")
     print(f"  Coupling spread at M_PS: {best_spread:.4f}")
     print(f"  sin²θ_W at M_PS: {sin2_tw_mps:.6f}")
-    if 'log_mps_cw' in dir():
+    if log_mps_cw is not None and log_mps_cw > 0:
         print(f"  CW M_PS from D₄ lattice: 10^{log_mps_cw:.2f} GeV")
         print(f"  M_PS gap (CW vs RG): {mps_gap_decades:.2f} decades")
     print(f"  Proton decay: {'SAFE' if proton_safe else 'EXCLUDED'}")
 
     # Determine the best M_PS estimate
     # Weight CW analytic (favored by proton decay) over RG scan
-    if 'log_mps_cw' in dir() and log_mps_cw > 0:
+    if log_mps_cw is not None and log_mps_cw > 0:
         # Geometric mean of CW and RG estimates
         log_mps_combined = (log_mps_cw + best_log_mps) / 2
         print(f"\n  Combined M_PS estimate: 10^{log_mps_combined:.2f} GeV")

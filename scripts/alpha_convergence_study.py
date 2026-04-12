@@ -115,7 +115,7 @@ def mc_vacuum_polarization(n_samples, roots, seed=42, method="standard"):
 
         # Vectorized computation
         d_inv = lattice_propagator_inv_batch(q)
-        valid = d_inv >= 1e-20
+        valid = d_inv >= 1e-12
         if not np.any(valid):
             continue
 
@@ -172,7 +172,7 @@ def control_variate_correction(n_samples, roots, seed=42):
 
         q = rng.uniform(-np.pi, np.pi, (actual_batch, 4))
         d_inv = lattice_propagator_inv_batch(q)
-        valid = d_inv >= 1e-20
+        valid = d_inv >= 1e-12
         if not np.any(valid):
             continue
 
@@ -229,7 +229,9 @@ def main():
     # ── Step 1: Convergence study at different sample counts ──
     print("\n1. Standard MC convergence study...")
 
-    sample_counts = [100_000, 500_000, 1_000_000, 5_000_000, args.samples]
+    sample_counts_raw = [100_000, 500_000, 1_000_000, 5_000_000, args.samples]
+    # Deduplicate and sort to ensure monotonic increase
+    sample_counts = sorted(set(sample_counts_raw))
     results_standard = []
 
     for n in sample_counts:

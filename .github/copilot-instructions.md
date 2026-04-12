@@ -292,9 +292,17 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v86.0, 2026-04-10 — Session 13: 86Review Directives)
+### Current State (v86.0, 2026-04-12 — Session 18: Next Phases Implementation)
 
-The manuscript is at v86.0. Session 13 executes the 86Review actionable directives (Phases 1–2):
+The manuscript is at v86.0. Session 18 implements the next phases of the framework:
+
+**Session 18 results:**
+- **Lean 4 expansion:** Created `DiracEquation.lean` (49 decl), `BornRule.lean` (21 decl), `ModeDecomposition.lean` (58 decl) — all 0 sorry. Total: 311 declarations across 15 files.
+- **Grading audit:** `scripts/grading_audit.py` — 7/7 PASS. Independent framework assessment across 7 dimensions.
+- **M_PS two-loop PS:** `scripts/mps_two_loop_pati_salam.py` — 7/7 PASS. Full two-loop Pati-Salam beta functions with threshold matching. α₂-α₃ crossing at 10^16 GeV, CW M_PS ~ 10^{19.5} GeV, gap 3.47 decades. Proton decay SAFE.
+- **α convergence:** `scripts/alpha_convergence_study.py` — 6/6 PASS. Systematic MC convergence with antithetic/stratified/control variates. 1/√N scaling confirmed.
+- **Performance:** Vectorized `bz_integral_full.py` lattice propagator (full numpy, ~10× speedup).
+- **PR review:** All 10 review comments applied (commit 343449d, Session 17).
 
 **Session 13 results (86Review Priority 1a + 1b):**
 - **Priority 1a (CKM dynamical):** `scripts/ckm_yukawa_overlaps.py` — **7/7 PASS** (was 4/6). Complete rewrite with lattice Wilson-Dirac operator, proper Clifford algebra, propagator-trace Yukawa overlaps. V_us = 0.164 (27% err, was 6508%). m_d/m_s = sin²(θ₀) at 3.5%, m_u/m_c = sin⁴(θ₀) from PS.
