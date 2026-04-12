@@ -152,6 +152,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/alpha_pade_three_loop.py` | Padé three-loop BZ integral analysis (Session 12) | 9/9 PASS, gap 0.95%→0.044% |
 | `scripts/kappa4_lattice_derivation.py` | κ₄ from D₄ bond potential (Session 12) | 11/11 PASS, 4 methods |
 | `scripts/grading_audit.py` | Independent framework grading audit (Session 18) | 7/7 PASS, 311 decl, parsimony 5.0:1 |
+| `scripts/mps_two_loop_pati_salam.py` | Two-loop PS beta functions for M_PS (Session 18) | 7/7 PASS, gap 3.47 decades |
 
 ## MCP Server Usage
 

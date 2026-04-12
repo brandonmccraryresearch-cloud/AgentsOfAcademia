@@ -150,8 +150,8 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
         q = rng.uniform(-np.pi, np.pi, (actual_batch, 4))
 
-        # Vectorized over the batch
-        d_inv = np.array([lattice_propagator_inv(qi) for qi in q], dtype=np.float64)
+        # Fully vectorized lattice propagator: D⁻¹(q) = 4Σ_μ sin²(q_μ/2)
+        d_inv = 4.0 * np.sum(np.sin(q / 2.0)**2, axis=1)
         valid = d_inv >= 1e-20
         if not np.any(valid):
             continue
