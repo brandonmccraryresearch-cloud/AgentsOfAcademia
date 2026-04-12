@@ -68,13 +68,12 @@ theorem weylGroup_factored : z2_factor * s4_factor = weylGroupOrder := by
 
 /-! ## D₄ Root System
 
-  The D₄ root system has 24 roots (= nearest-neighbor vectors):
-  - 8 roots of the form ±eᵢ ± eⱼ (i < j, same sign): type I
-  - 16 roots of the form (±1, ±1, ±1, ±1)/√2 ... actually no.
+  The D₄ root system has 24 roots (= nearest-neighbor vectors).
 
   The D₄ root system in R⁴ consists of:
     {±eᵢ ± eⱼ : 1 ≤ i < j ≤ 4}
-  giving C(4,2) × 4 = 24 roots total (2 sign choices for each of the 2 slots).
+  giving C(4,2) × 4 = 24 roots total, since there are 6 choices of
+  coordinate pair and 4 independent sign choices for each pair.
 
   These are exactly the nearest-neighbor vectors of the D₄ lattice.
 -/

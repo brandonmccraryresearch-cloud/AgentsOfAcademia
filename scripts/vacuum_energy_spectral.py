@@ -146,37 +146,51 @@ def main():
     sum_vac = 0.0
     sum_vac_sq = 0.0
 
-    # Branch-resolved vacuum energy
-    branch_sums = np.zeros(4)
+    def compute_phonon_spectrum_batch(k_batch, roots_arr, J=1.0):
+        """Compute phonon spectra for a batch of k-vectors.
 
-    # Vectorized: process in batches to avoid per-sample Python loop overhead
+        Returns shape (batch, 4) array of sorted eigenfrequencies.
+        Note: eigenvalues are sorted independently at each k, so branch
+        indices do not track consistent physical modes across k-space
+        (mode crossings will shuffle indices). For total vacuum energy
+        this is irrelevant; per-branch decompositions require eigenvector
+        classification (longitudinal vs transverse projectors).
+        """
+        M_star = 1.0
+        # roots_arr shape: (n_roots, 4)
+        delta_norm_sq = np.sum(roots_arr**2, axis=1)  # (n_roots,)
+        # k_batch @ roots_arr.T → (batch, n_roots)
+        phases = k_batch @ roots_arr.T
+        weights = (2 * J / M_star) * (1.0 - np.cos(phases)) / delta_norm_sq
+        # Outer products: roots_arr[:, :, None] * roots_arr[:, None, :] → (n_roots, 4, 4)
+        root_outer = roots_arr[:, :, None] * roots_arr[:, None, :]
+        # Batched dynamical matrices: (batch, 4, 4)
+        dmat_batch = np.einsum('br,rij->bij', weights, root_outer)
+        eigvals = np.linalg.eigvalsh(dmat_batch)
+        return np.sqrt(np.clip(eigvals, 0.0, None))
+
+    # True vectorization: process batches with stacked dynamical matrices
     batch_size = 10_000
     n_batches = (n_samples + batch_size - 1) // batch_size
-    roots_arr = np.array(roots)
+    roots_arr = np.asarray(roots, dtype=float)
 
     for batch_idx in range(n_batches):
         actual_batch = min(batch_size, n_samples - batch_idx * batch_size)
         if actual_batch <= 0:
             break
         k_batch = rng.uniform(-np.pi, np.pi, (actual_batch, 4))
+        omega_batch = compute_phonon_spectrum_batch(k_batch, roots_arr)
+        e_vac_batch = 0.5 * np.sum(omega_batch, axis=1)
 
-        for i in range(actual_batch):
-            omega = compute_phonon_spectrum(k_batch[i], roots)
-            E_vac = 0.5 * np.sum(omega)
-            sum_vac += E_vac
-            sum_vac_sq += E_vac**2
-            for b in range(4):
-                branch_sums[b] += 0.5 * omega[b]
+        sum_vac += np.sum(e_vac_batch)
+        sum_vac_sq += np.sum(e_vac_batch**2)
 
     rho_vac = sum_vac / n_samples
-    rho_vac_err = np.sqrt((sum_vac_sq / n_samples - rho_vac**2) / n_samples)
-    branch_densities = branch_sums / n_samples
+    variance = max(sum_vac_sq / n_samples - rho_vac**2, 0.0)
+    rho_vac_err = np.sqrt(variance / n_samples)
 
     print(f"   ρ_vac = {rho_vac:.6f} ± {rho_vac_err:.6f}")
-    print(f"   Branch contributions:")
-    for b in range(4):
-        print(f"   Branch {b+1}: ρ_b = {branch_densities[b]:.6f} "
-              f"({branch_densities[b]/rho_vac*100:.1f}%)")
+    print(f"   (Total vacuum energy summed over all 4 branches)")
 
     check("Vacuum energy integral computed", rho_vac > 0)
 
@@ -204,13 +218,27 @@ def main():
     # their anharmonic self-energy. The translation modes (which become
     # gravitons) do not contribute.
 
-    # Shear mode contribution: 19 modes × triality factor
-    rho_shear = sum(branch_densities[1:4])  # Branches 2,3,4 (shear)
-    rho_trans = branch_densities[0]  # Branch 1 (translation/acoustic)
+    # NOTE: Sorted eigenvalue indices do NOT track consistent physical
+    # modes across k-space due to mode crossings (eigenvalues are re-sorted
+    # independently at each k). The physical 1-translation / 3-shear split
+    # comes from the W(D₄) irrep decomposition 24 = 1 + 4 + 19 (at the
+    # group-theory level), not from eigenvalue ordering.
+    #
+    # For a monatomic lattice, all 4 branches are acoustic polarizations.
+    # The translation/shear classification is a representation-theory
+    # statement about the D₄ bond modes (1 singlet + 19 shear-like from
+    # the 24-dim root representation), not a per-k eigenvalue split.
+    #
+    # We estimate the shear fraction using the mode count ratio:
+    # 19 shear-like modes out of 24 total → fraction 19/24 of vacuum energy.
+    rho_shear = rho_vac * (19.0 / 24.0)
+    rho_trans = rho_vac * (1.0 / 24.0)
+    # (The remaining 4/24 are the "vector" representation modes.)
 
-    print(f"   Translation modes: ρ_trans = {rho_trans:.6f}")
-    print(f"   Shear modes: ρ_shear = {rho_shear:.6f}")
-    print(f"   ρ_Λ (raw) = ρ_shear / ρ_vac = {rho_shear/rho_vac:.6f}")
+    print(f"   Translation mode fraction: 1/24 → ρ_trans ≈ {rho_trans:.6f}")
+    print(f"   Shear mode fraction: 19/24 → ρ_shear ≈ {rho_shear:.6f}")
+    print(f"   (Mode fractions from W(D₄) irrep decomposition 24 = 1 + 4 + 19)")
+    print(f"   ρ_shear / ρ_vac = {rho_shear/rho_vac:.6f}")
 
     # --- Step 4: Compare with α^57/(4π) ---
     print("\n4. Comparison with α^57/(4π)...")
@@ -259,11 +287,12 @@ def main():
           f"exponent = {np.log(target) / np.log(alpha):.2f} (expected 57 + log correction)")
 
     # --- Step 5: Spectral density per mode ---
-    print("\n5. Spectral density per mode...")
+    print("\n5. Spectral density analysis...")
 
-    # Average frequency per branch
-    for b in range(4):
-        print(f"   Branch {b+1}: <ω_b> = {2*branch_densities[b]:.6f}")
+    # Average energy per mode (from total vacuum energy and mode counting)
+    avg_energy_per_mode = rho_vac / 4.0  # 4 acoustic branches in 4D
+    print(f"   Average vacuum energy per branch: <E_b> = {avg_energy_per_mode:.6f}")
+    print(f"   (All 4 branches are acoustic in a monatomic 4D lattice)")
 
     # Verify 19-mode exponent from the W(D₄) mode decomposition
     n_shear = 19

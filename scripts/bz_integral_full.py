@@ -200,25 +200,29 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
 def alpha_from_polarization(pi_val, n_channels, z=24):
     """
-    Extract α⁻¹ from the vacuum polarization integral.
+    Extract α⁻¹ from the vacuum polarization integral Π(0).
 
-    The relation is:
-        α⁻¹ = 4π × [normalization factor] / Π_diag
+    In standard lattice QED at one loop:
+        e² = 1/Π(0)
+        α  = e²/(4π) = 1/(4π Π(0))
+        α⁻¹ = 4π Π(0)
 
-    The normalization depends on the lattice structure:
-    - Single channel (μ=ν=0): α⁻¹ = 1/(4π × Π_11)
-    - Multi-channel (all roots): α⁻¹ = z/(4π × Π_multi × n_channels)
+    This function applies that relation directly:
+        α⁻¹ = 4π × pi_val
 
-    The KEY question: what is the correct normalization that maps
-    the lattice integral to the physical fine structure constant?
+    Parameters
+    ----------
+    pi_val : float
+        Vacuum polarization Π(0) from the BZ integral.
+    n_channels : int
+        Number of channels (unused; kept for API compatibility).
+    z : int
+        Coordination number (unused; kept for API compatibility).
 
-    In standard lattice QED:
-        e² = 1/Π(0)  (at one loop)
-        α = e²/(4π) = 1/(4πΠ(0))
-        α⁻¹ = 4πΠ(0)
-
-    For the D₄ lattice with 24 root vectors forming a 5-design:
-    The vertex factor includes all 24 nearest-neighbor contributions.
+    Returns
+    -------
+    float
+        The inverse fine-structure constant α⁻¹ = 4π Π(0).
     """
     if pi_val <= 0:
         return float('inf')
@@ -351,17 +355,23 @@ def main():
     rng_ward = np.random.RandomState(456)
 
     Pi_0nu = np.zeros(4)
+    accepted = 0
     for _ in range(n_ward):
         q = rng_ward.uniform(-np.pi, np.pi, 4)
         D_q = lattice_propagator_inv(q)
         D_kq = lattice_propagator_inv(k_test - q)
         if D_q < 1e-10 or D_kq < 1e-10:
             continue
+        accepted += 1
         for nu in range(4):
             Pi_0nu[nu] += np.sin(q[0]) * np.sin(q[nu]) / (D_q * D_kq)
 
-    Pi_0nu /= n_ward
+    if accepted > 0:
+        Pi_0nu /= accepted
+    else:
+        print("   WARNING: No accepted Ward-identity samples")
     ward_check = k_test[0] * Pi_0nu[0]  # k_0 Π^{00}
+    print(f"   Accepted Ward samples: {accepted:,}/{n_ward:,}")
     print(f"   k_μ Π^{0}ν: {Pi_0nu}")
     print(f"   k_0 Π^{0}0 = {ward_check:.6f}")
     print(f"   (Should approach 0 for k→0; finite-k correction expected)")

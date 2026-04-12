@@ -262,13 +262,14 @@ def main():
     print("\n4. Root-space gamma matrices Γ_R = δ_R · γ...")
     roots, root_gammas, _ = construct_gamma_from_root_vectors()
 
-    # Verify Γ_R² = |δ_R|² I₄ for all roots
-    print(f"   Verifying Γ_R² = |δ_R|²·I₄ for all 24 roots...")
+    # Verify Γ_R² = η(δ_R, δ_R) I₄ for all roots, where δ_R is interpreted
+    # as a coefficient 4-vector contracted with the Minkowski Clifford basis.
+    print(f"   Verifying Γ_R² = η(δ_R, δ_R)·I₄ for all 24 roots "
+          f"(Minkowski contraction of root coefficients)...")
     all_root_sq_pass = True
     for i, (delta, Gamma_R) in enumerate(zip(roots, root_gammas)):
         sq = Gamma_R @ Gamma_R
-        expected = np.dot(delta, delta) * np.eye(4, dtype=complex)
-        # Use Minkowski metric (+−−−): (δ·δ)_Mink = +δ₀² - δ₁² - δ₂² - δ₃²
+        # Use Minkowski metric (+−−−): η(δ,δ) = +δ₀² - δ₁² - δ₂² - δ₃²
         mink_norm = delta[0]**2 - delta[1]**2 - delta[2]**2 - delta[3]**2
         expected_mink = mink_norm * np.eye(4, dtype=complex)
         if not np.allclose(sq, expected_mink):
@@ -277,7 +278,7 @@ def main():
                 print(f"   Root {delta}: Γ² = {np.trace(sq)/4:.2f}·I, "
                       f"expected η(δ,δ) = {mink_norm:.2f}")
     check("Γ_R² = η(δ_R, δ_R)·I₄ for all 24 roots", all_root_sq_pass,
-          "Using Minkowski inner product")
+          "Using Minkowski inner product η = diag(+1,-1,-1,-1)")
 
     # --- Step 5: Coefficients c_R^μ ---
     print("\n5. Computing coefficients c_R^μ...")

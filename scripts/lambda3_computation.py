@@ -133,9 +133,9 @@ def d4_geometry_constraint_on_beta():
     }
 
 
-def critical_damping_from_lambda3(beta, J, M_star, z=24, d=4, n_shear=19):
+def compute_critical_beta(J, M_star, z=24, d=4, n_shear=19):
     """
-    Compute the critical damping coefficient from anharmonic coupling.
+    Compute the critical β that achieves ζ = 1 (critical damping).
 
     From Phase 1A/1B, the harmonic cross-sector coupling is ZERO.
     Damping of translation modes by shear modes requires the CUBIC
@@ -156,6 +156,26 @@ def critical_damping_from_lambda3(beta, J, M_star, z=24, d=4, n_shear=19):
     The geometric factor depends on the shear mode density of states
     at the resonance frequency and the Clebsch-Gordan coefficients
     of the W(D₄) representation.
+
+    Parameters
+    ----------
+    J : float
+        Harmonic spring constant.
+    M_star : float
+        Effective mass.
+    z : int
+        Coordination number (default 24 for D₄).
+    d : int
+        Spatial dimension (default 4).
+    n_shear : int
+        Number of shear modes (default 19 from 24 = 1 + 4 + 19).
+
+    Returns
+    -------
+    beta_critical : float
+        The cubic coupling strength at critical damping.
+    lambda3_crit : float
+        Dimensionless λ₃ = β_crit × a₀ at critical damping.
     """
     Omega_P = np.sqrt(J / M_star)
     eta_critical = 2 * M_star * Omega_P
@@ -242,8 +262,8 @@ def main():
 
     # --- Step 4: Critical damping condition ---
     print("\n4. Critical damping from anharmonic coupling...")
-    beta_crit, lambda3_crit = critical_damping_from_lambda3(
-        None, J, M_star, z=24, d=4, n_shear=19)
+    beta_crit, lambda3_crit = compute_critical_beta(
+        J, M_star, z=24, d=4, n_shear=19)
 
     check("Critical β computed",
           beta_crit > 0, f"β_crit = {beta_crit:.4f}")
