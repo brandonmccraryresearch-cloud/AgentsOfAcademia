@@ -45,11 +45,14 @@ def check(name, condition, detail=""):
 
 def d4_bond_potential(r, a0, J, beta):
     """
-    Bond potential for D₄ lattice:
-    V(r) = ½J(r - a₀)² - (1/6)βJ(r - a₀)³ + (1/24)κ₄J(r - a₀)⁴
+    Truncated bond potential for the D₄ lattice used in the λ₃ analysis:
+    V(r) = ½J(r - a₀)² - (1/6)βJ(r - a₀)³
 
-    The cubic term β determines anharmonic coupling.
-    The quartic term κ₄ determines the Higgs quartic.
+    The cubic term β determines the leading anharmonic coupling.
+    This helper does not include quartic stabilization; any discussion of a
+    completed potential with a +(1/24)κ₄J(r - a₀)⁴ term belongs to a separate
+    model. As implemented here, the cubic truncation is not globally stable
+    for sufficiently large negative displacements without quartic completion.
     """
     dr = r - a0
     return 0.5 * J * dr**2 - (1.0/6) * beta * J * dr**3
@@ -78,7 +81,7 @@ def compute_dimensionless_lambda3(beta, a0, J, M_star):
     # Method 1: β × a₀
     lambda3_1 = beta * a0
 
-    # Method 2: β × u_zp / a₀ (anharmonic ratio)
+    # Method 2: β × u_zp (anharmonic displacement ratio)
     lambda3_2 = beta * u_zp
 
     # Method 3: The dimensionless coupling that enters the decoherence rate
@@ -250,8 +253,12 @@ def main():
     # Bounded potential requires quartic term κ₄ > 0
     beta_test = 2.0
     V_test = d4_bond_potential(r_values, a0, J, beta_test)
-    check("Cubic potential bounded (with quartic stabilization needed)",
-          True, f"V(r→∞) → -∞ without κ₄ > 0")
+    # NOTE: The cubic truncation V(r) = ½J(r-a₀)² - (1/6)βJ(r-a₀)³ is
+    # not globally stable — V → -∞ for large negative displacements.
+    # Physical stability requires quartic completion κ₄ > 0.
+    has_quartic = False  # This model is cubic-only
+    print(f"   [INFO] Cubic potential is not globally bounded without quartic "
+          f"stabilization (κ₄ > 0). This is a truncated model.")
 
     # --- Step 3: Dimensionless coupling ---
     print("\n3. Dimensionless λ₃ for various β...")

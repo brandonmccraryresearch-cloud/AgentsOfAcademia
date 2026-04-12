@@ -214,7 +214,7 @@ def main():
     # Higgs mechanism, cosmological constant, anomaly cancellation,
     # Goldstone theorem, g-2, etc.
     free_params = 2  # J, a₀ (minimal set)
-    n_observables_covered = total_obs
+    n_observables_covered = covered
     parsimony = n_observables_covered / free_params if free_params > 0 else 0
 
     print(f"   Free parameters: {free_params} (J, a₀)")

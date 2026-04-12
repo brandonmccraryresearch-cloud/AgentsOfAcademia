@@ -136,8 +136,8 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
     sum_multi = 0.0
     sum_multi_sq = 0.0
 
-    # Ward identity check: k_μ Π_μν(k) at small k
-    sum_ward = 0.0
+    # Track accepted samples (those not rejected by IR cutoff)
+    n_accepted = 0
 
     batch_size = min(n_samples, 1000000)
     n_batches = (n_samples + batch_size - 1) // batch_size
@@ -156,6 +156,8 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
         if not np.any(valid):
             continue
 
+        n_valid = np.sum(valid)
+        n_accepted += n_valid
         q_valid = q[valid]
         d_inv_valid = d_inv[valid]
         d_inv_sq = d_inv_valid**2
@@ -174,12 +176,8 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
     elapsed = time.time() - t0
 
-    # Normalize: integral = (volume / N) × sum
-    # But we want ∫ d⁴q/(2π)⁴ × f(q), so divide by (2π)⁴
-    # The sampling is uniform on [-π,π]⁴ with volume (2π)⁴
-    # So <f> = sum/N, and the integral = <f>
-
-    n = n_samples
+    # Normalize by accepted sample count (excluding IR-cutoff rejections)
+    n = n_accepted if n_accepted > 0 else 1
     pi_diag = sum_diag / n
     diag_var = (sum_diag_sq / n - pi_diag**2) / n
     pi_diag_err = np.sqrt(max(diag_var, 0.0))

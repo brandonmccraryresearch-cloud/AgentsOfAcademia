@@ -305,7 +305,8 @@ def main():
     print("  and the SAME physical content. They are complementary limits:")
     print("  Route A: k → 0 limit (spatially uniform, defines time)")
     print("  Route B: ω → 0 limit (static, defines spatial metric)")
-    print("  Together: □ = −c⁻²∂_t² + ∇² with c² = 6Ja₀²/M*")
+    print(f"  Together: □ = −c⁻²∂_t² + ∇² with c² = {c_avg_sq:.4f}"
+          f" (direction-averaged from D₄ lattice dispersion)")
 
     check("Both routes produce well-defined c²",
           c_avg_sq > 0, f"c² = {c_avg_sq:.4f} from D₄ lattice")

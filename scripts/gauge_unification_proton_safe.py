@@ -334,7 +334,9 @@ def main():
     # --- Step 5: D₄ prediction: sin²θ_W = 3/13 ---
     print("\n5. D₄ prediction: sin²θ_W = 3/13...")
     sin2_predicted = 3.0 / 13
-    sin2_at_mps = alphas_sm[0] / (alphas_sm[0] + (5.0/3) * alphas_sm[1])
+    # alphas_sm[0] is GUT-normalized α₁ = (5/3) α_Y, so convert back to α_Y
+    alpha_y_at_mps = (3.0 / 5.0) * alphas_sm[0]
+    sin2_at_mps = alpha_y_at_mps / (alpha_y_at_mps + alphas_sm[1])
     print(f"   D₄ prediction: sin²θ_W = 3/13 = {sin2_predicted:.6f}")
     print(f"   Experimental (M_Z): sin²θ_W = {sin2_theta_W:.6f}")
     print(f"   At M_PS = 10¹⁴ (SM running): sin²θ_W = {sin2_at_mps:.6f}")

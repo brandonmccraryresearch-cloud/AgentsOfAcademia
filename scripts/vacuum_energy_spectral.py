@@ -231,14 +231,22 @@ def main():
     #
     # We estimate the shear fraction using the mode count ratio:
     # 19 shear-like modes out of 24 total → fraction 19/24 of vacuum energy.
+    # The relevant representation-theory bookkeeping for the 24-dimensional
+    # D₄ root/bond mode space is:
+    #   - 1 singlet ("breathing") mode
+    #   - 4 vector modes
+    #   - 19 shear-like modes
+    # These are tracked only as global mode-count fractions, not as a per-k
+    # eigenvalue assignment.
+    rho_singlet = rho_vac * (1.0 / 24.0)
+    rho_vector = rho_vac * (4.0 / 24.0)
     rho_shear = rho_vac * (19.0 / 24.0)
-    rho_trans = rho_vac * (1.0 / 24.0)
-    # (The remaining 4/24 are the "vector" representation modes.)
 
-    print(f"   Translation mode fraction: 1/24 → ρ_trans ≈ {rho_trans:.6f}")
+    print(f"   Singlet (breathing) mode fraction: 1/24 → ρ_singlet ≈ {rho_singlet:.6f}")
+    print(f"   Vector mode fraction: 4/24 → ρ_vector ≈ {rho_vector:.6f}")
     print(f"   Shear mode fraction: 19/24 → ρ_shear ≈ {rho_shear:.6f}")
     print(f"   (Mode fractions from W(D₄) irrep decomposition 24 = 1 + 4 + 19)")
-    print(f"   ρ_shear / ρ_vac = {rho_shear/rho_vac:.6f}")
+    print(f"   Fraction sum check: {(rho_singlet + rho_vector + rho_shear)/rho_vac:.6f}")
 
     # --- Step 4: Compare with α^57/(4π) ---
     print("\n4. Comparison with α^57/(4π)...")
