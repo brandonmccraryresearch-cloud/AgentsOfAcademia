@@ -21,3 +21,7 @@ import IHMFramework.GaugeInvariance
 import IHMFramework.ReggeContinuumLimit
 -- v85.0 additions
 import IHMFramework.NonAbelianGauge
+-- v86.0 additions (Session 18)
+import IHMFramework.DiracEquation
+import IHMFramework.BornRule
+import IHMFramework.ModeDecomposition
