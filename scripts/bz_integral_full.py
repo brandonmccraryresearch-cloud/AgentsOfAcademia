@@ -150,24 +150,27 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
         q = rng.uniform(-np.pi, np.pi, (actual_batch, 4))
 
-        for i in range(actual_batch):
-            D_inv = lattice_propagator_inv(q[i])
-            if D_inv < 1e-20:
-                continue
+        # Vectorized over the batch
+        d_inv = np.array([lattice_propagator_inv(qi) for qi in q], dtype=np.float64)
+        valid = d_inv >= 1e-20
+        if not np.any(valid):
+            continue
 
-            # Single channel
-            val_diag = np.sin(q[i, 0])**2 / D_inv**2
-            sum_diag += val_diag
-            sum_diag_sq += val_diag**2
+        q_valid = q[valid]
+        d_inv_valid = d_inv[valid]
+        d_inv_sq = d_inv_valid**2
 
-            # Multi-channel (all roots)
-            val_multi = 0.0
-            for delta in roots:
-                q_dot_delta = np.dot(q[i], delta)
-                val_multi += np.sin(q_dot_delta / 2)**2
-            val_multi /= D_inv**2
-            sum_multi += val_multi
-            sum_multi_sq += val_multi**2
+        # Single channel
+        val_diag = np.sin(q_valid[:, 0])**2 / d_inv_sq
+        sum_diag += np.sum(val_diag)
+        sum_diag_sq += np.sum(val_diag**2)
+
+        # Multi-channel (all roots), vectorized over the batch:
+        # q_dot_roots has shape (n_valid, 24)
+        q_dot_roots = q_valid @ roots.T
+        val_multi = np.sum(np.sin(q_dot_roots / 2.0)**2, axis=1) / d_inv_sq
+        sum_multi += np.sum(val_multi)
+        sum_multi_sq += np.sum(val_multi**2)
 
     elapsed = time.time() - t0
 
@@ -178,10 +181,12 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
     n = n_samples
     pi_diag = sum_diag / n
-    pi_diag_err = np.sqrt((sum_diag_sq / n - pi_diag**2) / n)
+    diag_var = (sum_diag_sq / n - pi_diag**2) / n
+    pi_diag_err = np.sqrt(max(diag_var, 0.0))
 
     pi_multi = sum_multi / n
-    pi_multi_err = np.sqrt(max((sum_multi_sq / n - pi_multi**2) / n, 0))
+    multi_var = (sum_multi_sq / n - pi_multi**2) / n
+    pi_multi_err = np.sqrt(max(multi_var, 0.0))
 
     return {
         'pi_diag': pi_diag,

@@ -64,14 +64,12 @@ def dynamical_matrix(k, roots, J=1.0):
     D_αβ(k) = (J/M*) Σ_δ (δ_α δ_β / |δ|²) × 2(1 - cos(k·δ))
     """
     M_star = 1.0
-    D = np.zeros((4, 4))
-    for delta in roots:
-        delta_norm_sq = np.dot(delta, delta)
-        k_dot_delta = np.dot(k, delta)
-        factor = (2 * J / M_star) * (1 - np.cos(k_dot_delta)) / delta_norm_sq
-        for alpha in range(4):
-            for beta in range(4):
-                D[alpha, beta] += delta[alpha] * delta[beta] * factor
+    roots_arr = np.asarray(roots)
+    delta_norm_sq = np.sum(roots_arr**2, axis=1)  # (n_roots,)
+    k_dot_delta = roots_arr @ k  # (n_roots,)
+    factors = (2 * J / M_star) * (1 - np.cos(k_dot_delta)) / delta_norm_sq  # (n_roots,)
+    # Outer product sum: D = Σ factor_r * δ_r ⊗ δ_r
+    D = np.einsum('r,ra,rb->ab', factors, roots_arr, roots_arr)
     return D
 
 
@@ -151,14 +149,24 @@ def main():
     # Branch-resolved vacuum energy
     branch_sums = np.zeros(4)
 
-    for i in range(n_samples):
-        k = rng.uniform(-np.pi, np.pi, 4)
-        omega = compute_phonon_spectrum(k, roots)
-        E_vac = 0.5 * np.sum(omega)
-        sum_vac += E_vac
-        sum_vac_sq += E_vac**2
-        for b in range(4):
-            branch_sums[b] += 0.5 * omega[b]
+    # Vectorized: process in batches to avoid per-sample Python loop overhead
+    batch_size = 10_000
+    n_batches = (n_samples + batch_size - 1) // batch_size
+    roots_arr = np.array(roots)
+
+    for batch_idx in range(n_batches):
+        actual_batch = min(batch_size, n_samples - batch_idx * batch_size)
+        if actual_batch <= 0:
+            break
+        k_batch = rng.uniform(-np.pi, np.pi, (actual_batch, 4))
+
+        for i in range(actual_batch):
+            omega = compute_phonon_spectrum(k_batch[i], roots)
+            E_vac = 0.5 * np.sum(omega)
+            sum_vac += E_vac
+            sum_vac_sq += E_vac**2
+            for b in range(4):
+                branch_sums[b] += 0.5 * omega[b]
 
     rho_vac = sum_vac / n_samples
     rho_vac_err = np.sqrt((sum_vac_sq / n_samples - rho_vac**2) / n_samples)

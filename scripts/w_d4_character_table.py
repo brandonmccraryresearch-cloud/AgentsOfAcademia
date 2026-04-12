@@ -177,7 +177,9 @@ def conjugacy_classes(elements):
         # Find all conjugates of g
         conj_class = set()
         for k in elements:
-            k_inv = np.linalg.inv(k).astype(int)
+            # Elements of W(D₄) are signed permutation matrices, so k is
+            # orthogonal and its inverse is exactly its transpose.
+            k_inv = k.T.copy()
             h = k @ g @ k_inv
             h_key = matrix_to_tuple(h)
             if h_key in elem_set:
@@ -654,15 +656,15 @@ def main():
               f"+ {dim_shear}")
 
     print(f"\n  Damping Coefficient ζ (Directive 1 Resolution):")
-    print(f"    FINDING: Harmonic cross-sector coupling is EXACTLY ZERO.")
-    print(f"    The elastic matrix K is block-diagonal in the irrep basis.")
-    print(f"    Translation modes (eigenvalue 6J) and shear modes (eigenvalue 0)")
-    print(f"    do not mix through harmonic interactions.")
-    print(f"    Damping requires ANHARMONIC coupling (λ₃ in the bond potential).")
-    print(f"    Therefore: ζ = 1 is a CALIBRATION CONDITION on λ₃,")
-    print(f"    not a derivation from D₄ mode counting.")
-    print(f"    The manuscript's ζ = 1/2 calculation AND the ζ = 1 claim")
-    print(f"    are both based on an incorrect harmonic coupling model.")
+    print(f"    FINDING: Assessing harmonic cross-sector coupling from the")
+    print(f"    computed irrep-block coupling matrix.")
+    print(f"    The quantitative check below determines whether the elastic")
+    print(f"    matrix K is block-diagonal in the irrep basis to numerical")
+    print(f"    tolerance, or whether a residual cross-sector coupling remains.")
+    print(f"    If the coupling vanishes within tolerance, damping requires")
+    print(f"    ANHARMONIC coupling (λ₃ in the bond potential).")
+    print(f"    Therefore any claim about ζ = 1 must be based on the measured")
+    print(f"    cross-sector coupling reported below, not assumed a priori.")
 
     # ===================================================================
     # CRITICAL FINDING: Harmonic cross-sector coupling is ZERO

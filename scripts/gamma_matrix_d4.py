@@ -82,7 +82,7 @@ def construct_gamma_matrices_from_d4():
     Construct the 4×4 Dirac gamma matrices from D₄ root structure.
 
     The construction follows the Clifford algebra over R^{1,3}:
-    {γ^μ, γ^ν} = 2η^{μν}·I₄  where η = diag(-1,+1,+1,+1)
+    {γ^μ, γ^ν} = 2η^{μν}·I₄  where η = diag(+1,-1,-1,-1)
 
     Method: Orthonormalize the D₄ simple roots to get an orthonormal
     basis {ê_μ} of R⁴, then construct γ^μ in the standard (Dirac)
@@ -92,12 +92,13 @@ def construct_gamma_matrices_from_d4():
     A_{ij} = 2(α_i · α_j)/(α_j · α_j) encodes the lattice geometry.
     After orthonormalization, the gamma matrices are:
 
-    γ⁰ = σ₃ ⊗ I₂    (timelike, signature -1)
-    γ¹ = iσ₁ ⊗ σ₁   (spacelike, signature +1)
-    γ² = iσ₁ ⊗ σ₂   (spacelike, signature +1)
-    γ³ = iσ₁ ⊗ σ₃   (spacelike, signature +1)
+    γ⁰ = σ₃ ⊗ I₂    (timelike, (γ⁰)² = +I, signature +1)
+    γ¹ = iσ₁ ⊗ σ₁   (spacelike, (γ¹)² = -I, signature -1)
+    γ² = iσ₁ ⊗ σ₂   (spacelike, (γ²)² = -I, signature -1)
+    γ³ = iσ₁ ⊗ σ₃   (spacelike, (γ³)² = -I, signature -1)
 
-    These are the standard Dirac gamma matrices in the Dirac representation.
+    These are the standard Dirac gamma matrices in the Dirac representation
+    with the "mostly minus" convention η = diag(+1,-1,-1,-1).
     The D₄ structure enters through the IDENTIFICATION of the 4 directions
     with the simple root directions of D₄, which is unique up to triality.
     """

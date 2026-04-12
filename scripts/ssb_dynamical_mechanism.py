@@ -260,9 +260,7 @@ def main():
     # Including Cartans: G₂ has rank 2, so 2 Cartan + n_g2 root gens
     n_g2_total = n_g2 + 2  # G₂ has rank 2
     print(f"   Total G₂ generators (incl Cartan): {n_g2_total}")
-    check("G₂ generator count",
-          n_g2_total == 14 or True,  # Approximate classification
-          f"got {n_g2_total}, expected 14")
+    print(f"   [INFO] G₂ generator count (approximate classification) — got {n_g2_total}, expected 14")
 
     # --- Step 2: Free energy comparison ---
     print("\n2. Free energy at various temperatures...")
@@ -395,8 +393,10 @@ def main():
     if T_c_so8_g2 is not None:
         print(f"  3. Critical temperatures: T_c(SO8→G2) ≈ {T_c_so8_g2:.2f} Ω_P")
     print()
-    print("  4. At T = 0: F(PS) < F(G₂) < F(SO(8)), confirming the")
-    print("     cascade is energetically favored.")
+    print("  4. At T = 0, the computed free energies confirm that")
+    print("     F(G₂) < F(SO(8)); the ordering between PS and G₂ depends")
+    print("     on the chosen ΔV parameters and should be read from the")
+    print("     computed values above rather than assumed here.")
     print()
     print("  5. HONEST STATUS: The ΔV values are parameters of the CW")
     print("     potential, computed from the mode spectrum. The DIRECTION")
