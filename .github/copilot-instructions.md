@@ -18,6 +18,7 @@ The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session th
 - **Integrate results into relevant main body chapters** — do NOT append new results as appendix sections. New computational results belong in the chapter where they are topically relevant (e.g., α integral results go in Chapter II, Higgs results in Chapter VIII, CKM results in Chapter X). Only truly supplementary material (long derivation details, raw data tables, formal proofs) belongs in appendices.
 - **Additions must be complete** — full derivations, complete equations, proper cross-references. No placeholder text.
 - **Do not add version markers to section titles** — avoid annotations like "(new v85.0, Review5 Priority 1)" in heading text.
+- **Do not add version or session markers anywhere in the manuscript body** — see Rule 2.2 below.
 - If the session work does not yet rise to publication-quality, record it in `audit_results/` instead and note the pending manuscript integration.
 
 ### Rule 2.1: ⚠️ MAIN BODY INTEGRATION MANDATE — NON-NEGOTIABLE
@@ -51,6 +52,30 @@ The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session th
 - Mathematical reference material (Appendices A–T)
 
 **VIOLATION:** Adding a new `### C.x`, `### §C.x`, or any new top-level appendix section for session results is a protocol violation. The session-by-session Appendix C pattern (§C.1–C.45) was dissolved in v85.0 and must not be recreated.
+
+### Rule 2.2: ⚠️ NO VERSION OR SESSION MARKERS IN MANUSCRIPT — NON-NEGOTIABLE
+
+> **The ONLY place a version marker (e.g., "v86.0") may appear in the manuscript is in the preamble/header block (title, date, version line). Version and session markers MUST NOT appear anywhere else in the document.**
+
+The manuscript must read as a professional academic paper at all times. The following are **strictly prohibited** anywhere outside the preamble:
+
+- Version annotations: `v75.0`, `v78.0`, `v83.0`, `v86.0`, etc.
+- Session annotations: `Session 3`, `Session 12`, `Session 20`, etc.
+- Update markers: `**v86.0 update:**`, `**v79.0 Response:**`, `(added v75.0)`, `(v80.0, Review4 §2)`, etc.
+- Grade evolution markers: `Grade: C+ → D+ → B+` (use only the current grade)
+- Inline version-change commentary: "The v74.0 formula...", "In v75.0, this was resolved...", "upgraded from Session 2", etc.
+
+**Correct practice:**
+- Integrate new results directly into the relevant section as if the paper were being written fresh
+- State results in present tense without referring to when they were added
+- If a result supersedes or corrects an earlier one, simply state the correct result — do not narrate the correction history
+- Use `audit_results/` or commit messages to track version-by-version changes, not the manuscript itself
+
+**Example — WRONG:**
+> **v86.0 corrections (Session 20):** The Ward-identity estimator has been corrected to normalize by accepted samples.
+
+**Example — CORRECT:**
+> The Ward-identity estimator normalizes by the number of accepted samples to avoid systematic bias from the rejection rate.
 
 ### Rule 3: Three-Thing Update Mandate
 
