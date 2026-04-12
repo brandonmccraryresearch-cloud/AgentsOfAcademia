@@ -122,10 +122,16 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
 
     BZ = [-π, π]⁴ with Haar measure d⁴q/(2π)⁴.
 
-    Returns: (diagonal Π, error estimate, Ward identity check)
+    Returns
+    -------
+    dict with keys:
+        pi_diag, pi_diag_err   : single-channel Π₁₁(0) and MC error
+        pi_multi, pi_multi_err : multi-channel (24-root) Π(0) and MC error
+        elapsed                : wall-clock time (seconds)
+        n_samples              : total samples drawn
+        n_accepted             : samples passing IR cutoff
     """
     rng = np.random.RandomState(seed)
-    volume = (2 * np.pi)**4
 
     # Level 1: Single diagonal channel Π_11(0)
     # Π_11(0) = ∫ d⁴q/(2π)⁴ × sin²(q₁) / [D⁻¹(q)]²
@@ -193,6 +199,7 @@ def compute_bz_integral_mc(n_samples, roots, seed=42):
         'pi_multi_err': pi_multi_err,
         'elapsed': elapsed,
         'n_samples': n_samples,
+        'n_accepted': n_accepted,
     }
 
 

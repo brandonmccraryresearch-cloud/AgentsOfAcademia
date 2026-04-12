@@ -131,12 +131,14 @@ def main():
     check("All ω = 0 at Γ (acoustic modes)",
           np.allclose(omega_gamma, 0, atol=1e-10))
 
-    # Zone boundary at R: should have one zero mode (from 5-design)
+    # Zone boundary at R = (π,π,π,π): ALL 4 frequencies should vanish.
+    # For every D₄ root δ = ±eᵢ ± eⱼ, the dot product k·δ = π(±1 ± 1)
+    # is always 0 or ±2π, so cos(k·δ) = 1 and (1 − cos(k·δ)) = 0 for
+    # every root. Therefore D(R) = 0 identically, giving ω_b(R) = 0 ∀ b.
     omega_R = compute_phonon_spectrum(hsp['R'], roots)
-    n_zero_R = np.sum(np.abs(omega_R) < 1e-6)
-    check("Zone-boundary zero at R = (π,π,π,π)",
-          n_zero_R >= 1,
-          f"{n_zero_R} zero modes")
+    check("All ω = 0 at R = (π,π,π,π)",
+          np.allclose(omega_R, 0, atol=1e-10),
+          f"ω_R = [{', '.join(f'{w:.2e}' for w in omega_R)}]")
 
     # --- Step 2: Full vacuum energy integral ---
     print(f"\n2. Vacuum energy integral ({n_samples:,} MC samples)...")
@@ -317,7 +319,8 @@ def main():
     print("  1. The full vacuum energy integral ρ_vac = (1/2)∫ Σ_b ω_b(k)")
     print(f"     gives ρ_vac = {rho_vac:.6f} in Planck units.")
     print()
-    print("  2. The shear mode contribution (3 of 4 branches) is O(1).")
+    print("  2. The W(D₄) irrep decomposition 24 = 1 + 4 + 19 assigns")
+    print("     19/24 of the total bond-mode energy to the shear sector.")
     print("     The claimed suppression to α⁵⁷/(4π) requires a NON-TRIVIAL")
     print("     dynamical mechanism beyond the free phonon spectrum.")
     print()

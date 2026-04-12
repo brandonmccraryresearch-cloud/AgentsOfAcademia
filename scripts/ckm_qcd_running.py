@@ -113,27 +113,33 @@ def lattice_mass_ratios(theta_0):
     return ratios, pdg_ratios
 
 
-def compute_ckm_from_mass_ratios(ratios, apply_qcd=False,
-                                 mu_lat=1e14, mu_low=2.0):
+def compute_ckm_from_mass_ratios(ratios, apply_qcd=False, mu_low=2.0):
     """
     Compute CKM matrix elements from quark mass ratios.
 
     The Wolfenstein parameterization: λ ≈ |V_us| ≈ √(m_d/m_s)
     (Fritzsch-Xing mass-mixing relations).
+
+    Parameters
+    ----------
+    ratios : dict
+        Quark mass ratios (m_d/m_s, m_u/m_c, etc.)
+    apply_qcd : bool
+        If True, apply NLO α_s/π correction at scale mu_low.
+    mu_low : float
+        MS-bar renormalization scale (GeV) at which α_s is evaluated.
     """
     r_ds = ratios['m_d/m_s']
     r_uc = ratios['m_u/m_c']
 
     # Apply QCD running corrections if requested
     if apply_qcd:
-        # Running shifts the mass ratios
-        # m_d/m_s is RG-invariant to leading order (same anomalous dim)
-        # But there are O(α_s) corrections at NLO
+        # m_d/m_s is RG-invariant to leading order (same anomalous dimension),
+        # but there are O(α_s) corrections at NLO from one-loop quark
+        # self-energy with gluon exchange.
         alpha_s_2 = alpha_s_running(mu_low)
-        # NLO correction: O(α_s/π) contribution from one-loop
-        # quark self-energy with gluon exchange. The coefficient 0.5
-        # is the leading-order matching coefficient at the MS-bar/lattice
-        # boundary (see Chetyrkin et al., Nucl. Phys. B 583, 2000).
+        # The coefficient 0.5 is the leading-order matching coefficient
+        # at the MS-bar boundary (see Chetyrkin et al., Nucl. Phys. B 583, 2000).
         nlo_correction = 1.0 + alpha_s_2 / np.pi * 0.5
         r_ds *= nlo_correction
         r_uc *= nlo_correction**2
@@ -212,7 +218,7 @@ def main():
     # --- Step 3: CKM with QCD running corrections ---
     print("\n3. CKM with QCD running corrections (M_lat → 2 GeV)...")
     ckm_qcd = compute_ckm_from_mass_ratios(
-        ratios, apply_qcd=True, mu_lat=1e14, mu_low=2.0)
+        ratios, apply_qcd=True, mu_low=2.0)
 
     print(f"   α_s(2 GeV) = {alpha_s_running(2.0):.4f}")
     print(f"   α_s(M_lat) = {alpha_s_running(1e14):.6f}")

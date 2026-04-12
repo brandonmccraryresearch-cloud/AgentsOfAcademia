@@ -136,23 +136,23 @@ def main():
     # For acoustic modes: ω = c|k|, so ds² = -c² dt² + dx²
 
     c_sq = K / rho  # = Ja₀²/(M*/a₀⁴) = Ja₀⁶/M*
-    # In our units: c² = 1 × 1 / 1 = 1
-    # But the D₄ lattice gives c² = 6J/M* for the acoustic branch
-    # (from the dynamical matrix eigenvalue at small k)
-    c_sq_d4 = 6 * J * a0**2 / M_star
+    # The D₄ lattice dynamical matrix at small k gives ω² ∝ c²|k|², where
+    # c² depends on the phonon branch (longitudinal vs transverse).
+    # The direction-averaged value is computed from the full dispersion
+    # relation fitted below (Route B). Here we report the elastic modulus
+    # estimate as a consistency check.
+    # The 5-design sum Σ_δ (δ̂·ê_μ)² = z/d = 24/4 = 6 sets the trace of
+    # the dynamical matrix, yielding a trace-averaged c² = 6Ja₀²/M* in
+    # these units. The branch-resolved values are derived in Route B.
+    c_sq_trace = 6 * J * a0**2 / M_star
 
     print(f"\n  Sound velocity squared:")
     print(f"    From elastic modulus: c² = K/ρ = {K/rho:.4f}")
-    print(f"    From D₄ dynamical matrix: c² = 6Ja₀²/M* = {c_sq_d4:.4f}")
-
-    # The factor of 6 comes from the D₄ coordination: each of the 24 bonds
-    # contributes (δ̂·k̂)² to the dynamical matrix, and the average over
-    # all 24 root directions gives 24 × (1/4) = 6 for the diagonal term.
-    print("    The factor 6 arises from the D₄ 5-design property:")
-    print("    Σ_δ (δ̂·ê_μ)² = z/d = 24/4 = 6 for each direction μ.")
+    print(f"    Trace-averaged (5-design): Tr(D)/d = 6Ja₀²/M* = {c_sq_trace:.4f}")
+    print("    (Branch-resolved c² from dispersion fit: see Route B below)")
 
     check("Sound velocity from D₄ geometry",
-          c_sq_d4 > 0, f"c² = {c_sq_d4:.4f}")
+          c_sq_trace > 0, f"c² = {c_sq_trace:.4f}")
 
     # =====================================================================
     # ROUTE B: Phonon Dispersion Derivation

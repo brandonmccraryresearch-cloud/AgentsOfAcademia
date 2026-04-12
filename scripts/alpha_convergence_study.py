@@ -282,7 +282,7 @@ def main():
 
     # ── Step 3: Stratified sampling ──
     print("\n3. Stratified MC sampling...")
-    # Use cube root of sample count for grid
+    # Use 4th root of sample count for the per-dimension grid (4D BZ)
     n_strat = min(args.samples, 10_000_000)
     pi_strat, err_strat = mc_vacuum_polarization(
         n_strat, roots, seed=42, method="stratified")
