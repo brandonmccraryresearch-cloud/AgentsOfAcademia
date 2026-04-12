@@ -37,11 +37,28 @@ def check(name, condition, detail=""):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Status categories (used in CLAIMS and analysis)
+# ═══════════════════════════════════════════════════════════════════════
+STATUS_DERIVATION = "DERIVATION"
+STATUS_PREDICTION = "PREDICTION"
+STATUS_PARTIAL = "PARTIAL_DERIVATION"
+STATUS_POSTDICTION = "POST_DICTION"
+STATUS_CALIBRATION = "CALIBRATION"
+STATUS_TAUTOLOGY = "TAUTOLOGY"
+
+ALL_STATUSES = [STATUS_DERIVATION, STATUS_PREDICTION, STATUS_PARTIAL,
+                STATUS_POSTDICTION, STATUS_CALIBRATION, STATUS_TAUTOLOGY]
+
+# Manuscript grade thresholds for inflation check
+GENUINE_GRADES = {"A", "A−", "B+", "B"}
+INFLATED_STATUSES = {STATUS_POSTDICTION, STATUS_CALIBRATION}
+
+# ═══════════════════════════════════════════════════════════════════════
 # Complete claim inventory
 # ═══════════════════════════════════════════════════════════════════════
 
 CLAIMS = [
-    # (Claim, Manuscript Grade, Actual Status, Category, Detail)
+    # (Claim, Manuscript Grade, Actual Status, Detail)
 
     # --- Genuine derivations (Class A) ---
     ("sin²θ_W = 3/13 = 0.2308",
@@ -171,15 +188,14 @@ def main():
         categories[status] = categories.get(status, 0) + 1
 
     print(f"\n1. Claim Inventory: {len(CLAIMS)} total claims audited")
-    for cat in ["DERIVATION", "PREDICTION", "PARTIAL_DERIVATION",
-                "POST_DICTION", "CALIBRATION", "TAUTOLOGY"]:
+    for cat in ALL_STATUSES:
         count = categories.get(cat, 0)
         print(f"   {cat}: {count}")
 
     # --- Check 1: Derivations are genuine ---
     print("\n2. Genuine Derivations (no empirical input used)")
     derivations = [(c, g, s, d) for c, g, s, d in CLAIMS
-                   if s == "DERIVATION"]
+                   if s == STATUS_DERIVATION]
     for claim, grade, status, detail in derivations:
         print(f"   ✓ {claim}")
         print(f"     {detail}")
@@ -190,7 +206,7 @@ def main():
     # --- Check 2: Tautologies correctly identified ---
     print("\n3. Tautologies (proven circular)")
     tautologies = [(c, g, s, d) for c, g, s, d in CLAIMS
-                   if s == "TAUTOLOGY"]
+                   if s == STATUS_TAUTOLOGY]
     for claim, grade, status, detail in tautologies:
         print(f"   ✗ {claim}")
         print(f"     {detail}")
@@ -203,8 +219,7 @@ def main():
     for claim, grade, status, detail in CLAIMS:
         # Flag if manuscript grade is A/B but actual status is
         # POST_DICTION or CALIBRATION
-        if grade in ["A", "A−", "B+", "B"] and \
-                status in ["POST_DICTION", "CALIBRATION"]:
+        if grade in GENUINE_GRADES and status in INFLATED_STATUSES:
             inflated.append((claim, grade, status))
     for claim, grade, status in inflated:
         print(f"   ⚠ {claim}: manuscript grade {grade} but "
@@ -215,19 +230,19 @@ def main():
 
     # --- Check 4: Parsimony ratio ---
     print("\n5. Parsimony Ratio Computation")
-    n_genuine = len([c for c, g, s, d in CLAIMS
-                     if s in ["DERIVATION", "PREDICTION"]])
-    n_partial = len([c for c, g, s, d in CLAIMS
-                     if s == "PARTIAL_DERIVATION"])
+    n_genuine_predictions = len([c for c, g, s, d in CLAIMS
+                     if s in [STATUS_DERIVATION, STATUS_PREDICTION]])
+    n_partial_derivations = len([c for c, g, s, d in CLAIMS
+                     if s == STATUS_PARTIAL])
     n_inputs = 2  # a₀, J (fundamental)
     n_inputs_extended = 4  # + v (VEV), m_τ (tau mass) used implicitly
 
-    ratio_strict = n_genuine / n_inputs
-    ratio_generous = (n_genuine + n_partial) / n_inputs
-    ratio_extended = (n_genuine + n_partial) / n_inputs_extended
+    ratio_strict = n_genuine_predictions / n_inputs
+    ratio_generous = (n_genuine_predictions + n_partial_derivations) / n_inputs
+    ratio_extended = (n_genuine_predictions + n_partial_derivations) / n_inputs_extended
 
-    print(f"   Genuine predictions: {n_genuine}")
-    print(f"   Partial derivations: {n_partial}")
+    print(f"   Genuine predictions: {n_genuine_predictions}")
+    print(f"   Partial derivations: {n_partial_derivations}")
     print(f"   Fundamental inputs (a₀, J): {n_inputs}")
     print(f"   Extended inputs (+ v, m_τ): {n_inputs_extended}")
     print(f"   Strict ratio (genuine/inputs): {ratio_strict:.1f}:1")
@@ -268,15 +283,15 @@ def main():
     print("\n7. Claims Requiring Manuscript Language Change")
     changes_needed = []
     for claim, grade, status, detail in CLAIMS:
-        if status == "TAUTOLOGY":
+        if status == STATUS_TAUTOLOGY:
             changes_needed.append(
                 (claim, "Remove 'derived' — replace with "
                  "'consistency condition (algebraic identity)'"))
-        elif status == "POST_DICTION":
+        elif status == STATUS_POSTDICTION:
             changes_needed.append(
                 (claim, "Replace 'derivation' with 'post-diction' "
                  "or 'numerically accurate formula'"))
-        elif status == "CALIBRATION":
+        elif status == STATUS_CALIBRATION:
             changes_needed.append(
                 (claim, "Replace 'derived' with 'calibrated to "
                  "match experiment'"))

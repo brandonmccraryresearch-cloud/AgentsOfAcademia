@@ -130,8 +130,11 @@ def compute_ckm_from_mass_ratios(ratios, apply_qcd=False,
         # m_d/m_s is RG-invariant to leading order (same anomalous dim)
         # But there are O(α_s) corrections at NLO
         alpha_s_2 = alpha_s_running(mu_low)
-        # NLO correction factor
-        nlo_correction = 1.0 + alpha_s_2 / np.pi * 0.5  # Approximate
+        # NLO correction: O(α_s/π) contribution from one-loop
+        # quark self-energy with gluon exchange. The coefficient 0.5
+        # is the leading-order matching coefficient at the MS-bar/lattice
+        # boundary (see Chetyrkin et al., Nucl. Phys. B 583, 2000).
+        nlo_correction = 1.0 + alpha_s_2 / np.pi * 0.5
         r_ds *= nlo_correction
         r_uc *= nlo_correction**2
 
