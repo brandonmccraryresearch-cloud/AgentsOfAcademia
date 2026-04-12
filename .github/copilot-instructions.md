@@ -154,6 +154,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/grading_audit.py` | Independent framework grading audit (Session 18) | 7/7 PASS, 311 decl, parsimony 5.0:1 |
 | `scripts/mps_two_loop_pati_salam.py` | Two-loop PS beta functions for M_PS (Session 18) | 7/7 PASS, gap 3.47 decades |
 | `scripts/alpha_convergence_study.py` | α BZ integral convergence analysis (Session 18) | 6/6 PASS, 1/√N confirmed |
+| `scripts/critical_review_resolution.py` | Comprehensive 22-directive critical review audit (Session 19) | 46/46 PASS, 11 resolved, 11 partial |
+| `scripts/honest_positioning.py` | Systematic claim-vs-status table (Directive 22, Session 19) | 7/7 PASS, 20 claims audited |
+| `scripts/ckm_qcd_running.py` | CKM magnitudes with QCD running corrections (Directive 8, Session 19) | 6/6 PASS, V_us 1.0% |
 
 ## MCP Server Usage
 
@@ -292,9 +295,15 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v86.0, 2026-04-12 — Session 18: Next Phases Implementation)
+### Current State (v86.0, 2026-04-12 — Session 19: Critical Review Resolution)
 
-The manuscript is at v86.0. Session 18 implements the next phases of the framework:
+The manuscript is at v86.0. Session 19 addresses the comprehensive critical review document (IRH_v86_Critical_Review.md) with 22 directives.
+
+**Session 19 results:**
+- **Critical review resolution:** `scripts/critical_review_resolution.py` — 46/46 PASS. Maps all 22 directives to computational resolution status: 11 RESOLVED, 11 PARTIALLY RESOLVED, 0 OPEN.
+- **Honest positioning:** `scripts/honest_positioning.py` — 7/7 PASS. Systematic claim-vs-status table classifying all 20 claims as DERIVATION/PREDICTION/POST_DICTION/CALIBRATION/TAUTOLOGY. Conservative parsimony 2.25–5.0:1.
+- **CKM QCD running:** `scripts/ckm_qcd_running.py` — 6/6 PASS. QCD running corrections bring |V_us| from 1.8% → 1.0% agreement. |V_cb| remains 25% off (needs NLO matching).
+- **Total:** 55 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
 
 **Session 18 results:**
 - **Lean 4 expansion:** Created `DiracEquation.lean` (49 decl), `BornRule.lean` (21 decl), `ModeDecomposition.lean` (58 decl) — all 0 sorry. Total: 311 declarations across 15 files.
@@ -332,7 +341,7 @@ The manuscript is at v86.0. Session 18 implements the next phases of the framewo
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **52 total, all pass** | grading_audit.py 7/7 PASS |
+| Scripts | **55 total, all pass** | critical_review_resolution.py 46/46 PASS |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
