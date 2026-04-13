@@ -199,8 +199,7 @@ def main():
           f1_mc > 0,
           f"f₁ = {f1_mc:.6f}")
 
-    # ── Step 4: Three-loop estimate via Padé ──
-    # ── Step 4: Three-loop estimate via Padé approximants ──
+    # ── Step 4: Three-loop Padé estimate ──
     print("\n4. Three-loop Padé estimate (from alpha_pade_three_loop.py)...")
     f1_best = F1_LEVEL3  # Use best known one-loop value
 
