@@ -6,12 +6,12 @@ CKM NLO Matching: Next-to-Leading-Order QCD Corrections
 Addresses Critical Review Directive 8 (PARTIALLY RESOLVED):
 The CKM magnitudes from lattice Dirac overlaps show |V_us| at 1.0%
 (with QCD running from ckm_qcd_running.py) but |V_cb| remains 25%
-off. This script implements full NLO matching between the lattice
+off. This script implements NLO matching between the lattice
 scale and MS-bar at 2 GeV, including:
 
-1. NLO anomalous dimension for quark masses
-2. Threshold matching at m_c and m_b
-3. Improved Fritzsch-Xing relations with NLO corrections
+1. Two-loop α_s running with threshold matching at m_c and m_b
+2. NLO quark mass running via run_mass_nlo
+3. θ₀-based Fritzsch-Xing relations with NLO vertex corrections
 4. CKM parametrization with Jarlskog invariant
 
 Physics:
@@ -142,7 +142,7 @@ def run_mass_nlo(m_q, mu_from, mu_to, alpha_s_from, alpha_s_to, n_f):
     return m_q * lo_factor * nlo_corr
 
 
-def fritzsch_xing_ckm(mass_ratios, theta_0):
+def fritzsch_xing_ckm(mass_ratios):
     """
     CKM magnitudes from Wolfenstein parameterization with mass ratios.
 
@@ -174,29 +174,46 @@ def fritzsch_xing_ckm(mass_ratios, theta_0):
     }
 
 
-def fritzsch_xing_nlo(mass_ratios, theta_0, alpha_s):
+def fritzsch_xing_nlo(theta_0, alpha_s_from, mu_from, alpha_s_to, mu_to, n_f):
     """
-    NLO-corrected CKM with QCD mass running corrections.
+    NLO-corrected CKM using θ₀ Koide phase and NLO mass running.
 
-    The NLO correction modifies the quark mass ratios:
-    (m_d/m_s)(NLO) = (m_d/m_s)(LO) × (1 + α_s/π × c_NLO)
+    Computes base mass ratios from θ₀:
+        m_d/m_s = sin²(θ₀)
+        m_u/m_c = sin⁴(θ₀)
 
-    where c_NLO = 0.5 is the leading MS-bar matching coefficient
-    (Chetyrkin et al., Nucl. Phys. B 583, 2000).
+    Then applies NLO QCD mass running via run_mass_nlo to evolve
+    normalized quark masses from mu_from to mu_to. Since same-charge
+    quarks share anomalous dimensions, the ratio shift arises from
+    higher-order matching effects.
 
-    This enters V_us = √(m_d/m_s) as:
-    V_us(NLO) ≈ V_us(LO) × (1 + α_s/(2π) × c_NLO)
+    Additionally applies the NLO vertex correction to the
+    mass-mixing relation (Chetyrkin et al., Nucl. Phys. B 583, 2000):
+        V_us(NLO) ≈ V_us(LO) × (1 + α_s/(2π) × c_NLO)
     """
-    # NLO mass ratio correction
-    c_nlo = 0.5  # Leading-order MS-bar matching coefficient
-    nlo_factor = 1.0 + alpha_s / np.pi * c_nlo
+    sin_t = np.sin(theta_0)
+    r_ds_base = sin_t ** 2
+    r_uc_base = sin_t ** 4
 
-    # Apply NLO correction to mass ratios
-    nlo_ratios = mass_ratios.copy()
-    nlo_ratios['d/s'] = mass_ratios['d/s'] * nlo_factor
-    nlo_ratios['u/c'] = mass_ratios['u/c'] * nlo_factor ** 2
+    # Run normalized quark masses from mu_from to mu_to using NLO
+    # (ratio is invariant at LO; NLO shift comes from matching)
+    m_s_run = run_mass_nlo(1.0, mu_from, mu_to, alpha_s_from, alpha_s_to, n_f)
+    m_d_run = run_mass_nlo(r_ds_base, mu_from, mu_to,
+                           alpha_s_from, alpha_s_to, n_f)
+    m_c_run = run_mass_nlo(1.0, mu_from, mu_to, alpha_s_from, alpha_s_to, n_f)
+    m_u_run = run_mass_nlo(r_uc_base, mu_from, mu_to,
+                           alpha_s_from, alpha_s_to, n_f)
 
-    return fritzsch_xing_ckm(nlo_ratios, theta_0)
+    r_ds_run = m_d_run / m_s_run
+    r_uc_run = m_u_run / m_c_run
+
+    # NLO vertex correction to mass-mixing relation
+    c_nlo = 0.5  # Leading MS-bar matching coefficient
+    nlo_factor = 1.0 + alpha_s_to / np.pi * c_nlo
+    nlo_ratios = {'d/s': r_ds_run * nlo_factor,
+                  'u/c': r_uc_run * nlo_factor ** 2}
+
+    return fritzsch_xing_ckm(nlo_ratios)
 
 
 def main():
@@ -280,7 +297,7 @@ def main():
         'u/c': r_uc_base,
     }
 
-    ckm_lo = fritzsch_xing_ckm(mass_ratios, THETA_0)
+    ckm_lo = fritzsch_xing_ckm(mass_ratios)
 
     print(f"   CKM matrix (LO):")
     for key in ['V_ud', 'V_us', 'V_ub', 'V_cd', 'V_cs', 'V_cb']:
@@ -292,7 +309,8 @@ def main():
     # ── Step 4: CKM magnitudes (NLO) ──
     print("\n4. CKM magnitudes at NLO (with QCD mass running)...")
 
-    ckm_nlo = fritzsch_xing_nlo(mass_ratios, THETA_0, alpha_s_2gev)
+    ckm_nlo = fritzsch_xing_nlo(THETA_0, alpha_s_mc, m_c, alpha_s_2gev, 2.0,
+                                n_f=3)
 
     print(f"   CKM matrix (NLO):")
     for key in ['V_ud', 'V_us', 'V_ub', 'V_cd', 'V_cs', 'V_cb']:

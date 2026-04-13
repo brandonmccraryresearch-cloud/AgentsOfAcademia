@@ -6,9 +6,10 @@ Higgs Coleman-Weinberg Ab Initio on D₄ Lattice
 Addresses Critical Review Directive 6 (PARTIALLY RESOLVED):
 The Higgs VEV formula v = E_P·α⁹·π⁵·(9/8) ≈ 246.64 GeV is numerically
 accurate to 0.17%, but the CW minimum has not been solved ab initio
-from the D₄ lattice potential. This script constructs the full CW
-effective potential with all 28 SO(8) modes and solves for the
-minimum self-consistently.
+from the D₄ lattice potential. This script constructs the CW
+effective potential with the dominant SM modes (Higgs, W, Z, top)
+using per-mode scheme constants (c_i = 3/2 for scalars/fermions,
+5/6 for gauge bosons) and solves for the minimum self-consistently.
 
 Physics:
     The Coleman-Weinberg effective potential on D₄ is:
@@ -93,7 +94,7 @@ N_TOTAL = sum(N_MODES.values())  # = 24
 N_SO8_ADJ = 28
 
 
-def cw_potential(phi, m_sq, lam0, mu, modes, c_i=3.0 / 2.0):
+def cw_potential(phi, m_sq, lam0, mu, modes):
     """
     Compute the Coleman-Weinberg effective potential.
 
@@ -105,15 +106,15 @@ def cw_potential(phi, m_sq, lam0, mu, modes, c_i=3.0 / 2.0):
         m_sq: tree-level mass parameter
         lam0: tree-level quartic coupling
         mu: renormalization scale
-        modes: list of (n_i, coefficient) pairs for M_i²(φ)
-        c_i: scheme-dependent constant
+        modes: list of (n_i, coefficient, c_i) tuples for M_i²(φ)
+               where c_i = 3/2 for scalars/fermions, 5/6 for gauge bosons
     """
     # Tree level
     v_tree = 0.5 * m_sq * phi ** 2 + 0.25 * lam0 * phi ** 4
 
     # One-loop CW correction
     v_cw = 0.0
-    for n_i, coeff in modes:
+    for n_i, coeff, c_i in modes:
         m_i_sq = coeff * phi ** 2
         if m_i_sq > 0:
             v_cw += n_i * m_i_sq ** 2 * (np.log(m_i_sq / mu ** 2) - c_i)
@@ -123,7 +124,7 @@ def cw_potential(phi, m_sq, lam0, mu, modes, c_i=3.0 / 2.0):
     return v_tree + v_cw
 
 
-def cw_potential_derivative(phi, m_sq, lam0, mu, modes, c_i=3.0 / 2.0):
+def cw_potential_derivative(phi, m_sq, lam0, mu, modes):
     """
     First derivative of the CW potential: dV/dφ.
 
@@ -133,7 +134,7 @@ def cw_potential_derivative(phi, m_sq, lam0, mu, modes, c_i=3.0 / 2.0):
     dv_tree = m_sq * phi + lam0 * phi ** 3
 
     dv_cw = 0.0
-    for n_i, coeff in modes:
+    for n_i, coeff, c_i in modes:
         m_i_sq = coeff * phi ** 2
         if m_i_sq > 0:
             dv_cw += n_i * coeff * phi * m_i_sq * (
@@ -159,9 +160,41 @@ def find_cw_minimum(m_sq, lam0, mu, modes, phi_range=(1.0, 1e5)):
         # Minimum at boundary — no nontrivial minimum found
         return None, None
 
-    # Refine with bisection on derivative
-    phi_left = phi_values[max(0, idx_min - 5)]
-    phi_right = phi_values[min(len(phi_values) - 1, idx_min + 5)]
+    # Refine with bisection on derivative (with bracket verification)
+    left_idx = max(0, idx_min - 5)
+    right_idx = min(len(phi_values) - 1, idx_min + 5)
+    phi_left = phi_values[left_idx]
+    phi_right = phi_values[right_idx]
+    dv_left = cw_potential_derivative(phi_left, m_sq, lam0, mu, modes)
+    dv_right = cw_potential_derivative(phi_right, m_sq, lam0, mu, modes)
+
+    # Verify bracket: dV/dφ must have opposite signs at endpoints
+    if dv_left * dv_right > 0:
+        # Search wider neighborhood for a sign change
+        search_radius = 50
+        scan_left = max(0, idx_min - search_radius)
+        scan_right = min(len(phi_values) - 1, idx_min + search_radius)
+        bracket_found = False
+
+        prev_phi = phi_values[scan_left]
+        prev_dv = cw_potential_derivative(prev_phi, m_sq, lam0, mu, modes)
+
+        for i in range(scan_left + 1, scan_right + 1):
+            curr_phi = phi_values[i]
+            curr_dv = cw_potential_derivative(curr_phi, m_sq, lam0, mu, modes)
+            if prev_dv * curr_dv < 0:
+                phi_left = prev_phi
+                phi_right = curr_phi
+                dv_left = prev_dv
+                dv_right = curr_dv
+                bracket_found = True
+                break
+            prev_phi = curr_phi
+            prev_dv = curr_dv
+
+        if not bracket_found:
+            # No derivative root bracketed; bisection would be invalid
+            return None, None
 
     for _ in range(100):
         phi_mid = 0.5 * (phi_left + phi_right)
@@ -251,12 +284,21 @@ def main():
     print(f"   Top Yukawa: y_t = {y_t:.4f}")
     print(f"   SU(2) gauge: g₂ = {g2:.4f}")
 
-    # Mode list: (multiplicity, coupling coefficient for M²_i = c_i φ²)
+    # Mode list: (multiplicity, coupling coefficient, c_i)
+    # c_i = 3/2 for scalars and fermions (MS-bar), 5/6 for gauge bosons
+    # This is a simplified SM-only CW model with the dominant modes:
+    # Higgs radial, W, Z, and top quark. The 19 heavy scalar modes
+    # from R²⁴ = 1 ⊕ 4 ⊕ 19 and the remaining SO(8) gauge modes
+    # are at lattice-scale masses and contribute sub-leading corrections
+    # (see two_loop_cw_full.py for the full 28-mode treatment).
+    C_SCALAR = 3.0 / 2.0   # MS-bar constant for scalars
+    C_GAUGE = 5.0 / 6.0    # MS-bar constant for gauge bosons
+    C_FERMION = 3.0 / 2.0  # MS-bar constant for fermions
     modes = [
-        (1, 3.0 * lam_sm),          # Singlet: M² = 3λφ²
-        (3, g2 ** 2 / 4.0),         # W bosons (gauge, c_i = 5/6)
-        (1, (g1 ** 2 + g2 ** 2) / 4.0),  # Z boson
-        (-12, y_t ** 2 / 2.0),      # Top quark (negative for fermion)
+        (1, 3.0 * lam_sm, C_SCALAR),           # Singlet: M² = 3λφ²
+        (3, g2 ** 2 / 4.0, C_GAUGE),            # W bosons
+        (1, (g1 ** 2 + g2 ** 2) / 4.0, C_GAUGE),  # Z boson
+        (-12, y_t ** 2 / 2.0, C_FERMION),       # Top quark (negative for fermion)
     ]
 
     # D₄ lattice bare mass parameter

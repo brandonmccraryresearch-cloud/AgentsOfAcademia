@@ -229,11 +229,11 @@ def main():
     for m in contributing:
         print(f"   p = ({', '.join('π' if np.isclose(c, np.pi) else '0' for c in m['p'])}): "
               f"M = {m['m_total']:.4f}, charge = ω^{m['q']}")
-    print(f"   ind_Z₃ = {z3_index:.6f}")
+    print(f"   ind_Z₃ = {z3_index.real:.6f}{z3_index.imag:+.6f}j")
 
     check("Z₃ index = 1 (one physical fermion per sector)",
           np.isclose(z3_index, 1.0 + 0.0j),
-          f"ind_Z₃ = {z3_index}")
+          f"ind_Z₃ = {z3_index.real:.6f}{z3_index.imag:+.6f}j")
 
     # ── Step 5: Mass gap analysis ──
     print("\n5. Mass gap analysis...")
@@ -321,7 +321,7 @@ def main():
     print(f"     mass ≥ {min_doubler_mass:.3f} while the physical mode")
     print(f"     has mass {physical_mode['m_total']:.4f}.")
     print()
-    print(f"  3. The Z₃ index ind_Z₃ = {z3_index:.0f} is preserved:")
+    print(f"  3. The Z₃ index ind_Z₃ = {z3_index.real:.0f} is preserved:")
     print("     one net physical fermion per triality sector.")
     print()
     print("  4. G₂ provides TOPOLOGICAL protection: Z₃-charged doublers")

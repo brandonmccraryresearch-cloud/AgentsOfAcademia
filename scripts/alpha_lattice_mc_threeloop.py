@@ -1,18 +1,22 @@
 #!/usr/bin/env python3
 """
-Three-Loop Lattice Monte Carlo for Fine-Structure Constant α
-=============================================================
+BZ Integral Verification: One-Loop D₄ MC with Multi-Loop Padé Summary
+======================================================================
 
 Addresses Critical Review Directive 5 (PARTIALLY RESOLVED):
 The BZ integral for α has a residual 0.044% gap after Padé resummation
-(alpha_pade_three_loop.py). This script performs a direct three-loop
-lattice MC evaluation to independently verify and close the gap.
+(alpha_pade_three_loop.py). This script performs a one-loop Monte Carlo
+evaluation using the D₄ lattice propagator (with all 24 root vectors),
+then combines with two-loop and three-loop coefficients from prior
+analyses to verify the full gap closure.
 
 Method:
-    1. One-loop: bare BZ integral over 24 D₄ root vectors
-    2. Two-loop: self-energy insertion (V₃ ≡ 0 by centrosymmetry)
-    3. Three-loop: Padé-estimated f₃ coefficient with MC error analysis
-    4. Convergence: systematic study of MC statistics vs gap closure
+    1. One-loop: MC evaluation of BZ integral using D₄ lattice
+       propagator (nearest-neighbor sum over 24 root vectors)
+    2. Two-loop: self-energy coefficient I_SE from bz_two_loop.py
+       (V₃ ≡ 0 by centrosymmetry)
+    3. Three-loop: Padé-resummed estimate from alpha_pade_three_loop.py
+    4. Convergence: systematic study of MC statistics (1/√N scaling)
 
 The target is α⁻¹ = 137 + 1/(28 - π/14) ≈ 137.0360028
 
@@ -86,11 +90,14 @@ def lattice_propagator(k, roots, m_sq=0.0):
     """
     Compute the lattice propagator G(k) on D₄.
 
-    G(k)⁻¹ = 4·Σ_μ sin²(k_μ/2) + m²
+    G(k)⁻¹ = Σ_{r ∈ D₄ roots} (1 - cos(k·r)) + m²
 
-    This is the standard Wilson lattice propagator.
+    Uses the 24 D₄ root vectors as nearest-neighbor directions,
+    giving the proper D₄ lattice Laplacian (distinct from the
+    standard hypercubic Wilson propagator 4·Σ_μ sin²(k_μ/2)).
     """
-    inv = 4.0 * np.sum(np.sin(k / 2.0) ** 2) + m_sq
+    kr = roots @ k  # dot product with each root vector, shape (24,)
+    inv = np.sum(1.0 - np.cos(kr)) + m_sq
     return 1.0 / inv if inv > 1e-30 else 0.0
 
 
@@ -158,7 +165,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 72)
-    print("THREE-LOOP LATTICE MONTE CARLO FOR α")
+    print("BZ INTEGRAL VERIFICATION: ONE-LOOP D₄ MC + MULTI-LOOP PADÉ")
     print("Directive 5: Close the 0.044% BZ integral gap")
     print("=" * 72)
 
@@ -296,7 +303,7 @@ def main():
 
     # ── Summary ──
     print(f"\n{'=' * 72}")
-    print("SUMMARY — DIRECTIVE 5 THREE-LOOP RESOLUTION")
+    print("SUMMARY — DIRECTIVE 5 BZ INTEGRAL VERIFICATION")
     print("=" * 72)
     print()
     print(f"  α⁻¹ formula: 137 + 1/(28 - π/14) = {ALPHA_INV_THEORY:.7f}")

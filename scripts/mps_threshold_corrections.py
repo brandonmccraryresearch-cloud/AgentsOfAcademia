@@ -98,9 +98,11 @@ def run_sm_couplings(log10_mu, alpha_inv_mz):
 
 def threshold_corrections(eta_x, eta_wr, eta_h):
     """
-    Compute threshold corrections at M_PS.
+    Compute threshold corrections at M_PS in the α⁻¹ basis.
 
-    The corrections to 1/g_i² from integrating out heavy fields:
+    The one-loop threshold corrections to 1/g_i² from integrating out
+    heavy fields are Δ_i/(12π). Since α_i = g_i²/(4π), the corrections
+    to 1/α_i are 4π × Δ_i/(12π) = Δ_i/3.
 
     1. Leptoquark X, Y bosons (12 gauge bosons, mass = η_X × M_PS):
        Δ₁ = -2/3 × 12 × ln(η_X) = -8 ln(η_X)   [for U(1)]
@@ -115,7 +117,7 @@ def threshold_corrections(eta_x, eta_wr, eta_h):
        Δ₂ = -1/3 × n_H × ln(η_H)
        n_H depends on representation; typically n_H ≈ 10
 
-    Returns: array of [Δ₁, Δ₂, Δ₃] corrections to 1/α_i
+    Returns: array of [δ₁, δ₂, δ₃] corrections to 1/α_i (= Δ_i/3)
     """
     n_lq = 12    # Number of leptoquark gauge bosons
     n_wr = 3     # Number of W_R gauge bosons
@@ -124,19 +126,20 @@ def threshold_corrections(eta_x, eta_wr, eta_h):
     delta = np.zeros(3)
 
     # Leptoquark contribution (affects U(1) and SU(3))
+    # Correction to 1/α_i = Δ_i/3 where Δ_i = -(2/3)·n_lq·ln(η_x)
     if eta_x > 0:
-        delta[0] += -(2.0 / 3.0) * n_lq * np.log(eta_x) / (12.0 * np.pi)
-        delta[2] += -(2.0 / 3.0) * n_lq * np.log(eta_x) / (12.0 * np.pi)
+        delta[0] += -(2.0 / 3.0) * n_lq * np.log(eta_x) / 3.0
+        delta[2] += -(2.0 / 3.0) * n_lq * np.log(eta_x) / 3.0
 
     # W_R contribution (affects U(1) only at one-loop)
     if eta_wr > 0:
-        delta[0] += -(2.0 / 3.0) * n_wr * np.log(eta_wr) / (12.0 * np.pi)
+        delta[0] += -(2.0 / 3.0) * n_wr * np.log(eta_wr) / 3.0
 
     # PS Higgs contribution (affects all couplings)
     if eta_h > 0:
-        delta[0] += -(1.0 / 3.0) * n_h * np.log(eta_h) / (12.0 * np.pi)
-        delta[1] += -(1.0 / 3.0) * n_h * np.log(eta_h) / (12.0 * np.pi)
-        delta[2] += -(1.0 / 3.0) * n_h * np.log(eta_h) / (12.0 * np.pi)
+        delta[0] += -(1.0 / 3.0) * n_h * np.log(eta_h) / 3.0
+        delta[1] += -(1.0 / 3.0) * n_h * np.log(eta_h) / 3.0
+        delta[2] += -(1.0 / 3.0) * n_h * np.log(eta_h) / 3.0
 
     return delta
 
