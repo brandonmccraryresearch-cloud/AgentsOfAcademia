@@ -28,6 +28,15 @@ window.MathJax = {
   startup: {
     pageReady: function() {
       return MathJax.startup.defaultPageReady().then(function() {
+        // Wrap every display mjx-container in a scroll rail so wide equations
+        // scroll horizontally without needing overflow: auto on the container
+        // itself (which would coerce overflow-y: visible to auto and clip glyphs).
+        document.querySelectorAll('mjx-container[display="true"]').forEach(function(el) {
+          var wrapper = document.createElement('div');
+          wrapper.className = 'math-scroll-wrapper';
+          el.parentNode.insertBefore(wrapper, el);
+          wrapper.appendChild(el);
+        });
         document.body.setAttribute('data-mathjax-done', 'true');
         console.log('MathJax rendering complete');
       });
@@ -259,25 +268,48 @@ pre code {
 
 /* ===== Math Rendering ===== */
 /*
- * MathJax CHTML mode renders math as HTML elements, so CSS font-family
- * applies. We override MathJax's own TeX/STIX web-font declarations with
- * Noto Sans Math so all math glyphs are rendered in the desired typeface.
+ * MathJax CHTML renders math as HTML elements with precisely pre-calculated
+ * glyph metrics tied to its own TeX/STIX web fonts.  Forcing a different
+ * font-family on internal mjx-* elements breaks those metrics and causes
+ * glyphs to overflow below their computed bounding boxes.
+ *
+ * Rules here are therefore intentionally minimal:
+ *   - overflow: visible on mjx-container so glyph descenders are never clipped
+ *   - horizontal scrolling for wide display equations is handled by a
+ *     .math-scroll-wrapper div injected after MathJax renders (see script below)
+ *   - generous padding-bottom for descenders / subscripts / brackets
+ *   - line-height: normal so the paragraph line-box never squeezes math
  */
 mjx-container {
-  overflow-x: auto;
-  overflow-y: hidden;
+  /* Both axes must be visible — if one is non-visible the other is coerced to
+     auto by the CSS overflow spec, reintroducing bottom-glyph clipping. */
+  overflow: visible;
   max-width: 100%;
+  /* Give descenders, brackets, and subscripts room to breathe */
+  padding-bottom: 0.15em;
+  line-height: normal;
 }
 
-mjx-container,
-mjx-math,
-mjx-math * {
-  font-family: var(--font-math) !important;
-}
-
+/* Block (display) equations */
 mjx-container[display="true"] {
-  margin: 0.8em 0 !important;
+  display: block;
+  margin: 1em 0 !important;
   text-align: center;
+  padding-bottom: 0.2em;
+}
+
+/* Inline math: ensure the surrounding line-box is tall enough */
+mjx-container:not([display="true"]) {
+  vertical-align: middle;
+}
+
+/* Horizontal scroll wrapper for wide display equations.
+   Applied by the post-render script below — keeps mjx-container
+   overflow: visible while still providing a scroll rail for long equations. */
+.math-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
 }
 
 /* ===== Footnotes ===== */
