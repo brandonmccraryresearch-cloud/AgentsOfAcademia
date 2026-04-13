@@ -265,7 +265,7 @@ pre code {
  * glyphs to overflow below their computed bounding boxes.
  *
  * Rules here are therefore intentionally minimal:
- *   - overflow: visible so nothing is clipped
+ *   - overflow-x: auto for horizontal scrolling; overflow-y: visible to avoid clipping descenders
  *   - generous padding-bottom for descenders / subscripts / brackets
  *   - line-height: normal so the paragraph line-box never squeezes math
  */
