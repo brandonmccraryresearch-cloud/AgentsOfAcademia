@@ -259,25 +259,37 @@ pre code {
 
 /* ===== Math Rendering ===== */
 /*
- * MathJax CHTML mode renders math as HTML elements, so CSS font-family
- * applies. We override MathJax's own TeX/STIX web-font declarations with
- * Noto Sans Math so all math glyphs are rendered in the desired typeface.
+ * MathJax CHTML renders math as HTML elements with precisely pre-calculated
+ * glyph metrics tied to its own TeX/STIX web fonts.  Forcing a different
+ * font-family on internal mjx-* elements breaks those metrics and causes
+ * glyphs to overflow below their computed bounding boxes.
+ *
+ * Rules here are therefore intentionally minimal:
+ *   - overflow: visible so nothing is clipped
+ *   - generous padding-bottom for descenders / subscripts / brackets
+ *   - line-height: normal so the paragraph line-box never squeezes math
  */
 mjx-container {
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;   /* was hidden — was clipping glyph descenders */
+  overflow: visible;
   max-width: 100%;
+  /* Give descenders, brackets, and subscripts room to breathe */
+  padding-bottom: 0.15em;
+  line-height: normal;
 }
 
-mjx-container,
-mjx-math,
-mjx-math * {
-  font-family: var(--font-math) !important;
-}
-
+/* Block (display) equations */
 mjx-container[display="true"] {
-  margin: 0.8em 0 !important;
+  display: block;
+  margin: 1em 0 !important;
   text-align: center;
+  padding-bottom: 0.2em;
+}
+
+/* Inline math: ensure the surrounding line-box is tall enough */
+mjx-container:not([display="true"]) {
+  vertical-align: middle;
 }
 
 /* ===== Footnotes ===== */
