@@ -22,7 +22,7 @@ The one-loop vacuum-polarization tensor at zero external momentum is
 
 and the scalar self-energy is  Π(0) = (1/4) Tr[Π_μν(0)].
 
-The fine-structure constant is then α⁻¹ = R × Π(0)/(4π), where R is a
+The fine-structure constant is then α⁻¹ = R × Π(0), where R is a
 normalization factor determined a posteriori from D₄ / SO(8) group theory.
 
 Tests
@@ -167,11 +167,10 @@ def Pi0_tensor_blind(roots, n_samples, seed=42):
 
     Π_μν(0) = ∫ d⁴q/(2π)⁴  V_μ(q) V_ν(q) / D(q)²
 
-    Uses antithetic variates: for each q, also evaluate at −q.
-    V_μ is odd ⇒ V(−q) = −V(q), so V(−q)⊗V(−q) = V(q)⊗V(q)
-    while D is even ⇒ D(−q) = D(q).  Hence both samples give the
-    same integrand value — the antithetic variate acts as a variance
-    reduction by averaging the random-number noise.
+    Note: V_μ is odd ⇒ V(−q) = −V(q), so V(−q)⊗V(−q) = V(q)⊗V(q),
+    while D is even ⇒ D(−q) = D(q).  The integrand is exactly even,
+    so antithetic variates provide no variance reduction.  We evaluate
+    only q (not −q) and count each sample once.
 
     Returns: Pi_tensor (4×4), scalar Π(0) = Tr/4, stat_error
     """
@@ -186,15 +185,13 @@ def Pi0_tensor_blind(roots, n_samples, seed=42):
         bs = min(batch, remaining)
         q = rng.uniform(-np.pi, np.pi, size=(bs, 4))
 
-        # Combine q and −q (antithetic)
-        q_all = np.concatenate([q, -q], axis=0)           # (2*bs, 4)
-        Dq = D_lattice_batch(q_all, roots)                # (2*bs,)
+        Dq = D_lattice_batch(q, roots)                    # (bs,)
         good = Dq > 1e-20
         if good.sum() == 0:
             remaining -= bs
             continue
 
-        Vq = V_lattice_batch(q_all[good], roots)          # (M, 4)
+        Vq = V_lattice_batch(q[good], roots)              # (M, 4)
         inv_D2 = 1.0 / (Dq[good] ** 2)                   # (M,)
 
         # Accumulate outer-product sum

@@ -6,7 +6,7 @@ Origin of the (12π²−1) Factor in the Koide Mass Scale
 Investigates whether the factor (12π²−1) ≈ 117.43 appearing in the
 Koide mass scale formula:
 
-    M_scale = v · α · (12π²−1) / (24 × 28) ≈ 44.7 MeV
+    M_scale = v · α · (12π²−1) / (24 × 28) ≈ 314 MeV
 
 has a geometric origin in D₄/SO(8) group theory, or is an empirically
 calibrated numerical coincidence.
@@ -29,13 +29,15 @@ The D₄ lattice propagator denominator is:
 where the sum runs over all 24 root vectors δ of D₄. At k = 0, D(0) = 0,
 and the trace of D(k) over the BZ is:
 
-    ∫_BZ d⁴k/(2π)⁴ × D(k) = z/2 = 12
+    ∫_BZ d⁴k/(2π)⁴ × D(k) = z = 24
 
-This integral equals z/2 because each cosine integrates to zero over the
-BZ, leaving 24/2 = 12.
+This integral equals z because each cos(k·δ) integrates to zero over the
+BZ for δ ≠ 0, leaving z × 1 = 24.
 
-The factor 12π² then arises when this trace is weighted by the volume
-factor π² from the 4D solid angle normalization.
+The factor 12 = z/2 in the combination 12π² arises from a different
+counting argument: the D₄ lattice has z/2 = 12 bond-pair directions
+(each root δ is paired with −δ). The factor π² is the 4D angular
+normalization from Vol(S³) = 2π².
 
 Usage:
     python mscale_factor_derivation.py             # Default
@@ -185,17 +187,22 @@ def test_group_theory_invariants():
     n_pts = 32
     kvals = np.linspace(-np.pi, np.pi, n_pts, endpoint=False)
     roots = d4_root_vectors()
+    n_total = n_pts ** 4
+
+    # Vectorized evaluation: build k-point grid in chunks (one k0 slice
+    # at a time) to avoid a 32⁴×4 array exceeding memory.
     g0_sum = 0.0
-    n_total = 0
     for k0 in kvals:
-        for k1 in kvals:
-            for k2 in kvals:
-                for k3 in kvals:
-                    kvec = np.array([k0, k1, k2, k3])
-                    dk = np.sum(1.0 - np.cos(roots @ kvec))
-                    if dk > 1e-10:
-                        g0_sum += 1.0 / dk
-                    n_total += 1
+        k0_grid, k1_grid, k2_grid, k3_grid = np.meshgrid(
+            np.array([k0]), kvals, kvals, kvals, indexing="ij"
+        )
+        k_batch = np.stack(
+            (k0_grid, k1_grid, k2_grid, k3_grid), axis=-1
+        ).reshape(-1, 4)
+        dk = np.sum(1.0 - np.cos(k_batch @ roots.T), axis=1)
+        mask = dk > 1e-10
+        if np.any(mask):
+            g0_sum += np.sum(1.0 / dk[mask])
     g0_d4 = g0_sum / n_total
     check("Test 6: D₄ Green's function G(0) ≈ O(0.1) ≠ 12π²−1",
           abs(g0_d4 - FACTOR) > 100,
@@ -242,12 +249,14 @@ def test_phonon_self_energy():
     # (24 roots = 12 pairs of opposite vectors).
     trace_dk = 0.0
     for k0 in kvals:
-        for k1 in kvals:
-            for k2 in kvals:
-                for k3 in kvals:
-                    kvec = np.array([k0, k1, k2, k3])
-                    dk_val = np.sum(1.0 - np.cos(roots @ kvec))
-                    trace_dk += dk_val * vol_factor
+        k0_grid, k1_grid, k2_grid, k3_grid = np.meshgrid(
+            np.array([k0]), kvals, kvals, kvals, indexing="ij"
+        )
+        k_batch = np.stack(
+            (k0_grid, k1_grid, k2_grid, k3_grid), axis=-1
+        ).reshape(-1, 4)
+        dk_vals = np.sum(1.0 - np.cos(k_batch @ roots.T), axis=1)
+        trace_dk += np.sum(dk_vals) * vol_factor
     expected_trace = float(Z_COORD)  # = 24
     n_bond_pairs = Z_COORD // 2      # = 12 (paired ±δ directions)
     check("Test 8: ∫_BZ D(k) = z = 24; bond pairs z/2 = 12",
@@ -354,13 +363,15 @@ def test_bz_derivation():
     # For the BZ of the D₄ lattice, |k| ranges up to ~ 2π.
     weighted_integral = 0.0
     for k0 in kvals:
-        for k1 in kvals:
-            for k2 in kvals:
-                for k3 in kvals:
-                    kvec = np.array([k0, k1, k2, k3])
-                    dk_val = np.sum(1.0 - np.cos(roots @ kvec))
-                    k_sq = np.sum(kvec**2)
-                    weighted_integral += dk_val * k_sq * vol_factor
+        k0_grid, k1_grid, k2_grid, k3_grid = np.meshgrid(
+            np.array([k0]), kvals, kvals, kvals, indexing="ij"
+        )
+        k_batch = np.stack(
+            (k0_grid, k1_grid, k2_grid, k3_grid), axis=-1
+        ).reshape(-1, 4)
+        dk_vals = np.sum(1.0 - np.cos(k_batch @ roots.T), axis=1)
+        k_sq_vals = np.sum(k_batch**2, axis=1)
+        weighted_integral += np.sum(dk_vals * k_sq_vals) * vol_factor
 
     # Expected: ∫ D(k)|k|² = z × ∫|k|² (cosines vanish by orthogonality)
     # ⟨k²⟩ for uniform in [-π,π]⁴: each component has ⟨k_i²⟩ = π²/3

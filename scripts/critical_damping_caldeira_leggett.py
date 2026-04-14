@@ -253,16 +253,16 @@ def main():
         C_analytic[j, partners[j]] += 0.5
 
     N_mc = 10 ** 6
-    k_samples = np.random.uniform(0, 2 * np.pi, (N_mc, 4))
-    phases = k_samples @ roots.T                   # (N_mc, 24)
-    one_minus_cos = 1.0 - np.cos(phases)           # (N_mc, 24)
 
-    # Batch outer products to keep memory bounded
+    # Batch sample generation and outer products to keep memory bounded
     C_mc = np.zeros((z, z))
     batch_size = 50000
     for start in range(0, N_mc, batch_size):
         end = min(start + batch_size, N_mc)
-        batch = one_minus_cos[start:end]
+        current_batch_size = end - start
+        k_samples = np.random.uniform(0, 2 * np.pi, (current_batch_size, 4))
+        phases = k_samples @ roots.T                          # (batch, 24)
+        batch = 1.0 - np.cos(phases)                          # (batch, 24)
         C_mc += batch.T @ batch
     C_mc /= N_mc
 

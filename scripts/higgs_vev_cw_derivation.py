@@ -157,7 +157,9 @@ def build_mode_list_full():
     modes.append((1, 3.0 * LAMBDA_PHYS, C_SCALAR, 'Higgs radial (breathing)'))
 
     # --- G₂ fundamental' 7': SM gauge sector ---
-    # W± (3 polarizations × 2 = 6, but coupling via g₂²/4)
+    # W± counted with multiplicity 3 by the script's gauge-sector
+    # bookkeeping convention (generator/field-count normalization),
+    # not by explicit physical polarization DOFs.
     modes.append((3, g2**2 / 4.0, C_GAUGE, 'W± bosons'))
     # Z boson
     modes.append((1, (g1**2 + g2**2) / 4.0, C_GAUGE, 'Z boson'))
