@@ -483,11 +483,11 @@ def main():
     # Single-step CW gives a Z_λ that differs significantly from the
     # multi-threshold result (0.21), confirming the single-step approach
     # is inadequate for precision VEV extraction across 17 decades.
-    naive_z_wrong = abs(z_lam_naive - 0.21) / 0.21 > 0.5
+    naive_z_far_from_target = abs(z_lam_naive - 0.21) / 0.21 > 0.5
 
     # Test 5
     check("5. Single-step Z_λ deviates from target (confirms multi-threshold needed)",
-          naive_z_wrong,
+          naive_z_far_from_target,
           f"Z_λ = {z_lam_naive:.4f} (differs from 0.21 target by >50%)")
 
     # ══════════════════════════════════════════════════════════════════

@@ -66,7 +66,7 @@ DIM_G2 = 14                   # dim(G₂)
 D_DIM = 4                     # Spacetime dimensions
 
 # The factor under investigation
-FACTOR = 12.0 * np.pi**2 - 1.0  # ≈ 117.435
+FACTOR = 12.0 * np.pi**2 - 1.0  # ≈ 117.4349
 
 # Koide mass scale
 M_SCALE = V_HIGGS * ALPHA * FACTOR / (Z_COORD * DIM_SO8)  # ≈ 44.7 MeV

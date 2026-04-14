@@ -386,7 +386,7 @@ def part5_assessment(lambda3_morse):
     beta_lj = 3.0 * alpha_lj
     lambda3_lj = beta_lj * A0
     spread = max(lambda3_morse, lambda3_lj) / min(lambda3_morse, lambda3_lj)
-    check("T19: Potential-shape spread: Morse vs LJ gives ~1.7× range",
+    check("T19: Potential-shape spread is O(1) with <5× variation",
           1.0 < spread < 5.0,
           f"λ₃(Morse) = {lambda3_morse:.3f}, "
           f"λ₃(LJ) = {lambda3_lj:.3f}, ratio = {spread:.2f}")
