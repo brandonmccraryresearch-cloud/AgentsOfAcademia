@@ -190,6 +190,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/phonon_velocity_resolution.py` | Phonon velocity from D₄ dynamical matrix (Review86 Directive 10) | 12/12 PASS, c²=3J verified |
 | `scripts/alpha57_independent_test.py` | α^57/(4π) uniqueness validation (Review86 Directive 17) | 18/18 PASS, n=57 unique |
 | `scripts/gibbs_free_energy_lattice.py` | Gibbs free energy from phonon partition function (Review86 Directive 09) | 16/16 PASS, triality entropy selects D₄ |
+| `scripts/lorentzian_phase_lag_proof.py` | Lorentzian signature for any ζ > 0 (Review86 Directive 01) | 12/12 PASS, π/2 at resonance for all ζ |
+| `scripts/nmixing_v3_resolution.py` | N_mixing vs V₃≡0 contradiction resolution (Review86 Directive 02) | 12/12 PASS, CW mass channels ≠ cubic vertices |
+| `scripts/svea_lorentzian_derivation.py` | SVEA envelope → Lorentzian signature (Review86 Directive 04) | 16/16 PASS, corrects §I.4 derivation |
 
 ## MCP Server Usage
 
@@ -328,11 +331,19 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-13 — Session 20: Directives 4-8 Scripts + Manuscript Update)
+### Current State (v87.0, 2026-04-16 — Session 21: Review86 Directives 01, 02, 04 + Manuscript Corrections)
 
-The manuscript is at v87.0. Session 20 creates 5 scripts addressing Critical Review Directives 4-8 and integrates results into the manuscript body.
+The manuscript is at v87.0. Session 21 resolves 3 critical Review86 directives related to the Lorentzian signature derivation and N_mixing contradiction, with MCP-verified mathematics and meta_agent integration.
 
-**Session 20 results:**
+**Session 21 results:**
+- **Lorentzian phase lag proof (Directive 01):** `scripts/lorentzian_phase_lag_proof.py` — 12/12 PASS. Proves φ(ω→ω₀) = π/2 for ANY ζ > 0 at resonance. Transient duration τ_ss = 12/(πΩ_P) ≈ 3.82 t_P. Grade upgrade D+ → B.
+- **N_mixing V₃ resolution (Directive 02):** `scripts/nmixing_v3_resolution.py` — 12/12 PASS. T_μνρ = 0 by centrosymmetry confirmed. N_mixing = 2 refers to CW background-field mass channels, not cubic scattering vertices. V₃ ≡ 0 and N_mixing = 2 are NOT contradictory.
+- **SVEA Lorentzian derivation (Directive 04):** `scripts/svea_lorentzian_derivation.py` — 16/16 PASS. Corrects §I.4: coordinate translation does NOT change derivatives; SVEA envelope extraction with π/2 phase lag produces Lorentzian signature.
+- **Manuscript corrected:** §I.4 derivation rewritten (SVEA mechanism, not coordinate redefinition), §I.4.1 assessment D+ → B, §VIII.3 N_mixing clarified as CW mass channels, script count 69 → 72.
+- **MCP verification:** math-mcp confirmed arctan(∞) = π/2, SVEA second derivative expansion, and π⁵×(9/8) prefactor.
+- **Total:** 72 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 20 results (prior session):**
 - **Nielsen-Ninomiya doubler mass mechanism (Directive 4):** `scripts/nn_doubler_mass_mechanism.py` — 8/8 PASS. G₂ mass splitting mechanism gaps 15 doublers while preserving one physical mode. Z₃ triality index = 1. Mass ratio > 500.
 - **α lattice MC three-loop (Directive 5):** `scripts/alpha_lattice_mc_threeloop.py` — 9/9 PASS. One-loop D₄ MC verification with proper D₄ root-based propagator + multi-loop Padé summary. Convergence 1/√N confirmed.
 - **M_PS threshold corrections (Directive 7):** `scripts/mps_threshold_corrections.py` — 6/6 PASS. PS heavy field thresholds reduce coupling spread by 62%. Proton decay safe at M_PS = 10^{15.5}.
@@ -372,7 +383,7 @@ The manuscript is at v87.0. Session 20 creates 5 scripts addressing Critical Rev
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 20):** 69 scripts total. All prior scripts unchanged + 5 new (Directives 4-8).
+**Script verification (Session 20):** 72 scripts total. All prior scripts unchanged + 5 new (Directives 4-8).
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -383,7 +394,7 @@ The manuscript is at v87.0. Session 20 creates 5 scripts addressing Critical Rev
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **69 total, all pass** | 5 new scripts (Directives 4-8, Session 20) |
+| Scripts | **72 total, all pass** | 5 new scripts (Directives 4-8, Session 20) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -443,7 +454,7 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 69 scripts as supplementary material
+3. Include all 72 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
 ### Open Problem Status (as of v85.0 Session 12)
