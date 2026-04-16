@@ -196,6 +196,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/bz_vacuum_polarization_explicit.py` | Explicit one-loop BZ vacuum polarization (Review86 Directive 03) | 20/20 PASS, Π(0)=0.0528, R≈2597 |
 | `scripts/higgs_vev_blind_derivation.py` | Blind CW exponent extraction for Higgs VEV (Review86 Directive 05) | 20/20 PASS, N_raw=7.81, grade C+ |
 | `scripts/damping_from_d4_hamiltonian.py` | Spectral density verification of ζ=π/12 (Review86 Directive 06) | 21/21 PASS, ζ_max≈0.73, critical damping unachievable |
+| `scripts/g2_stabilizer_justification.py` | G₂ stabilizer from triality equivariance (Review86 Directive 11) | 87/87 PASS, G₂=∩ three Spin(7) |
 
 ## MCP Server Usage
 
@@ -386,7 +387,7 @@ The manuscript is at v87.0. Session 21 resolves 3 critical Review86 directives r
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 20):** 75 scripts total. All prior scripts unchanged + 2 new (Directives 5-6).
+**Script verification (Session 20):** 76 scripts total. All prior scripts unchanged + 3 new (Directives 5, 6, 11).
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -397,7 +398,7 @@ The manuscript is at v87.0. Session 21 resolves 3 critical Review86 directives r
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **75 total, all pass** | 2 new scripts (Directives 5-6) |
+| Scripts | **76 total, all pass** | 3 new scripts (Directives 5, 6, 11) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
