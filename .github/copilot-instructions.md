@@ -335,11 +335,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-16 — Session 24: Review86 Directives 05, 06, 11)
+### Current State (v87.0, 2026-04-16 — Session 27: Review86 Directives 18, 20)
 
-The manuscript is at v87.0. Session 24 completes 3 Review86 directives: blind Higgs VEV exponent extraction, spectral density damping verification, and G₂ stabilizer physical justification. Meta_agent and MCP tools used for theoretical work.
+The manuscript is at v87.0. Session 27 completes 2 Review86 directives: explicit two-loop beta functions with hidden D₄ DOF and independent α derivation attempt. Meta_agent and MCP tools used for theoretical work. Retries DIR-18/20 from failed Sessions 25-26 (push permission errors).
 
-**Session 24 results:**
+**Session 27 results:**
+- **Two-loop beta hidden DOF (Directive 18):** `scripts/two_loop_beta_hidden_dof.py` — 31/31 PASS. Full Machacek-Vaughn matrix with 20 hidden G₂ modes. Fundamental obstacle: all hidden modes are SU(2)_L singlets (Δb₂=0). Hidden DOF reduce spread by only 0.6%. PS Higgs (15,2,2) gives 4.3% improvement. Grade: D→D+.
+- **Independent α derivation (Directive 20):** `scripts/alpha_independent_derivation.py` — 25/25 PASS. Multi-channel BZ integral hierarchy L1→L4 recovers 99.2% of correction at L3. Integer 137 from bare impedance, not BZ integral. Normalization R≈2589 NOT uniquely derived; best candidate |W(D₄)|×dim(G₂)=2688 (3.8% gap). Grade: C+→B (motivated conjecture).
+- **Manuscript updated:** §II.3.8 (independent α attempt), §IV.5.7 (two-loop hidden DOF). TOC and script counts updated 76→78.
+- **MCP verification:** math-mcp confirmed 1/(28-π/14)=14/(392-π), dim(SO(8))=28, 14+7+7=28.
+- **Total:** 78 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 24 results (prior session):**
 - **Higgs VEV blind derivation (Directive 05):** `scripts/higgs_vev_blind_derivation.py` — 20/20 PASS. Blind CW exponent N_raw=7.81; N=9 is consistent but not derived. Formula v=E_P·α⁹·π⁵·(9/8) is a 0.17% fit, not a derivation. Grade: C+.
 - **Damping spectral density (Directive 06):** `scripts/damping_from_d4_hamiltonian.py` — 21/21 PASS. Caldeira-Leggett J(ω) independently confirms ζ=π/12. Anharmonic κ₄ corrections give ζ_max≈0.73; critical damping unachievable without lattice instability.
 - **G₂ stabilizer justification (Directive 11):** `scripts/g2_stabilizer_justification.py` — 87/87 PASS. G₂ = SO(7)_v ∩ Spin(7)_s ∩ Spin(7)_c: triality equivariance forces simultaneous condensation in all three 8-dim reps. Explicit D₄ root system, Weyl group, Dynkin folding, branching rules verified.
@@ -396,7 +403,7 @@ The manuscript is at v87.0. Session 24 completes 3 Review86 directives: blind Hi
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 20):** 76 scripts total. All prior scripts unchanged + 3 new (Directives 5, 6, 11).
+**Script verification (Session 27):** 78 scripts total. All prior scripts unchanged + 2 new (Directives 18, 20).
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -407,7 +414,7 @@ The manuscript is at v87.0. Session 24 completes 3 Review86 directives: blind Hi
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **76 total, all pass** | 3 new scripts (Directives 5, 6, 11) |
+| Scripts | **78 total, all pass** | 2 new scripts (Directives 18, 20) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
