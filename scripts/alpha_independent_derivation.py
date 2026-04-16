@@ -398,7 +398,8 @@ def test_bare_coupling(Pi0):
     print(f"   Raw Π(0)         = {Pi0:.8f}")
     print(f"   Π(0)/(4π)        = {Pi_over_4pi:.8f}")
     print(f"   Target α⁻¹       = {ALPHA_INV_EXP}")
-    print(f"   R = α⁻¹/Π(0)    = {ALPHA_INV_EXP/Pi0:.2f}")
+    R_norm = ALPHA_INV_EXP / Pi0
+    print(f"   R = α⁻¹/Π(0)    = {R_norm:.2f}  (Interpretation B: α⁻¹ = R × Π(0))")
     print()
 
     # Interpretation 1: bare = 137, correction = fractional part

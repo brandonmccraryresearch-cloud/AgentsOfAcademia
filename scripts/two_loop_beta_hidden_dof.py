@@ -19,7 +19,7 @@ Physics overview:
       14_{G₂} → 8_{SU(3)} ⊕ (3 ⊕ 3̄)_{SU(3)}       [14 modes from G₂ adj]
       7_{G₂}  → (3 ⊕ 3̄ ⊕ 1)_{SU(3)}               [×2, giving 14 modes]
 
-    Net: 28 = 8 (visible, gluons) + 14 (hidden at M_{G₂}) + 6 (hidden at M_{EW})
+    Net: 28 = 8 (visible gluons) + 20 (hidden: 6 from 14_{G₂} triplets + 14 from two 7_{G₂})
 
     All G₂ modes are SU(2)_L singlets, so Δb₂ = 0 for the hidden sector
     from the minimal G₂ decomposition alone. This is the fundamental
