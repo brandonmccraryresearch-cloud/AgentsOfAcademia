@@ -96,7 +96,7 @@ import IHMFramework.MeasureUniqueness
   Script: `scripts/critical_damping_caldeira_leggett.py` (25/25 PASS)
   Manuscript: §I.4.1 -/
 axiom caldeira_leggett_zeta_stub :
-  ∃ (ζ : Float), ζ = Float.ofScientific 262 true 3 -- ζ ≈ 0.262
+  ∃ (ζ : Float), ζ = Float.ofScientific 262 true 3 -- ζ ≈ 0.262 (262 × 10⁻³)
 
 /-- **Stub (C):** Higgs VEV exponent.
   The scaling v = E_P · α^9 · π^5 · (9/8) yields v ≈ 246.64 GeV (0.17%).
@@ -123,4 +123,4 @@ axiom cosmo_constant_exponent_stub :
   Script: `scripts/ckm_nlo_matching.py` (7/7 PASS)
   Manuscript: §X.3 -/
 axiom ckm_magnitudes_stub :
-  ∃ (v_us : Float), v_us = Float.ofScientific 2246 true 4 -- |V_us| ≈ 0.2246
+  ∃ (v_us : Float), v_us = Float.ofScientific 2246 true 4 -- |V_us| ≈ 0.2246 (2246 × 10⁻⁴)
