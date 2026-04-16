@@ -128,7 +128,7 @@ def main():
     M_star = 1.0
     c_sq = 3.0 * J  # c² = 3J in natural units
     c_s = np.sqrt(c_sq)
-    Omega_P = np.sqrt(c_sq)  # Ω_P² = c² in 1D; for the general D₄ case Ω_P² = 24J/M*
+    Omega_P = np.sqrt(c_sq)  # Simplified: Ω_P = c for numerical sections (full D₄: Ω_P² = 24J/M*)
 
     check("D₄ has 24 root vectors", z == 24, f"z = {z}")
 
@@ -445,9 +445,6 @@ def main():
     # So ψ₀ = -iA/2 (purely imaginary) — confirms π/2 lag
 
     psi_0 = -1j * 1.0 / 2.0  # A = 1 for normalization
-    u_ss_from_psi = np.real(psi_0 * np.exp(1j * Omega * tau_grid))
-    u_ss_direct = np.sin(Omega * tau_grid) / 2.0
-
     tau_grid = np.linspace(0, 4 * np.pi / Omega, 1000)
     u_ss_from_psi = np.real(psi_0 * np.exp(1j * Omega * tau_grid))
     u_ss_direct = np.sin(Omega * tau_grid) / 2.0
