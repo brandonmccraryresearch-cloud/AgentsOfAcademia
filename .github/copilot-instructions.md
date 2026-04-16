@@ -335,11 +335,20 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-16 — Session 21: Review86 Directives 01, 02, 04 + Manuscript Corrections)
+### Current State (v87.0, 2026-04-16 — Session 24: Review86 Directives 05, 06, 11)
 
-The manuscript is at v87.0. Session 21 resolves 3 critical Review86 directives related to the Lorentzian signature derivation and N_mixing contradiction, with MCP-verified mathematics and meta_agent integration.
+The manuscript is at v87.0. Session 24 completes 3 Review86 directives: blind Higgs VEV exponent extraction, spectral density damping verification, and G₂ stabilizer physical justification. Meta_agent and MCP tools used for theoretical work.
 
-**Session 21 results:**
+**Session 24 results:**
+- **Higgs VEV blind derivation (Directive 05):** `scripts/higgs_vev_blind_derivation.py` — 20/20 PASS. Blind CW exponent N_raw=7.81; N=9 is consistent but not derived. Formula v=E_P·α⁹·π⁵·(9/8) is a 0.17% fit, not a derivation. Grade: C+.
+- **Damping spectral density (Directive 06):** `scripts/damping_from_d4_hamiltonian.py` — 21/21 PASS. Caldeira-Leggett J(ω) independently confirms ζ=π/12. Anharmonic κ₄ corrections give ζ_max≈0.73; critical damping unachievable without lattice instability.
+- **G₂ stabilizer justification (Directive 11):** `scripts/g2_stabilizer_justification.py` — 87/87 PASS. G₂ = SO(7)_v ∩ Spin(7)_s ∩ Spin(7)_c: triality equivariance forces simultaneous condensation in all three 8-dim reps. Explicit D₄ root system, Weyl group, Dynkin folding, branching rules verified.
+- **Manuscript updated:** §I.4.2 (spectral density damping), §IV.3.3 (G₂ stabilizer), §VIII.4.8 (blind CW exponent). Derivation status of §IV.3 updated. Script count 73 → 76.
+- **MCP verification:** math-mcp confirmed dim(SO(8))=28 from n(n-1)/2, branching 14+7+7=28, |W(D₄)|=2³×4!=192.
+- **CodeQL:** 0 alerts.
+- **Total:** 76 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 21 results (prior session):**
 - **Lorentzian phase lag proof (Directive 01):** `scripts/lorentzian_phase_lag_proof.py` — 12/12 PASS. Proves φ(ω→ω₀) = π/2 for ANY ζ > 0 at resonance. Transient duration τ_ss = 12/(πΩ_P) ≈ 3.82 t_P. Grade upgrade D+ → B.
 - **N_mixing V₃ resolution (Directive 02):** `scripts/nmixing_v3_resolution.py` — 12/12 PASS. T_μνρ = 0 by centrosymmetry confirmed. N_mixing = 2 refers to CW background-field mass channels, not cubic scattering vertices. V₃ ≡ 0 and N_mixing = 2 are NOT contradictory.
 - **SVEA Lorentzian derivation (Directive 04):** `scripts/svea_lorentzian_derivation.py` — 16/16 PASS. Corrects §I.4: coordinate translation does NOT change derivatives; SVEA envelope extraction with π/2 phase lag produces Lorentzian signature.
