@@ -104,13 +104,10 @@ def d4_root_vectors():
 def D_lattice_batch(q_batch, roots):
     """D₄ propagator inverse: D(q) = Σ_{δ∈D₄} [1 − cos(q·δ)].
 
-    For small q: D(q) → Σ_δ (q·δ)²/2 = Σ_δ Σ_{μν} δ_μ δ_ν q_μ q_ν / 2
-    The second moment tensor M_μν = Σ_δ δ_μ δ_ν = 6 δ_μν (by 5-design).
-    So D(q) → 6|q|² / 2 × 2 = 6|q|² (from Taylor of 1−cos to order 2).
-    Actually: 1−cos(x) ≈ x²/2, so D(q) ≈ Σ_δ (q·δ)²/2 = (1/2)×6|q|² × 2
-    Wait: M_μν = Σ_δ δ_μ δ_ν. For D₄ roots, Σ_δ δ_μ² = 12 (each of 24
-    roots has exactly 2 nonzero coords ±1, so 24×2/4=12 per axis).
-    M_μμ = 12, so D(q) → Σ_μ 12 × q_μ²/2 = 6|q|². Confirmed.
+    Small-q limit: Using 1−cos(x) ≈ x²/2, we get D(q) ≈ Σ_δ (q·δ)²/2.
+    The second moment tensor M_μν = Σ_δ δ_μ δ_ν has diagonal entries
+    M_μμ = 12 (each of 24 roots has 2 nonzero coords ±1, giving 24×2/4=12
+    per axis), so D(q) → Σ_μ 12 × q_μ²/2 = 6|q|².
     """
     phases = q_batch @ roots.T          # (N, 24)
     return np.sum(1.0 - np.cos(phases), axis=1)
