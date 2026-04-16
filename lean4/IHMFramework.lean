@@ -25,3 +25,5 @@ import IHMFramework.NonAbelianGauge
 import IHMFramework.DiracEquation
 import IHMFramework.BornRule
 import IHMFramework.ModeDecomposition
+-- Formal Verification Registry (public registry table + stub axioms)
+import IHMFramework.FormalVerificationRegistry
