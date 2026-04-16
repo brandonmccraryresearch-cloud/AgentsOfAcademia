@@ -18,17 +18,19 @@ A unified field theory framework deriving Standard Model parameters as geometric
 
 ```
 ├── 86.0IRH.md                  # Main manuscript (v86.0)
+├── TECHNICAL_MAP.md             # Technical map & specification flowchart
 ├── lean4/                       # Lean 4 formal verification (311 declarations, 0 sorry)
-│   ├── IHMFramework/            # 15 verified Lean files
+│   ├── IHMFramework/            # 16 Lean source files
 │   │   ├── FormalVerificationRegistry.lean  # Public registry table
 │   │   └── ...
 │   └── lakefile.toml            # Build configuration
 ├── scripts/                     # 66 computational verification scripts (all PASS)
 ├── docs/
 │   └── LeanRegistry.md          # Markdown mirror of Lean registry
-├── agents/                      # AI agent specifications
-└── audit_results/               # Verification audit logs
+└── agents/                      # AI agent specifications
 ```
+
+See [`TECHNICAL_MAP.md`](TECHNICAL_MAP.md) for the full derivation dependency graph, verification architecture, and specification flowchart.
 
 ### Lean 4 Verification
 
