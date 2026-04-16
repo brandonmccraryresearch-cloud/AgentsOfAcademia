@@ -578,22 +578,19 @@ def ps_gauge_boson_thresholds():
         Δb_i = b_i^{PS→SM} - b_i^{SM→SM}
     """
     # W_R gauge bosons: (1,1)_0, (1,1)_{+1}, (1,1)_{-1}
-    # These are SU(2)_R triplet → contribute to running above M_PS
-    # Below M_PS, they decouple, so their effect is a threshold correction
-    #   Δα₁⁻¹ = -(2/3 × 2)/(2π) × ln(M_PS/M_Z) from Y=±1 modes
-    # For the beta function matching:
+    # These are SU(2)_R triplet → contribute to running above M_PS.
+    # Below M_PS they decouple. However, W_R is SU(2)_R, not U(1)_Y;
+    # its effect on SM couplings enters through the PS→SM matching
+    # relation α₁⁻¹ = (2/5)α_{2R}⁻¹ + (3/5)α₄⁻¹, not as a direct
+    # Δb₁ contribution. Therefore Δb₁(W_R) = 0 in the SM basis.
+    # The proper treatment uses PS beta functions above M_PS and SM
+    # beta functions below; the threshold correction is the mismatch
+    # at the matching point.
     db_wr = np.array([
-        (3.0/5) * (2.0/3) * 2.0,  # Y²=1 for W_R^±, gauge boson pf=2/3×2=4/3... 
-        0.0,                        # SU(2)_L singlet
-        0.0,                        # SU(3) singlet
+        0.0,  # No direct U(1)_Y contribution (enters via matching)
+        0.0,  # SU(2)_L singlet
+        0.0,  # SU(3) singlet
     ])
-    # More precisely, the W_R contributes to U(1)_Y running only through
-    # its mixing, which at tree level gives:
-    # Δb₁(W_R) = 0 (W_R is SU(2)_R not U(1)_Y; its effect enters
-    #             through the matching α₁⁻¹ = (2/5)α_{2R}⁻¹ + (3/5)α₄⁻¹)
-    # The proper treatment is to use PS beta functions above M_PS
-    # and SM beta functions below. The threshold "correction" is the
-    # mismatch at the matching point.
 
     # Leptoquark gauge bosons: 12 modes from SU(4)→SU(3)×U(1)_{B-L}
     # (3,1)_{2/3} + (3̄,1)_{-2/3} + ... = 12 gauge bosons
