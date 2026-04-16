@@ -17,7 +17,7 @@ A unified field theory framework deriving Standard Model parameters as geometric
 ### Repository Structure
 
 ```
-├── 86.0IRH.md                  # Main manuscript (v86.0)
+├── 87.0IRH.md                  # Main manuscript (v87.0)
 ├── TECHNICAL_MAP.md             # Technical map & specification flowchart
 ├── lean4/                       # Lean 4 formal verification (311 declarations, 0 sorry)
 │   ├── IHMFramework/            # 16 Lean source files
@@ -52,7 +52,7 @@ python3 scripts/<name>.py    # Each prints PASS/FAIL for each test
 
 ### Manuscript
 
-The current manuscript is [`86.0IRH.md`](86.0IRH.md) (v86.0, April 2026). It contains the complete theoretical framework with derivation grades (A through D) for each claim, enabling readers to assess confidence levels.
+The current manuscript is [`87.0IRH.md`](87.0IRH.md) (v87.0, April 2026). It contains the complete theoretical framework with derivation grades (A through D) for each claim, enabling readers to assess confidence levels.
 
 ### License
 

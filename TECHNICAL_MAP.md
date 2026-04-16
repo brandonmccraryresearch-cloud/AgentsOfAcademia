@@ -83,7 +83,7 @@ This document provides the technical map of the IRH framework: the logical depen
 ```
 AgentsOfAcademia/
 │
-├── 86.0IRH.md                    # Main manuscript (v86.0) — the theory
+├── 87.0IRH.md                    # Main manuscript (v87.0) — the theory
 ├── README.md                      # Project overview + badges
 ├── copilot-instructions.md        # Agent session configuration
 ├── TECHNICAL_MAP.md               # This file
@@ -240,7 +240,7 @@ The following shows which results depend on which prior results. Each node lists
 | Check for sorry | `grep -r "sorry" lean4/IHMFramework/*.lean` | 0 matches (only in comments) |
 | Run all scripts | `for f in scripts/*.py; do python3 "$f"; done` | All PASS |
 | Run single script | `python3 scripts/<name>.py` | PASS/FAIL per test |
-| Build PDF | `cd tools/ && bash build-pdf.sh` | 86.0IRH.pdf |
+| Build PDF | `cd tools/ && bash build-pdf.sh` | 87.0IRH.pdf |
 
 ---
 

@@ -2,7 +2,7 @@
 # BUILD PDF — IRH Manuscript
 # ==============================================================================
 #
-# Converts 86.0IRH.md to a professionally formatted PDF with MathJax-rendered
+# Converts 87.0IRH.md to a professionally formatted PDF with MathJax-rendered
 # equations and uploads it as a downloadable GitHub Actions artifact.
 #
 # Pipeline:
@@ -24,7 +24,7 @@ on:
       manuscript:
         description: "Manuscript file to convert (relative to repo root)"
         required: false
-        default: "86.0IRH.md"
+        default: "87.0IRH.md"
         type: string
       retention_days:
         description: "Artifact retention period (days)"
@@ -34,7 +34,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "86.0IRH.md"
+      - "87.0IRH.md"
       - "tools/template.html"
       - "tools/build-pdf.sh"
       - "tools/html-to-pdf.js"
@@ -122,7 +122,7 @@ jobs:
       # ----------------------------------------------------------------
       - name: Convert markdown to HTML
         run: |
-          MANUSCRIPT="${{ github.event.inputs.manuscript || '86.0IRH.md' }}"
+          MANUSCRIPT="${{ github.event.inputs.manuscript || '87.0IRH.md' }}"
           BASENAME="$(basename "$MANUSCRIPT" .md)"
 
           pandoc "$MANUSCRIPT" \
