@@ -122,7 +122,7 @@ def build_projectors(roots):
 
     # Translational projector
     # B maps 4D spatial displacement to 24D bond stretch: u_j = r·δ̂_j
-    B = roots / np.sqrt(2.0)   # (24, 4), normalised by bond length √2
+    B = roots / np.sqrt(2.0)   # (24, 4), normalized by bond length √2
     BtB = B.T @ B              # 6 I₄ for D₄
     BtB_inv = np.linalg.inv(BtB)
     P_t = B @ BtB_inv @ B.T
@@ -606,6 +606,9 @@ def main():
     # discontinuous jump — this is NOT achievable adiabatically.
 
     # Scan κ₄ < 0 to find maximum ζ on the physical branch
+    # Range extends to -0.15, well past the saddle-node bifurcation at
+    # ~-0.064 where the cubic loses its positive root; beyond that,
+    # anharmonic_zeta returns NaN (lattice unstable).
     kappa4_scan = np.linspace(0, -0.15, 500)
     zeta_scan = []
     for k4 in kappa4_scan:
