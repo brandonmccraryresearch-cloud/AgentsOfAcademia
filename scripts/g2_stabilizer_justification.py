@@ -23,15 +23,15 @@ irreducible representations: 8_v (vector), 8_s (positive spinor), and
 8_c (negative spinor).  When the ARO selects a preferred direction in 8_v,
 the triality symmetry of the D₄ lattice simultaneously selects corresponding
 directions in 8_s and 8_c.  Each selection individually breaks SO(8) to a
-copy of SO(7) — but these are THREE DIFFERENT SO(7) subgroups embedded in
-SO(8).  The physical residual symmetry is their intersection:
+copy of Spin(7) — but these are THREE DIFFERENT Spin(7) subgroups embedded
+in Spin(8).  The physical residual symmetry is their intersection:
 
-    G₂ = SO(7)_v ∩ SO(7)_s ∩ SO(7)_c
+    G₂ = SO(7)_v ∩ Spin(7)_s ∩ Spin(7)_c
 
-This is the precise group-theoretic content: any single stabilizer is SO(7),
-but the triality constraint (which is a geometric property of the D₄ lattice)
-forces all three stabilizers to be imposed simultaneously, leaving only their
-intersection G₂.
+This is the precise group-theoretic content: the vector stabilizer is SO(7),
+while the spinor stabilizers are Spin(7) (the double cover).  The triality
+constraint (a geometric property of the D₄ lattice) forces all three
+stabilizers to be imposed simultaneously, leaving only their intersection G₂.
 
 Equivalently, via triality, the ARO VEV in 8_v maps to a spinor VEV in 8_s,
 whose stabilizer is directly G₂.  The adjoint branching rule under
