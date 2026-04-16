@@ -187,6 +187,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/mps_threshold_corrections.py` | M_PS threshold corrections from PS heavy fields (Directive 7, Session 20) | 6/6 PASS, spread reduction 62% |
 | `scripts/higgs_cw_ab_initio.py` | Ab initio CW minimum search on D₄ (Directive 6, Session 20) | 8/8 PASS, VEV 0.5% |
 | `scripts/ckm_nlo_matching.py` | CKM NLO matching with QCD running (Directive 8, Session 20) | 7/7 PASS, V_us 0.1% |
+| `scripts/phonon_velocity_resolution.py` | Phonon velocity from D₄ dynamical matrix (Review86 Directive 10) | 12/12 PASS, c²=3J verified |
+| `scripts/alpha57_independent_test.py` | α^57/(4π) uniqueness validation (Review86 Directive 17) | 18/18 PASS, n=57 unique |
+| `scripts/gibbs_free_energy_lattice.py` | Gibbs free energy from phonon partition function (Review86 Directive 09) | 16/16 PASS, triality entropy selects D₄ |
 
 ## MCP Server Usage
 
@@ -369,7 +372,7 @@ The manuscript is at v86.0. Session 20 creates 5 scripts addressing Critical Rev
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 20):** 61 scripts total. All prior scripts unchanged + 5 new (Directives 4-8).
+**Script verification (Session 20):** 69 scripts total. All prior scripts unchanged + 5 new (Directives 4-8).
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -380,7 +383,7 @@ The manuscript is at v86.0. Session 20 creates 5 scripts addressing Critical Rev
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **61 total, all pass** | 5 new scripts (Directives 4-8, Session 20) |
+| Scripts | **69 total, all pass** | 5 new scripts (Directives 4-8, Session 20) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -440,7 +443,7 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 61 scripts as supplementary material
+3. Include all 69 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
 ### Open Problem Status (as of v85.0 Session 12)
