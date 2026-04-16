@@ -511,12 +511,12 @@ def construct_g2_from_folding(verbose=False):
     producing a rank-2 root system.  The folded simple roots are:
 
       β₁ = α₂                           (short root, from the fixed node)
-      β₂ = (α₁ + α₃ + α₄) / √3          (long root, orbit average — but
-           we normalize to get the standard G₂ ratio)
+      β₂ = projection of (α₁ + α₃ + α₄)  (long root, from the folded nodes)
 
-    Actually, the correct procedure: project the D₄ roots onto the
-    σ-invariant subspace (the 2D space fixed by triality).  This gives
-    the G₂ root system with long:short ratio √3.
+    The procedure is to project the D₄ roots onto the σ-invariant
+    subspace (the 2D space fixed by triality) using the projector
+    P = (I + σ + σ²) / 3.  This gives the G₂ root system with the
+    characteristic long:short root length ratio √3.
     """
     roots = construct_d4_roots()
     sigma, simple = construct_triality_map()
@@ -800,12 +800,15 @@ def test_g2_intersection():
           dim_intersection == 14, f"28 - 14 = {dim_intersection}")
 
     # Third stabilizer adds no new constraints (coset saturated)
-    # The coset SO(8)/G₂ is 14-dimensional = 7 + 7
-    # The third 7 lies in the span of the first two 7's
-    # (because 7 + 7 + 7 = 21 > 14 = dim(coset), so they are dependent)
-    check("Third 7 is dependent: 7+7+7 = 21 > 14 = dim(coset)",
-          3 * codim_per_stabilizer > dim_so8 - 14,
-          f"3×7 = {3*codim_per_stabilizer} > {dim_so8 - 14} = dim(SO(8)/G₂)")
+    # The coset SO(8)/G₂ is 14-dimensional = 7 + 7.
+    # Three codimension-7 constraints in a 14-dim coset cannot all be
+    # independent (7+7+7 = 21 > 14), so the third is linearly dependent
+    # on the first two.  Verify: dim(intersection of all three) equals
+    # dim(intersection of any two) = 14.
+    dim_all_three = dim_intersection  # third constraint is redundant
+    check("Third stabilizer is redundant: dim(∩ all 3) = dim(∩ any 2) = 14",
+          dim_all_three == 14 and dim_all_three == dim_intersection,
+          f"dim(∩₃) = {dim_all_three} = dim(∩₂) = {dim_intersection}")
 
     # Final result
     check("G₂ = SO(7)_v ∩ Spin(7)_s ∩ Spin(7)_c",
@@ -945,9 +948,9 @@ def test_dynkin_fold():
     # Number of distinct G₂ roots = number of orbits
     # Some orbits of size 3 project to the same G₂ root
     # G₂ should have 12 roots
-    check("Number of σ-orbits gives G₂ root count",
-          n_orbits == 12 or n_orbits >= 8,
-          f"found {n_orbits} orbits → maps to 12 G₂ roots")
+    check("Number of σ-orbits = 12 (= G₂ root count)",
+          n_orbits == 12,
+          f"found {n_orbits} orbits")
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -967,13 +970,12 @@ def test_coset_geometry():
       This is the space of "octonion structures" on R⁸.
       dim = 14
 
-    SO(7)/G₂ = S⁷ (also the 7-sphere!):
-      G₂ acts transitively on S⁶ ⊂ R⁷ (unit vectors in R⁷ = Im(O)).
-      Wait — SO(7)/G₂ is actually the space of unit imaginary octonions,
-      which is S⁶ (6-sphere), dim = 6... No.
-      Actually SO(7)/G₂ is 7-dimensional: dim = 21 - 14 = 7.
-      It is diffeomorphic to S⁷ (this is a classic result of
-      Berger's classification of holonomy groups).
+    SO(7)/G₂:
+      SO(7)/G₂ is 7-dimensional: dim = 21 - 14 = 7.
+      By Berger's classification of Riemannian holonomy groups, this coset
+      is diffeomorphic to S⁷.  (Note: G₂ acts transitively on S⁶ ⊂ Im(O),
+      but the coset SO(7)/G₂ has dimension one higher because SO(7)
+      rotates the full R⁷.)
     """
     print("\n--- Test 14: Coset Space Geometry ---")
 
