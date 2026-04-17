@@ -485,6 +485,14 @@ def hidden_two_loop_corrections(multiplets):
     """
     Compute two-loop Machacek-Vaughn corrections from hidden scalars.
 
+    Parameters:
+        multiplets: list of dicts, each with keys:
+            'su3' (int): SU(3) representation dimension
+            'su2' (int): SU(2) representation dimension
+            'Y' (float): hypercharge
+            'is_fermion' (bool): True for fermions
+            'is_complex' (bool): True for complex scalars
+
     For each scalar multiplet in representation (R₁, R₂, R₃), the
     two-loop contribution to the beta coefficient matrix is:
 
@@ -503,7 +511,9 @@ def hidden_two_loop_corrections(multiplets):
         Machacek & Vaughn, Phys. Rev. D 29, 2929 (1984)
     """
     # Quadratic Casimir eigenvalues C₂(R) for SM gauge groups
+    # SU(3): 1=singlet, 3=fundamental, 6=antisymmetric, 8=adjoint, 10=decuplet
     C2_SU3 = {1: 0.0, 3: 4.0/3, 6: 10.0/3, 8: 3.0, 10: 18.0/5}
+    # SU(2): 1=singlet, 2=fundamental, 3=adjoint, 4=quartet
     C2_SU2 = {1: 0.0, 2: 3.0/4, 3: 2.0, 4: 15.0/4}
 
     db2 = np.zeros((3, 3))
@@ -551,7 +561,7 @@ def rge_two_loop(alpha_inv_0, mu_0, mu_f, b1, b2_matrix,
     dt = (tf - t0) / n_steps
 
     def deriv(a_inv, mu):
-        """Compute dα_i⁻¹/dt at scale μ."""
+        """Compute dα_i⁻¹/dt at scale μ (closure over b1, b2_matrix, thresholds)."""
         b1_eff = b1.copy()
         b2_eff = b2_matrix.copy()
         for M_th, db1_th, db2_th in thresholds:
