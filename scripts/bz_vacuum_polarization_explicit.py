@@ -169,7 +169,8 @@ def Pi0_tensor_mc(roots, n_samples, seed=42):
         inv_D2 = 1.0 / (Dq[good] ** 2)              # (M,)
 
         outer = np.einsum('ni,nj,n->ij', Vq, Vq, inv_D2)
-        outer_sq = np.einsum('ni,nj,n->ij', Vq, Vq, inv_D2 ** 2)
+        # Second moment: E[(V_μ V_ν / D²)²] = E[V_μ² V_ν² / D⁴]
+        outer_sq = np.einsum('ni,nj,n->ij', Vq**2, Vq**2, inv_D2 ** 2)
 
         Pi_sum += outer
         Pi_sq_sum += outer_sq

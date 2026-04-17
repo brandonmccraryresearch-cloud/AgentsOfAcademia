@@ -18,19 +18,26 @@ Physics:
     1. The cubic coupling tensor T_μνρ = Σ_j (δ_j)_μ (δ_j)_ν (δ_j)_ρ = 0
        for ALL μ,ν,ρ (proven here by explicit computation).
 
-    2. ANY vertex with an ODD number of phonon legs vanishes.
+    2. Thus the odd-rank bulk phonon vertex V₃ built from three
+       propagating fluctuation legs vanishes by centrosymmetry.
 
-    3. The coupling λ₃σ(∇u)² contains TWO gradient phonon legs and
-       ONE breathing mode leg → three-leg vertex → VANISHES.
+    3. This does NOT by itself eliminate the Coleman–Weinberg
+       background-field mixing term λ₃σ(∇u)²: when σ is treated as a
+       background/radial field rather than a third propagating phonon,
+       the induced σ–u–u coupling is generally non-zero at finite k.
 
-    4. However, σ² terms (breathing mode self-energy) and σ²(∇u)²
-       quartic couplings do NOT vanish.
+    4. Quartic terms such as σ² and σ²(∇u)² also remain allowed and
+       contribute to the effective potential, but they are not the
+       reason the CW mixing count survives.
 
 Key Result:
-    N_mixing = 0, not 2. The breathing-gradient cubic vertex vanishes
-    identically by centrosymmetry. The correct mode counting is:
-        N_eff = N_breathing(1) + N_gradient(4) + N_quartic_mixing(N_q)
-    where N_q comes from QUARTIC (σ²-type) couplings, not cubic ones.
+    N_mixing = 2 is the correct counting in the CW background-field
+    interpretation. The contradiction is resolved by distinguishing:
+        - V₃ ≡ 0 for the fully dynamical odd-leg phonon vertex, from
+        - non-zero finite-k σ–u–u/background-field mixing in the CW
+          effective action.
+    Accordingly, the effective mode counting used in §VIII.3 keeps the
+    two mixing contributions rather than setting them to zero.
 
 Usage:
     python nmixing_v3_resolution.py
@@ -540,15 +547,18 @@ def main():
 
     # Form factor and vertex
     D_k_mc = np.zeros(N_mc)
-    Gamma_sq = np.zeros(N_mc)
+    Gamma_mc = np.zeros((N_mc, d, d))
     for j in range(z):
         kd = k_mc @ roots[j]
-        cos_kd = np.cos(kd)
-        D_k_mc += 1 - cos_kd
-        # Vertex squared (trace over μ,ν)
-        for mu in range(d):
-            for nu in range(d):
-                Gamma_sq += (roots[j, mu] * roots[j, nu] * (1 - cos_kd))**2
+        root_weight = 1 - np.cos(kd)
+        D_k_mc += root_weight
+
+        # Build Γ_μν(k) = Σ_j δ_jμ δ_jν [1 − cos(k·δ_j)] first,
+        # then form Γ² by tracing Γ·Γ over μ,ν so cross-terms are kept.
+        root_projector = np.outer(roots[j], roots[j])
+        Gamma_mc += root_weight[:, np.newaxis, np.newaxis] * root_projector[np.newaxis, :, :]
+
+    Gamma_sq = np.einsum("nij,nij->n", Gamma_mc, Gamma_mc)
 
     # Avoid division by zero at k=0
     mask = D_k_mc > 1e-10

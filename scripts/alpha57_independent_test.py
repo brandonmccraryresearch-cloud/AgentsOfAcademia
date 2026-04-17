@@ -47,7 +47,7 @@ RHO_LAMBDA_UNCERTAINTY = 0.05e-123     # ~4% uncertainty
 
 # Higgs VEV
 V_HIGGS = 246.22  # GeV
-E_PLANCK = 1.2209e19  # GeV (reduced Planck energy √(ℏc⁵/G))
+E_PLANCK = 1.2209e19  # GeV (unreduced Planck energy √(ℏc⁵/G))
 
 
 def main():

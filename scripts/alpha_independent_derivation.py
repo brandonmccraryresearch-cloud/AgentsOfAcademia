@@ -214,7 +214,8 @@ def compute_Pi0_tensor(roots, n_samples, seed=42):
         inv_D2 = 1.0 / (Dq[good] ** 2)              # (M,)
 
         outer = np.einsum('ni,nj,n->ij', Vq, Vq, inv_D2)
-        outer_sq = np.einsum('ni,nj,n->ij', Vq, Vq, inv_D2 ** 2)
+        # Second moment: E[(V_μ V_ν / D²)²] = E[V_μ² V_ν² / D⁴]
+        outer_sq = np.einsum('ni,nj,n->ij', Vq**2, Vq**2, inv_D2 ** 2)
 
         Pi_sum += outer
         Pi_sq_sum += outer_sq
@@ -519,12 +520,18 @@ def test_normalization_R(Pi0, R_needed):
           f"gap = {gap_WG2:.2f}%")
 
     # Test 19: R is NOT uniquely determined (honest assessment)
-    # Multiple candidates within 10% → normalization is ambiguous
-    close_count = sum(1 for val in candidates.values()
-                      if abs(val / R_needed - 1.0) < 0.10)
+    # Count only distinct numeric candidates within 10% so duplicate values
+    # (e.g. different names for the same number) do not create fake ambiguity.
+    unique_close_values = []
+    for val in candidates.values():
+        if abs(val / R_needed - 1.0) < 0.10:
+            if not any(np.isclose(val, seen, rtol=0.0, atol=1e-12)
+                       for seen in unique_close_values):
+                unique_close_values.append(val)
+    close_count = len(unique_close_values)
     check("Test 19: Multiple R candidates within 10% (normalization not unique)",
           close_count >= 2,
-          f"{close_count} candidates within 10%")
+          f"{close_count} distinct candidates within 10%")
 
     return best_name, best_gap
 
