@@ -518,7 +518,7 @@ def main():
     print(f"    D₄ entropy S = {D4_entropy:.4f} vs max = {max_entropy:.4f} [{status}]")
 
     # ---------------------------------------------------------------
-    # TEST 12: Test proposed Gibbs formula g(Λ) = z/2 - ln|W| - |Out|
+    # TEST 12: Test proposed Gibbs formula g(Λ) = z/2 - ln|W| - ln|Out|
     # ---------------------------------------------------------------
     test_num += 1
     print(f"\nTest {test_num}: Proposed Gibbs formula g(Λ) = z/2 - ln|W| - ln|Out|")
@@ -674,22 +674,21 @@ def main():
 
     print("""
 FINDINGS:
-    1. The formula g(Λ) = z/2 - ln|W| - |Out| correctly identifies D₄ as
-       the minimum among 4D root lattices (gap 2.47 to next-best A₄).
-    2. D₄'s advantage in the formula comes from |Out|=6 (triality).
-    3. HOWEVER: the pure phonon Helmholtz free energy F selects A₄, not D₄.
+    1. The dimensionally consistent formula g(Λ) = z/2 - ln|W| - ln|Out|
+       selects A₄ as the minimum among 4D root lattices, NOT D₄.
+    2. D₄'s triality entropy ln|S₃| = ln(6) ≈ 1.79 is insufficient to
+       overcome A₄'s energetic advantage (z=20 vs 24).
+    3. The pure phonon Helmholtz free energy F also selects A₄, not D₄.
        A₄ has lower zero-point energy due to fewer roots (20 vs 24).
-    4. This means D₄ selection REQUIRES the automorphism entropy term.
-       Phonon thermodynamics alone is insufficient — the |Out| contribution
-       (triality) is essential for D₄ to be the global minimum.
-    5. The formula g includes both energetic (z/2) and entropic (-ln|W|-|Out|)
-       contributions. The energy term favors low z (A₄), while the entropy
-       term favors high symmetry (D₄ via triality).
-    6. CONCLUSION: D₄ IS the minimum among 4D lattices in the Gibbs formula,
-       but ONLY because triality (|Out|=S₃) provides sufficient configurational
-       entropy to overcome A₄'s lower zero-point energy. This is a physically
-       meaningful result: triality is not merely a mathematical curiosity but
-       a thermodynamic advantage.
+    4. D₄ selection therefore REQUIRES the full multi-factor analysis
+       (d4_uniqueness.py): the 5-design property, kissing number, and
+       cross-dimensional Gibbs comparison jointly select D₄.
+    5. The formula g includes both energetic (z/2) and entropic
+       (-ln|W| - ln|Out|) contributions. Both favor A₄ at d=4.
+    6. CONCLUSION: The simple Gibbs formula does NOT select D₄. D₄
+       selection is a genuinely multi-factor result — triality contributes
+       but is not the sole mechanism. The 5-design property and lattice
+       packing optimality (kissing number) are essential co-selectors.
     """)
 
     if args.strict and failures:

@@ -481,30 +481,44 @@ def sm_machacek_vaughn_matrix():
     ])
 
 
-def hidden_two_loop_corrections(db_hidden):
+def hidden_two_loop_corrections(multiplets):
     """
-    Estimate two-loop corrections from hidden sector.
+    Compute two-loop Machacek-Vaughn corrections from hidden scalars.
 
-    The two-loop matrix for hidden scalars is proportional to the
-    product of one-loop beta coefficients:
-        Δb_{ij}^{hidden} ~ db_i × db_j / (some group factor)
+    For each scalar multiplet in representation (R₁, R₂, R₃), the
+    two-loop contribution to the beta coefficient matrix is:
 
-    For a leading-order estimate, the hidden sector two-loop matrix
-    scales as the outer product of the one-loop hidden contributions,
-    modulated by the appropriate group Casimir factors.
+        Δb_{ij}^{(2)} = Σ_S Δb_i^{(S)} × C₂_j(R_S)
+
+    where Δb_i^{(S)} is the one-loop contribution of scalar S to
+    gauge coupling i, and C₂_j(R_S) is the quadratic Casimir of the
+    scalar's representation under gauge group j.
+
+    This captures the correct group-theory structure: SU(2)_L singlets
+    have C₂(SU2) = 0, so they contribute zero to the (i,2) column,
+    while SU(3) triplets/octets contribute via C₂(3) = 4/3, C₂(8) = 3.
+
+    References:
+        Machacek & Vaughn, Nucl. Phys. B 222, 83 (1983), Eq. (A.2)
+        Machacek & Vaughn, Phys. Rev. D 29, 2929 (1984)
     """
-    # The dominant two-loop correction from hidden scalars is
-    # proportional to the Casimir eigenvalues C₂(R) of each hidden rep
-    # For SU(3) triplets: C₂(3) = 4/3
-    # For SU(3) octets: C₂(8) = 3
-    # For SU(2) doublets: C₂(2) = 3/4
-    # For SU(2) singlets: C₂(1) = 0
+    # Quadratic Casimir eigenvalues C₂(R) for SM gauge groups
+    C2_SU3 = {1: 0.0, 3: 4.0/3, 6: 10.0/3, 8: 3.0, 10: 18.0/5}
+    C2_SU2 = {1: 0.0, 2: 3.0/4, 3: 2.0, 4: 15.0/4}
 
-    # Simple estimate: Δb_{ij}^{hidden} ≈ Σ_h Δb_i^{(h)} × C₂_j(R_h)
-    # This is a qualitative approximation — the full calculation would
-    # require explicit two-loop Feynman diagrams for each hidden multiplet
-    db_two_loop = np.outer(db_hidden, db_hidden) * 0.5
-    return db_two_loop
+    db2 = np.zeros((3, 3))
+    for m in multiplets:
+        db_i = compute_delta_b(m)
+        # GUT-normalized U(1) Casimir: C₂ = (3/5) × Y²
+        c2_1 = (3.0 / 5.0) * m['Y']**2
+        c2_2 = C2_SU2.get(m['su2'], 0.0)
+        c2_3 = C2_SU3.get(m['su3'], 0.0)
+        c2 = np.array([c2_1, c2_2, c2_3])
+
+        # Two-loop: Δb_{ij} = Δb_i × C₂_j (per-multiplet Casimir weighting)
+        db2 += np.outer(db_i, c2)
+
+    return db2
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -514,7 +528,10 @@ def hidden_two_loop_corrections(db_hidden):
 def rge_two_loop(alpha_inv_0, mu_0, mu_f, b1, b2_matrix,
                  thresholds=None, n_steps=20000):
     """
-    Two-loop RGE integration from mu_0 to mu_f.
+    Two-loop RGE integration from mu_0 to mu_f using 4th-order Runge-Kutta.
+
+    The RGE for inverse couplings in log-scale t = ln(μ):
+        dα_i⁻¹/dt = -b_i/(2π) - Σ_j b_{ij}/(8π²) × α_j
 
     Parameters:
         alpha_inv_0: initial α_i⁻¹ at mu_0
@@ -533,12 +550,8 @@ def rge_two_loop(alpha_inv_0, mu_0, mu_f, b1, b2_matrix,
     tf = np.log(mu_f)
     dt = (tf - t0) / n_steps
 
-    a_inv = np.array(alpha_inv_0, dtype=np.float64)
-
-    for step in range(n_steps):
-        t = t0 + step * dt
-        mu = np.exp(t)
-
+    def deriv(a_inv, mu):
+        """Compute dα_i⁻¹/dt at scale μ."""
         b1_eff = b1.copy()
         b2_eff = b2_matrix.copy()
         for M_th, db1_th, db2_th in thresholds:
@@ -546,16 +559,28 @@ def rge_two_loop(alpha_inv_0, mu_0, mu_f, b1, b2_matrix,
                 b1_eff = b1_eff + db1_th
                 b2_eff = b2_eff + db2_th
 
-        alpha = 1.0 / np.maximum(a_inv, 1e-10)  # guard against zeros
+        alpha = 1.0 / np.maximum(a_inv, 1e-10)
 
-        # One-loop contribution
-        da_inv = -b1_eff / (2.0 * np.pi) * dt
-        # Two-loop contribution
+        da = -b1_eff / (2.0 * np.pi)
         for i in range(3):
             for j in range(3):
-                da_inv[i] -= b2_eff[i, j] / (8.0 * np.pi**2) * alpha[j] * dt
+                da[i] -= b2_eff[i, j] / (8.0 * np.pi**2) * alpha[j]
+        return da
 
-        a_inv = a_inv + da_inv
+    a_inv = np.array(alpha_inv_0, dtype=np.float64)
+
+    for step in range(n_steps):
+        t = t0 + step * dt
+        mu = np.exp(t)
+        mu_half = np.exp(t + 0.5 * dt)
+        mu_next = np.exp(t + dt)
+
+        k1 = deriv(a_inv, mu)
+        k2 = deriv(a_inv + 0.5 * dt * k1, mu_half)
+        k3 = deriv(a_inv + 0.5 * dt * k2, mu_half)
+        k4 = deriv(a_inv + dt * k3, mu_next)
+
+        a_inv = a_inv + (dt / 6.0) * (k1 + 2*k2 + 2*k3 + k4)
 
     return a_inv
 
@@ -807,8 +832,9 @@ def main():
           f"b₂ = {b1_extended[1]:.4f},  "
           f"b₃ = {b1_extended[2]:.4f}")
 
-    # Two-loop hidden sector corrections (estimated)
-    db2_hidden = hidden_two_loop_corrections(total_db_all)
+    # Two-loop hidden sector corrections (Machacek-Vaughn with Casimirs)
+    all_threshold_multiplets = hidden['multiplets'] + ps_higgs['multiplets']
+    db2_hidden = hidden_two_loop_corrections(all_threshold_multiplets)
     b2_extended = b2_sm + db2_hidden
 
     print(f"\n  Extended two-loop matrix (SM + hidden corrections):")
@@ -903,7 +929,7 @@ def main():
 
     thresholds_full = list(thresholds_g2)  # copy G₂ thresholds
     thresholds_full.append(
-        (M_PS, total_db_ps, hidden_two_loop_corrections(total_db_ps)))
+        (M_PS, total_db_ps, hidden_two_loop_corrections(ps_higgs['multiplets'])))
 
     alpha_inv_full = rge_two_loop(
         alpha_inv_mz, M_Z, M_LATTICE,
@@ -996,7 +1022,7 @@ def main():
         m_ps_scan = 10.0**log_mps
         thresholds_scan = list(thresholds_g2)
         thresholds_scan.append(
-            (m_ps_scan, total_db_ps, hidden_two_loop_corrections(total_db_ps)))
+            (m_ps_scan, total_db_ps, hidden_two_loop_corrections(ps_higgs['multiplets'])))
         alpha_inv_scan = rge_two_loop(
             alpha_inv_mz, M_Z, M_LATTICE,
             b1_sm, b2_sm,
@@ -1020,7 +1046,7 @@ def main():
     m_ps_opt = 10.0**best_log_mps_scan
     thresholds_opt = list(thresholds_g2)
     thresholds_opt.append(
-        (m_ps_opt, total_db_ps, hidden_two_loop_corrections(total_db_ps)))
+        (m_ps_opt, total_db_ps, hidden_two_loop_corrections(ps_higgs['multiplets'])))
     alpha_inv_opt = rge_two_loop(
         alpha_inv_mz, M_Z, M_LATTICE,
         b1_sm, b2_sm,
@@ -1053,7 +1079,7 @@ def main():
         m_ps_safe = 10.0**LOG10_MPS_OPTIMAL
         thresholds_safe.append(
             (m_ps_safe, total_db_ps,
-             hidden_two_loop_corrections(total_db_ps)))
+             hidden_two_loop_corrections(ps_higgs['multiplets'])))
         alpha_inv_safe = rge_two_loop(
             alpha_inv_mz, M_Z, M_LATTICE,
             b1_sm, b2_sm,
