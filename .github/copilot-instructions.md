@@ -202,6 +202,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/proton_decay_mps_resolution.py` | Proton decay M_PS constraint (Review86 Directive 12) | 8/8 PASS, CW M_PS=10^7.4 excluded, grade D+ |
 | `scripts/d4_feynman_rules.py` | D₄ lattice QED Feynman rules (Review86 Directive 14) | 36/36 PASS, D=J(k²δ+2k⊗k), 104× artifact suppression |
 | `scripts/cosmo_constant_spectral_derivation.py` | α^57 spectral derivation assessment (Review86 Directive 16) | 14/14 PASS, ~11% match (postdiction), n=57 unique |
+| `scripts/alpha_formula_alternatives.py` | α formula alternatives search (Review86 Directive 24) | 18/18 PASS, MOTIVATED CONJECTURE, 14 sub-ppm alternatives |
+| `scripts/comprehensive_parameter_audit.py` | Comprehensive parameter audit (Review86 Directive 26) | 16/16 PASS, C+ empirical grounding (GPA 2.33/4.0) |
+| `scripts/falsifiable_predictions.py` | Falsifiable prediction set (Review86 Directive 27) | 14/14 PASS, 3 high-quality calibration-free predictions |
 
 ## MCP Server Usage
 
@@ -340,11 +343,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-18 — Session 30: Review86 Directives 12, 14, 16)
+### Current State (v87.0, 2026-04-18 — Session 31: Review86 Directives 24, 26, 27)
 
-The manuscript is at v87.0. Session 30 completes 3 Review86 directives: proton decay M_PS constraint analysis (Directive 12), explicit D₄ lattice QED Feynman rules (Directive 14), and cosmological constant α^57 spectral derivation assessment (Directive 16). Meta_agent with MCP math tools used for theoretical verification and honest assessment.
+The manuscript is at v87.0. Session 31 completes 3 Review86 directives: α formula alternatives test (Directive 24), comprehensive parameter audit (Directive 26), and falsifiable prediction set (Directive 27). MCP math tools used for verification. Total: 20 of 27 directives complete.
 
-**Session 30 results:**
+**Session 31 results:**
+- **α formula alternatives (Directive 24):** `scripts/alpha_formula_alternatives.py` — 18/18 PASS. Exhaustive search over 11,250 group-theoretic expressions. 14 sub-ppm alternatives found; 2 within 100 ppb. (28,14) = (dim SO(8), dim G₂) is the best N=137 match at 27.3 ppb BUT not uniquely selected. Verdict: MOTIVATED CONJECTURE. Grade: B.
+- **Comprehensive parameter audit (Directive 26):** `scripts/comprehensive_parameter_audit.py` — 16/16 PASS. 26 parameters tracked: 0 primitive, 8 derived-exact, 10 derived-approx, 2 calibrated, 4 ad-hoc, 2 undetermined. Parsimony: conservative 1.7, generous 5.0 (manuscript claims 2.5-5.0). Tautological derivations (c, ℏ, G) correctly identified. Overall empirical grounding: C+ (GPA 2.33/4.0).
+- **Falsifiable predictions (Directive 27):** `scripts/falsifiable_predictions.py` — 14/14 PASS. 10 candidates scored on derivation quality, precision, discriminating power, testability (0-3 each). Top 5: (A) θ₀=2/9 [12/12], (B) δ_CKM=2π/(3√3) [10/12], (C) sin²θ_W=3/13 [8/12], (D) ν=1/4 [10/12], (E) lepton masses [11/12]. 3 high-quality calibration-free predictions identified. Draft PRL abstract generated.
+- **MCP verification:** math-mcp confirmed Koide identities (Σcos=0, Σcos²=3/2), CKM phase 2π/(3√3)=2√3π/9, α formula 14/(392-π).
+- **Total:** 86 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 30 results (prior session):**
 - **Proton decay M_PS constraint (Directive 12):** `scripts/proton_decay_mps_resolution.py` — 8/8 PASS. CW analytic M_PS = 10^{7.4} GeV is EXCLUDED by Super-K (7.6 decades too low). Threshold-corrected M_PS = 10^{15.5} marginally above Super-K bound (factor ~10×). Gauge coupling spread ~100 units at proton-safe scale — unification NOT achieved (Δb₂=0 obstruction). Grade: D+. Classification: CALIBRATED.
 - **D₄ Feynman rules (Directive 14):** `scripts/d4_feynman_rules.py` — 36/36 PASS. Complete Feynman rules from lattice action: D_αβ(k) = J(k²δ_αβ + 2k_αk_β) in long-wavelength limit (verified by MCP math T_abcd tensor). 3 transverse modes ω²=Jk², 1 longitudinal ω²=3Jk². Vertex Γ_μ → (2p+q)_μ in continuum (QED vertex). 5-design suppresses artifacts 104× vs Z⁴. Self-energy UV-finite. Grade: B+. Classification: DERIVED.
 - **Cosmological constant (Directive 16):** `scripts/cosmo_constant_spectral_derivation.py` — 14/14 PASS. **CRITICAL CORRECTION:** α^57/(4π) = 1.262×10^{-123} matches observational ρ_Λ/ρ_P = 1.134×10^{-123} to ~11% (NOT 0.2% as previously claimed — earlier comparison was against predicted value, not observed). n=57 uniquely selected. Triality averaging gives NO suppression (all sectors identical). Formula is postdiction, not derivation. Grade: C+. Classification: POSTDICTION.
@@ -416,7 +426,7 @@ The manuscript is at v87.0. Session 30 completes 3 Review86 directives: proton d
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 30):** 83 scripts total. All prior scripts unchanged + 3 new (Directives 12, 14, 16). Cosmological constant precision corrected from 0.2% to ~11%.
+**Script verification (Session 31):** 86 scripts total. All prior scripts unchanged + 3 new (Directives 24, 26, 27). α formula verdict: MOTIVATED CONJECTURE. Overall empirical grounding: C+ (GPA 2.33/4.0).
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -427,7 +437,7 @@ The manuscript is at v87.0. Session 30 completes 3 Review86 directives: proton d
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **83 total, all pass** | 3 new scripts (Directives 12, 14, 16) |
+| Scripts | **86 total, all pass** | 3 new scripts (Directives 24, 26, 27) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -447,7 +457,9 @@ The manuscript is at v87.0. Session 30 completes 3 Review86 directives: proton d
 | Higgs VEV | **v = E_P α⁹ π⁵(9/8); CW Z_λ=0.21 (S8)** | RG-improved; hierarchy self-consistent |
 | 4D simulation | **Anharmonic + scaling (Session 11)** | κ₄ terms, vectorized, 64⁴ extrapolation |
 | Regge continuum limit | **7 theorems, 0 sorry (Session 11)** | O(a₀²) convergence, 5-design improvement |
-| Parsimony | **2.5–5.0 (corrected)** | All references consistent |
+| Parsimony | **Conservative 1.7, generous 5.0 (S31 audit)** | Independent predictions / effective inputs |
+| α formula | **MOTIVATED CONJECTURE (S31); 14 sub-ppm alternatives** | 27 ppb match, but not uniquely selected |
+| Empirical grounding | **C+ (GPA 2.33/4.0) — S31 honest assessment** | Strong in Koide/GR, weak in unification/inflation |
 | Overall confidence | **94%** | +1% from Session 20 (N-N, CKM NLO, CW ab initio) |
 
 ### Priority 1: Close the α BZ Integral (gap now 0.044%)
@@ -510,7 +522,7 @@ When Priorities 1-4 close:
 | 14 | D₄ uniqueness | **GLOBAL MIN d=2–8 (Session 7)** | Complete; gap=0.825 |
 | 15 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
 | 16 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
-| 17 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
+| 17 | Parsimony ratio | **Audit complete: conservative 1.7, generous 5.0 (S31)** | Complete; parameter classification done |
 | 18 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Complete |
 | 19 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
 | 20 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
@@ -518,4 +530,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v87.0 complete; 80 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v87.0 complete; 86 scripts, 311 declarations** | Priority 2,4 closure → submit |

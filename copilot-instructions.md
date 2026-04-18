@@ -289,17 +289,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-16 — Session 27: Review86 Directives)
+### Current State (v87.0, 2026-04-18 — Session 31: Review86 Directives 24, 26, 27)
 
-The manuscript is at v87.0. Session 27 completes Review86 directives 18 and 20. 78 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+The manuscript is at v87.0. Session 31 completes Review86 directives 24, 26, and 27. 86 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 20 of 27 Review86 directives complete.
 
-**Session 27 results:**
-- **Two-loop beta hidden DOF (Directive 18):** `scripts/two_loop_beta_hidden_dof.py` — 31/31 PASS. Full Machacek-Vaughn matrix with 20 hidden G₂ modes. Grade: D→D+.
-- **Independent α derivation (Directive 20):** `scripts/alpha_independent_derivation.py` — 25/25 PASS. Multi-channel BZ integral hierarchy. Grade: C+→B.
+**Session 31 results:**
+- **α formula alternatives (Directive 24):** `scripts/alpha_formula_alternatives.py` — 18/18 PASS. MOTIVATED CONJECTURE verdict. 14 sub-ppm alternatives exist.
+- **Comprehensive parameter audit (Directive 26):** `scripts/comprehensive_parameter_audit.py` — 16/16 PASS. Overall empirical grounding: C+ (GPA 2.33/4.0).
+- **Falsifiable predictions (Directive 27):** `scripts/falsifiable_predictions.py` — 14/14 PASS. 3 high-quality calibration-free predictions.
 
-**Review86 directive status:** 12 of 27 complete (01, 02, 03, 04, 05, 06, 09, 10, 11, 17, 18, 20).
+**Review86 directive status:** 20 of 27 complete (01-06, 08-14, 16-18, 20, 24, 26, 27).
 
-**Script verification:** 78 scripts total, all pass.
+**Script verification:** 86 scripts total, all pass.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
