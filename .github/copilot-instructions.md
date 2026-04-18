@@ -155,7 +155,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/d4_uniqueness.py` | D₄ Gibbs free energy minimum among 4D root lattices + cross-dim d=2–8 | D₄ global minimum, gap=0.825 |
 | `scripts/two_loop_unification_v3.py` | Pati-Salam unification (Session 4) | Spread 17→0.4 units |
 | `scripts/lattice_g_minus_2.py` | Anomalous magnetic moment on D₄ (Session 4) | Schwinger α/(2π) verified |
-| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) matches 0.2% |
+| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) ~11% match (corrected S30) |
 | `scripts/higgs_vev_derivation.py` | Higgs VEV derivation attempt (Session 4) | Fitting, not derived |
 | `scripts/bz_two_loop.py` | Two-loop BZ integral: V₃≡0 + self-energy (Session 6) | Gap 1.7%→0.95% |
 | `scripts/symmetry_breaking_cascade.py` | SO(8)→G₂→SU(3)→SM algebraic cascade (Session 6) | 42/42 PASS |
@@ -199,6 +199,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/g2_stabilizer_justification.py` | G₂ stabilizer from triality equivariance (Review86 Directive 11) | 87/87 PASS, G₂=∩ three Spin(7) |
 | `scripts/koide_geometric_eigenvalue.py` | θ₀=2/9 as geometric eigenvalue (Review86 Directive 08) | 20/22 PASS (2 expected FAIL), Berry holonomy confirms 2/9, discrepancy 0.02% |
 | `scripts/aro_spatial_uniformity.py` | ARO spatial uniformity resolution (Review86 Directive 13) | 22/22 PASS, description error not physics error |
+| `scripts/proton_decay_mps_resolution.py` | Proton decay M_PS constraint (Review86 Directive 12) | 8/8 PASS, CW M_PS=10^7.4 excluded, grade D+ |
+| `scripts/d4_feynman_rules.py` | D₄ lattice QED Feynman rules (Review86 Directive 14) | 36/36 PASS, D=J(k²δ+2k⊗k), 104× artifact suppression |
+| `scripts/cosmo_constant_spectral_derivation.py` | α^57 spectral derivation assessment (Review86 Directive 16) | 14/14 PASS, ~11% match (postdiction), n=57 unique |
 
 ## MCP Server Usage
 
@@ -337,16 +340,17 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-18 — Session 29: Review86 Directives 08, 13)
+### Current State (v87.0, 2026-04-18 — Session 30: Review86 Directives 12, 14, 16)
 
-The manuscript is at v87.0. Session 29 completes 2 Review86 directives: θ₀ = 2/9 geometric eigenvalue verification (Directive 08) and ARO spatial uniformity resolution (Directive 13). Meta_agent with MCP math tools used for theoretical work.
+The manuscript is at v87.0. Session 30 completes 3 Review86 directives: proton decay M_PS constraint analysis (Directive 12), explicit D₄ lattice QED Feynman rules (Directive 14), and cosmological constant α^57 spectral derivation assessment (Directive 16). Meta_agent with MCP math tools used for theoretical verification and honest assessment.
 
-**Session 29 results:**
-- **Koide geometric eigenvalue (Directive 08):** `scripts/koide_geometric_eigenvalue.py` — 20/22 PASS (2 expected FAIL). Berry connection A_k = -1 (constant) on triality eigenstates; holonomy ∮A dθ = 2π/3; θ₀ = (2π/3)/(3π) = 2/9 confirmed. Discrepancy revised from 0.8% to **0.02%** using PDG masses. EM radiative correction Δθ₀ = -(α/π)ln(v/m_τ) ≈ -0.012 WORSENS agreement (2 expected FAIL). Koide circulant and triality operator share eigenbasis (both circulant). Grade: A− (maintained; discrepancy tightened 40×).
-- **ARO spatial uniformity (Directive 13):** `scripts/aro_spatial_uniformity.py` — 22/22 PASS. Resolves the inconsistency: the ARO (k=0 mode) has ∇φ = 0, so cannot exert differential inter-site force. The M*Ω_P²u term is the on-site harmonic restoring potential from 24 nearest-neighbor springs, NOT an ARO gradient force. This is a description error, not a physics error. SVEA derivation (§VI.2-3) is unaffected — Ω_P² terms cancel regardless of interpretation.
-- **Manuscript updated:** §I.4 (ARO driving force clarification), §III.6.2 (Berry connection, tightened discrepancy, circulant structure). Script counts updated 78→80.
-- **MCP verification:** math-mcp confirmed (2π/3)/(3π) = 2/9, cube roots of unity = {1, e^{±2πi/3}}.
-- **Total:** 80 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+**Session 30 results:**
+- **Proton decay M_PS constraint (Directive 12):** `scripts/proton_decay_mps_resolution.py` — 8/8 PASS. CW analytic M_PS = 10^{7.4} GeV is EXCLUDED by Super-K (7.6 decades too low). Threshold-corrected M_PS = 10^{15.5} marginally above Super-K bound (factor ~10×). Gauge coupling spread ~100 units at proton-safe scale — unification NOT achieved (Δb₂=0 obstruction). Grade: D+. Classification: CALIBRATED.
+- **D₄ Feynman rules (Directive 14):** `scripts/d4_feynman_rules.py` — 36/36 PASS. Complete Feynman rules from lattice action: D_αβ(k) = J(k²δ_αβ + 2k_αk_β) in long-wavelength limit (verified by MCP math T_abcd tensor). 3 transverse modes ω²=Jk², 1 longitudinal ω²=3Jk². Vertex Γ_μ → (2p+q)_μ in continuum (QED vertex). 5-design suppresses artifacts 104× vs Z⁴. Self-energy UV-finite. Grade: B+. Classification: DERIVED.
+- **Cosmological constant (Directive 16):** `scripts/cosmo_constant_spectral_derivation.py` — 14/14 PASS. **CRITICAL CORRECTION:** α^57/(4π) = 1.262×10^{-123} matches observational ρ_Λ/ρ_P = 1.134×10^{-123} to ~11% (NOT 0.2% as previously claimed — earlier comparison was against predicted value, not observed). n=57 uniquely selected. Triality averaging gives NO suppression (all sectors identical). Formula is postdiction, not derivation. Grade: C+. Classification: POSTDICTION.
+- **Manuscript updated:** §IV.5.8 (proton decay), §VI.7.3 (Feynman rules), §V.5.4 (cosmo constant assessment). Cosmological constant precision corrected from "1.5%" to "~11%" throughout (8 instances). Script counts updated 80→83.
+- **MCP verification:** math-mcp confirmed T_abcd = 4(δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc), D eigenvalues k² (×3) and 3k² (×1), α^57/(4π) = 1.262×10^{-123}.
+- **Total:** 83 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
 
 **Session 27 results (prior session):**
 - **Two-loop beta hidden DOF (Directive 18):** `scripts/two_loop_beta_hidden_dof.py` — 31/31 PASS. Full Machacek-Vaughn matrix with 20 hidden G₂ modes. Fundamental obstacle: all hidden modes are SU(2)_L singlets (Δb₂=0). Hidden DOF reduce spread by only 0.6%. PS Higgs (15,2,2) gives 4.3% improvement. Grade: D→D+.
@@ -412,7 +416,7 @@ The manuscript is at v87.0. Session 29 completes 2 Review86 directives: θ₀ = 
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 29):** 80 scripts total. All prior scripts unchanged + 2 new (Directives 08, 13).
+**Script verification (Session 30):** 83 scripts total. All prior scripts unchanged + 3 new (Directives 12, 14, 16). Cosmological constant precision corrected from 0.2% to ~11%.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -423,7 +427,7 @@ The manuscript is at v87.0. Session 29 completes 2 Review86 directives: θ₀ = 
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **80 total, all pass** | 2 new scripts (Directives 08, 13) |
+| Scripts | **83 total, all pass** | 3 new scripts (Directives 12, 14, 16) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -438,8 +442,8 @@ The manuscript is at v87.0. Session 29 completes 2 Review86 directives: θ₀ = 
 | Higgs quartic Z_λ | **Z_λ = 0.21; ab initio CW minimum 0.5% (S20)** | Multi-threshold matching; hierarchy exact |
 | Two-loop unification | **Spread 0.4 units; M_PS ~ 10¹⁴ derived (S8)** | 4-decade tension with scan; proton stability ✅ |
 | M_PS tension | **Gap reduced; threshold corrections 62% (S20)** | Proton decay safe at 10^{15.5} |
-| Proton decay | **τ_p too short at M_PS=3.5e12 (Session 11)** | Constrains M_PS > 2×10¹⁴ with D₄ |
-| Cosmological constant | **α⁵⁷/(4π) matches to 0.2%; BZ integral + triality (S8)** | Spectral density computed + triality averaged |
+| Proton decay | **CW M_PS=10^7.4 EXCLUDED; threshold 10^{15.5} marginal (S30)** | Constrains M_PS > 10^{15}; unification NOT achieved |
+| Cosmological constant | **α⁵⁷/(4π) matches to ~11% (S30 corrected); postdiction** | n=57 uniquely selected; triality averaging gives NO suppression |
 | Higgs VEV | **v = E_P α⁹ π⁵(9/8); CW Z_λ=0.21 (S8)** | RG-improved; hierarchy self-consistent |
 | 4D simulation | **Anharmonic + scaling (Session 11)** | κ₄ terms, vectorized, 64⁴ extrapolation |
 | Regge continuum limit | **7 theorems, 0 sorry (Session 11)** | O(a₀²) convergence, 5-design improvement |
@@ -494,12 +498,12 @@ When Priorities 1-4 close:
 | 2 | M_PS tension | **Threshold corrections reduce spread 62% (Session 20)** | Two-loop PS threshold matching |
 | 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
 | 4 | CKM magnitudes | **V_us=0.2246 (0.1%), NLO matching, 7/7 PASS (Session 20)** | V_cb 23% off (NNLO needed) |
-| 5 | Proton decay | **Constrains M_PS > 2×10¹⁴ (Session 11)** | Resolves M_PS in favor of CW analytic |
+| 5 | Proton decay | **CW M_PS=10^{7.4} EXCLUDED, threshold 10^{15.5} marginal (S30)** | Unification NOT achieved at proton-safe scale |
 | 6 | 4D simulation | **κ₄=0.70, Z_λ(dyn)=0.108, 8/8 PASS (Session 13)** | GPU 64⁴ |
 | 7 | Regge continuum | **7 theorems, 0 sorry (Session 11)** | Complete |
 | 8 | Two-loop unification | **Spread 0.4; M_PS ~ 10¹⁴ derived (S8)** | Consistent with proton decay bound |
 | 9 | Z_λ effective potential | **RG-improved Z_λ = 0.21; κ₄ derived (S12)** | Two-loop SO(8) correction |
-| 10 | ρ_Λ spectral density | **BZ integral + triality + α⁵⁷/(4π) (S8)** | Derive f_supp mechanism |
+| 10 | ρ_Λ spectral density | **α⁵⁷/(4π) ~11% match, POSTDICTION not derivation (S30)** | Mechanism for α^n suppression unresolved |
 | 11 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Complete |
 | 12 | D₄ anharmonic κ₄ / force constant J | **κ₄≈0.70 derived (Session 12): 4 methods** | Two-loop SO(8) correction to λ |
 | 13 | Circularity resolution | **PROVEN (Lean 4)** | Complete |
