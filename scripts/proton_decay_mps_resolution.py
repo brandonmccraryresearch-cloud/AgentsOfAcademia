@@ -53,9 +53,7 @@ def main():
     alpha_em_MZ = 1.0 / 127.951   # α_em(M_Z)
     sin2_thetaW = 0.23122          # sin²θ_W(M_Z)
 
-    # SM inverse couplings at M_Z
-    alpha1_inv = (3.0 / 5.0) * (1.0 / alpha_em_MZ) * (1.0 - sin2_thetaW)
-    # Correction: α₁ in GUT normalization
+    # SM inverse couplings at M_Z (GUT normalization: α₁ = (5/3)α_Y)
     alpha1_inv = (5.0 / 3.0) / (alpha_em_MZ / (1.0 - sin2_thetaW))
     alpha2_inv = 1.0 / (alpha_em_MZ / sin2_thetaW)
     alpha3_inv = 1.0 / alpha_s_MZ
