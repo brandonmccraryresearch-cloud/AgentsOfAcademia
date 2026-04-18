@@ -58,8 +58,9 @@ def main():
     alpha2_inv = 1.0 / (alpha_em_MZ / sin2_thetaW)
     alpha3_inv = 1.0 / alpha_s_MZ
 
-    # Super-K proton decay bound
-    tau_SK = 2.4e34  # years (p → e⁺π⁰)
+    # Super-K proton decay bound (p → e⁺π⁰)
+    # Super-Kamiokande Collaboration, Phys. Rev. D 95, 012004 (2017)
+    tau_SK = 2.4e34  # years
 
     # ── Test 1: Proton decay at CW M_PS = 10^14 GeV ──
     print("\n--- Test 1: Proton Lifetime at CW M_PS = 10^14 GeV ---")
