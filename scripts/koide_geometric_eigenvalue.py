@@ -53,13 +53,13 @@ def check(name, condition, detail=""):
 
 
 # ============================================================
-# Physical constants (PDG 2022)
+# Physical constants (PDG 2024 — pole masses)
 # ============================================================
 ALPHA_INV = 137.035999206       # Fine-structure constant inverse
 ALPHA = 1.0 / ALPHA_INV
-M_E = 0.51099895                # Electron mass (MeV)
-M_MU = 105.6583755              # Muon mass (MeV)
-M_TAU = 1776.86                 # Tau mass (MeV)
+M_E = 0.51099895                # Electron pole mass (MeV)
+M_MU = 105.6583755              # Muon pole mass (MeV)
+M_TAU = 1776.86                 # Tau pole mass (MeV)
 V_HIGGS = 246.22e3              # Higgs VEV (MeV) = 246.22 GeV
 
 
@@ -342,7 +342,7 @@ def test_07_discrepancy(theta0_exp):
     # Our extraction from PDG masses gives θ₀^exp ≈ 0.22227, much closer.
     print(f"\n  ⚠ NOTE ON DISCREPANCY VALUES:")
     print(f"  The directive cites θ₀^exp = 0.2204, giving ~0.8% discrepancy.")
-    print(f"  Our extraction from PDG pole masses gives θ₀^exp ≈ {theta0_exp:.4f},")
+    print(f"  Our extraction from PDG pole masses (on-shell, no MS-bar running) gives θ₀^exp ≈ {theta0_exp:.4f},")
     print(f"  corresponding to only ~{rel_pct:.2f}% discrepancy.")
     print(f"  The difference may arise from:")
     print(f"    (a) Different parametrization conventions")
