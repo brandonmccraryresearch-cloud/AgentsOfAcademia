@@ -249,7 +249,12 @@ def test_06_theta0_extraction():
     # Koide parametrization:
     #   √m_k = A × (1 + √2 cos(θ₀ + 2πk/3))
     # where A = S/3, S = Σ√m_i, and k = 0, 1, 2.
-    # Convention: k=0 → tau (largest mass), k=1 → e, k=2 → mu.
+    # Phase convention: k=0 → tau (largest mass), k=1 → e, k=2 → mu.
+    # Array ordering: sqrt_m[0]=e, sqrt_m[1]=mu, sqrt_m[2]=tau (by particle).
+    # The mapping between k-index and array index is:
+    #   k=0 (tau) ↔ array index 2
+    #   k=1 (e)   ↔ array index 0
+    #   k=2 (mu)  ↔ array index 1
 
     sqrt_m = np.array([np.sqrt(M_E), np.sqrt(M_MU), np.sqrt(M_TAU)])
     S = np.sum(sqrt_m)
@@ -263,32 +268,27 @@ def test_06_theta0_extraction():
     print(f"  ρ_μ  = {rho[1]:.10f}")
     print(f"  ρ_τ  = {rho[2]:.10f}")
 
-    # Extract θ₀ from the tau mass (k=0):
+    # Extract θ₀ from the tau mass (k=0 maps to array index 2):
     #   ρ_τ = (1/3)(1 + √2 cos(θ₀))
     #   cos(θ₀) = (3ρ_τ - 1)/√2
-    cos_theta0 = (3 * rho[2] - 1) / np.sqrt(2)
+    cos_theta0 = (3 * rho[2] - 1) / np.sqrt(2)  # rho[2] = ρ_τ
     theta0_exp = np.arccos(cos_theta0)
 
     print(f"\n  Extraction from tau (k=0 → τ convention):")
     print(f"    cos(θ₀) = (3ρ_τ - 1)/√2 = {cos_theta0:.10f}")
     print(f"    θ₀^exp = arccos({cos_theta0:.8f}) = {theta0_exp:.10f} rad")
 
-    # Cross-check with muon (k=2):
-    cos_theta0_mu = (3 * rho[1] - 1) / np.sqrt(2)
+    # Cross-check with muon (k=2 maps to array index 1):
+    cos_theta0_mu = (3 * rho[1] - 1) / np.sqrt(2)  # rho[1] = ρ_μ
     # cos(θ₀ + 4π/3) = cos_theta0_mu
-    # θ₀ + 4π/3 = ±arccos(cos_theta0_mu)
-    # Need to find the branch consistent with theta0 ≈ 0.22
+    # If θ₀ ≈ 0.22, then θ₀ + 4π/3 ≈ 4.41, and arccos gives the
+    # principal value. We reconstruct θ₀ from the full-circle branch:
     angle_mu = np.arccos(cos_theta0_mu)
-    theta0_from_mu = 2 * np.pi / 3 - angle_mu  # = -(angle_mu - 2π/3) from cos symmetry
-    # Actually: cos(θ₀ + 4π/3) = cos_theta0_mu
-    # If θ₀ ≈ 0.22, then θ₀ + 4π/3 ≈ 4.41, cos(4.41) ≈ cos(-1.87) = cos(1.87)
-    # arccos(cos_theta0_mu) ≈ 1.87 or 2π - 1.87 = 4.41
-    # From 4.41: theta0 = 4.41 - 4π/3 = 4.41 - 4.189 = 0.222
-    theta0_from_mu_v2 = 2 * np.pi - angle_mu - 4 * np.pi / 3
+    theta0_from_mu = 2 * np.pi - angle_mu - 4 * np.pi / 3
 
-    print(f"\n  Cross-check from muon (k=2 → μ convention):")
+    print(f"\n  Cross-check from muon (k=2 → μ, array index 1):")
     print(f"    cos(θ₀ + 4π/3) = {cos_theta0_mu:.10f}")
-    print(f"    θ₀ from muon = {theta0_from_mu_v2:.10f} rad")
+    print(f"    θ₀ from muon = {theta0_from_mu:.10f} rad")
 
     # Verify predicted masses
     A = S / 3
