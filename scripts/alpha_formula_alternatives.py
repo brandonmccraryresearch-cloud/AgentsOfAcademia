@@ -30,6 +30,8 @@ Usage
 import sys
 import math
 import argparse
+import random
+import textwrap
 
 # ---------------------------------------------------------------------------
 # CLI
@@ -585,7 +587,6 @@ print(f"  Integer offsets N:                {n_n_values}")
 print(f"  Actual formulas generated:        {n_total_formulas}")
 
 # Monte Carlo: expected sub-ppm matches for random integers in [1, 50]
-import random
 random.seed(42)
 
 mc_match_counts_100 = []
@@ -821,7 +822,7 @@ evidence = {
 has_physical_basis = evidence["uses_d4_dims"]
 is_best_match = evidence["claimed_is_best_n137"]
 subppm_alternatives = evidence["n_subppm_total"] > 1
-bz_normalization_derived = False  # 1/(4π) is asserted, not derived
+bz_normalization_derived = False  # 1/(4π) is asserted, not derived (§II.3)
 
 if (has_physical_basis and is_best_match
         and not subppm_alternatives and bz_normalization_derived):
@@ -866,7 +867,6 @@ print(f"  │  VERDICT: {verdict:<35s}│")
 print(f"  └──────────────────────────────────────────────┘")
 print()
 # Wrap long verdict detail for readability
-import textwrap
 for line in textwrap.wrap(verdict_detail, width=66):
     print(f"  {line}")
 print()
