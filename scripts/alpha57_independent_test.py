@@ -26,7 +26,7 @@ Usage:
     python alpha57_independent_test.py --strict
 
 References:
-    - IRH v86.0 §V.5 (cosmological constant), §VIII.3 (Higgs VEV)
+    - IRH manuscript §V.5 (cosmological constant), §VIII.3 (Higgs VEV)
     - Review86.md DIRECTIVE 17, DIRECTIVE 24
 """
 

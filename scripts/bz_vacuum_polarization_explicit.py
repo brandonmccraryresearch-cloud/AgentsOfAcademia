@@ -31,6 +31,8 @@ BZ = [-π, π)⁴ with periodic boundary.  Natural units: a₀ = M* = 1.
 Usage:
     python bz_vacuum_polarization_explicit.py
     python bz_vacuum_polarization_explicit.py --strict
+    python bz_vacuum_polarization_explicit.py --samples 100000
+    python bz_vacuum_polarization_explicit.py --samples 100000 --mc-samples 50000
 
 References:
     - Review86.md DIRECTIVE 03
@@ -279,7 +281,14 @@ def main():
         description="Explicit one-loop BZ vacuum polarization on D₄ (Review86 DIR-03)")
     parser.add_argument('--strict', action='store_true',
                         help='CI mode: exit non-zero on failure')
+    parser.add_argument('--samples', type=int, default=10_000_000,
+                        help='Main MC sample count (default: 10000000)')
+    parser.add_argument('--mc-samples', type=int, default=None,
+                        help='Multi-channel MC sample count (default: samples/5)')
     args = parser.parse_args()
+
+    N_MAIN = args.samples
+    N_MC = args.mc_samples if args.mc_samples is not None else max(N_MAIN // 5, 100_000)
 
     print("=" * 72)
     print("EXPLICIT ONE-LOOP VACUUM POLARIZATION ON D₄ BRILLOUIN ZONE")
@@ -379,12 +388,11 @@ def main():
           f"ratio = {ward_ratio:.4e}")
 
     # ══════════════════════════════════════════════════════════════════
-    # Section 5: Blind Π(0) — 10M Samples (Tests 9–12)
+    # Section 5: Blind Π(0) — MC Samples (Tests 9–12)
     # ══════════════════════════════════════════════════════════════════
-    print("\n5. Blind Π(0) Computation (10M MC samples)")
+    print(f"\n5. Blind Π(0) Computation ({N_MAIN:,} MC samples)")
     print("-" * 50)
 
-    N_MAIN = 10_000_000
     Pi_tensor, Pi0, Pi0_err, n_eff = Pi0_tensor_mc(roots, N_MAIN, seed=42)
 
     print(f"   Effective samples: {n_eff}")
@@ -485,7 +493,7 @@ def main():
     print("\n7. Multi-Channel Decomposition")
     print("-" * 50)
 
-    N_MC = 2_000_000
+    # N_MC already set from CLI args above
     frac_target = 1.0 / (28.0 - np.pi / 14.0)
 
     # Level 1

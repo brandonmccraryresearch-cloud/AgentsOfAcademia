@@ -189,7 +189,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/ckm_nlo_matching.py` | CKM NLO matching with QCD running (Directive 8, Session 20) | 7/7 PASS, V_us 0.1% |
 | `scripts/phonon_velocity_resolution.py` | Phonon velocity from D₄ dynamical matrix (Review86 Directive 10) | 12/12 PASS, c²=3J verified |
 | `scripts/alpha57_independent_test.py` | α^57/(4π) uniqueness validation (Review86 Directive 17) | 18/18 PASS, n=57 unique |
-| `scripts/gibbs_free_energy_lattice.py` | Gibbs free energy from phonon partition function (Review86 Directive 09) | 16/16 PASS, triality entropy selects D₄ |
+| `scripts/gibbs_free_energy_lattice.py` | Gibbs free energy from phonon partition function (Review86 Directive 09) | 16/16 PASS, simple Gibbs selects A₄; D₄ requires multi-factor score |
 | `scripts/lorentzian_phase_lag_proof.py` | Lorentzian signature for any ζ > 0 (Review86 Directive 01) | 12/12 PASS, π/2 at resonance for all ζ |
 | `scripts/nmixing_v3_resolution.py` | N_mixing vs V₃≡0 contradiction resolution (Review86 Directive 02) | 12/12 PASS, CW mass channels ≠ cubic vertices |
 | `scripts/svea_lorentzian_derivation.py` | SVEA envelope → Lorentzian signature (Review86 Directive 04) | 16/16 PASS, corrects §I.4 derivation |

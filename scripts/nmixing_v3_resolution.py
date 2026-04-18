@@ -409,10 +409,10 @@ def main():
     """)
 
     N_mixing_channels = 2  # trans mass channel + shear mass channel
-    N_eff = N_breath + N_trans + N_mixing_channels  # 1 + 4 + 2 = 7
+    N_mass_channels = N_breath + N_trans + N_mixing_channels  # 1 + 4 + 2 = 7
     N_manuscript = 9  # 4 + 3 + 2 as claimed in manuscript
 
-    print(f"  Corrected N_eff from CW mass channels: {N_eff}")
+    print(f"  CW mass-channel count = {N_mass_channels} (1 + 4 + 2)")
     print(f"  Manuscript N_eff = {N_manuscript} (from 4 + 3 + 2)")
 
     check("V₃ ≡ 0 does not kill background-field mass shifts",

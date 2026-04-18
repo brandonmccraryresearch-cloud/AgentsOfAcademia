@@ -13,7 +13,7 @@ Tests (16 total):
     7–8:   Helmholtz free energy comparison across lattices
     9–10:  Low-temperature expansion and leading coefficients
     11:    Automorphism entropy contributions
-    12:    Gibbs free energy formula: g(Λ) = z/2 - ln|W| - |Out|
+    12:    Gibbs free energy formula: g(Λ) = z/2 - ln|W| - ln|Out|
     13:    D₄ minimization verification
     14:    Temperature range for D₄ minimality
     15:    Cross-dimensional comparison (d=2..8)
@@ -25,7 +25,7 @@ Usage:
     python gibbs_free_energy_lattice.py --samples 50000
 
 References:
-    - IRH v86.0 §I.3, §I.6
+    - IRH manuscript §I.3, §I.6
     - Review86.md DIRECTIVE 09
     - scripts/d4_uniqueness.py
 """
