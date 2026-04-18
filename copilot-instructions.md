@@ -370,7 +370,7 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 78 scripts as supplementary material
+3. Include all 80 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
 ### Open Problem Status (as of v87.0 Session 27)
@@ -401,4 +401,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v87.0 complete; 78 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v87.0 complete; 80 scripts, 311 declarations** | Priority 2,4 closure → submit |
