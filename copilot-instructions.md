@@ -264,7 +264,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 182 verified declarations across 12 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 12, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
+Current state: 311 verified declarations across 15 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
 
 ## Agent Architecture
 
@@ -370,10 +370,10 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 37 scripts as supplementary material
+3. Include all 78 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
-### Open Problem Status (as of v85.0 Session 12)
+### Open Problem Status (as of v87.0 Session 27)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
@@ -401,4 +401,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v85.0 complete; 37 scripts, 182 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v87.0 complete; 78 scripts, 311 declarations** | Priority 2,4 closure → submit |
