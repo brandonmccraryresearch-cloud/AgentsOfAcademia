@@ -261,257 +261,264 @@ CANDIDATES = [
 # TESTS
 # =========================================================================
 
-print("=" * 70)
-print("MINIMUM VIABLE FALSIFIABLE PREDICTION SET — DIRECTIVE 27")
-print("=" * 70)
+def main():
+    global passed, failed, total
 
-# ── TEST 1: Score all candidates ──
-print("\n" + "─" * 70)
-print("TEST 1: Score all candidate predictions")
-print("─" * 70)
+    print("=" * 70)
+    print("MINIMUM VIABLE FALSIFIABLE PREDICTION SET — DIRECTIVE 27")
+    print("=" * 70)
 
-for c in CANDIDATES:
-    c["total_score"] = (c["derivation_quality"] + c["precision"] +
-                        c["discriminating"] + c["testability"])
+    # ── TEST 1: Score all candidates ──
+    print("\n" + "─" * 70)
+    print("TEST 1: Score all candidate predictions")
+    print("─" * 70)
 
-print(f"\n  {'Prediction':<50s} {'Deriv':>5s} {'Prec':>5s} {'Disc':>5s} {'Test':>5s} {'TOTAL':>6s}")
-print("  " + "─" * 76)
-for c in CANDIDATES:
-    print(f"  {c['name']:<50s} {c['derivation_quality']:>5d} {c['precision']:>5d} "
-          f"{c['discriminating']:>5d} {c['testability']:>5d} {c['total_score']:>6d}")
+    for c in CANDIDATES:
+        c["total_score"] = (c["derivation_quality"] + c["precision"] +
+                            c["discriminating"] + c["testability"])
 
-check("TEST 1: All candidates scored on 4 criteria",
-      all("total_score" in c for c in CANDIDATES),
-      f"{len(CANDIDATES)} candidates scored")
+    print(f"\n  {'Prediction':<50s} {'Deriv':>5s} {'Prec':>5s} {'Disc':>5s} {'Test':>5s} {'TOTAL':>6s}")
+    print("  " + "─" * 76)
+    for c in CANDIDATES:
+        print(f"  {c['name']:<50s} {c['derivation_quality']:>5d} {c['precision']:>5d} "
+              f"{c['discriminating']:>5d} {c['testability']:>5d} {c['total_score']:>6d}")
 
-# ── TEST 2: Rank by total score ──
-print("\n" + "─" * 70)
-print("TEST 2: Ranked predictions")
-print("─" * 70)
+    check("TEST 1: All candidates scored on 4 criteria",
+          all("total_score" in c for c in CANDIDATES),
+          f"{len(CANDIDATES)} candidates scored")
 
-ranked = sorted(CANDIDATES, key=lambda x: -x["total_score"])
+    # ── TEST 2: Rank by total score ──
+    print("\n" + "─" * 70)
+    print("TEST 2: Ranked predictions")
+    print("─" * 70)
 
-for i, c in enumerate(ranked):
-    print(f"  {i+1}. [{c['total_score']:2d}] {c['name']}")
+    ranked = sorted(CANDIDATES, key=lambda x: -x["total_score"])
 
-check("TEST 2: Predictions ranked by total score",
-      ranked[0]["total_score"] >= ranked[-1]["total_score"],
-      f"Top score = {ranked[0]['total_score']}, Bottom = {ranked[-1]['total_score']}")
+    for i, c in enumerate(ranked):
+        print(f"  {i+1}. [{c['total_score']:2d}] {c['name']}")
 
-# ── TEST 3: Identify top 5 ──
-print("\n" + "─" * 70)
-print("TEST 3: Top 5 predictions")
-print("─" * 70)
+    check("TEST 2: Predictions ranked by total score",
+          ranked[0]["total_score"] >= ranked[-1]["total_score"],
+          f"Top score = {ranked[0]['total_score']}, Bottom = {ranked[-1]['total_score']}")
 
-top5 = ranked[:5]
-for i, c in enumerate(top5):
-    print(f"\n  PREDICTION {chr(65+i)}: {c['name']}")
-    print(f"    Score: {c['total_score']}/12")
-    print(f"    {c['description']}")
+    # ── TEST 3: Identify top 5 ──
+    print("\n" + "─" * 70)
+    print("TEST 3: Top 5 predictions")
+    print("─" * 70)
 
-check("TEST 3: Top 5 predictions identified",
-      len(top5) == 5,
-      f"Top 5 scores: {[c['total_score'] for c in top5]}")
+    top5 = ranked[:5]
+    for i, c in enumerate(top5):
+        print(f"\n  PREDICTION {chr(65+i)}: {c['name']}")
+        print(f"    Score: {c['total_score']}/12")
+        print(f"    {c['description']}")
 
-# ── TEST 4: Verify top predictions are calibration-free ──
-print("\n" + "─" * 70)
-print("TEST 4: Calibration independence of top predictions")
-print("─" * 70)
+    check("TEST 3: Top 5 predictions identified",
+          len(top5) == 5,
+          f"Top 5 scores: {[c['total_score'] for c in top5]}")
 
-cal_free = [c for c in top5 if c["calibration_free"]]
-cal_dep = [c for c in top5 if not c["calibration_free"]]
+    # ── TEST 4: Verify top predictions are calibration-free ──
+    print("\n" + "─" * 70)
+    print("TEST 4: Calibration independence of top predictions")
+    print("─" * 70)
 
-print(f"\n  Calibration-free in top 5: {len(cal_free)}")
-for c in cal_free:
-    print(f"    ✓ {c['name']}")
-if cal_dep:
-    print(f"  Calibration-dependent in top 5: {len(cal_dep)}")
-    for c in cal_dep:
-        print(f"    ~ {c['name']}")
+    cal_free = [c for c in top5 if c["calibration_free"]]
+    cal_dep = [c for c in top5 if not c["calibration_free"]]
 
-check("TEST 4: Majority of top 5 are calibration-free or partially free",
-      len(cal_free) >= 2,
-      f"{len(cal_free)}/5 calibration-free")
+    print(f"\n  Calibration-free in top 5: {len(cal_free)}")
+    for c in cal_free:
+        print(f"    ✓ {c['name']}")
+    if cal_dep:
+        print(f"  Calibration-dependent in top 5: {len(cal_dep)}")
+        for c in cal_dep:
+            print(f"    ~ {c['name']}")
 
-# ── TEST 5: Distinguish from SM+GR+Λ ──
-print("\n" + "─" * 70)
-print("TEST 5: Discrimination from SM+GR+Λ")
-print("─" * 70)
+    check("TEST 4: Majority of top 5 are calibration-free or partially free",
+          len(cal_free) >= 2,
+          f"{len(cal_free)}/5 calibration-free")
 
-high_disc = [c for c in top5 if c["discriminating"] >= 2]
-print(f"\n  Predictions distinguishing IRH from SM+GR+Λ: {len(high_disc)}")
-for c in high_disc:
-    print(f"    [{c['discriminating']}] {c['name']}: {c['distinguishes_from']}")
+    # ── TEST 5: Distinguish from SM+GR+Λ ──
+    print("\n" + "─" * 70)
+    print("TEST 5: Discrimination from SM+GR+Λ")
+    print("─" * 70)
 
-check("TEST 5: Multiple predictions distinguish IRH from SM+GR+Λ",
-      len(high_disc) >= 3,
-      f"{len(high_disc)}/5 with discriminating score ≥ 2")
+    high_disc = [c for c in top5 if c["discriminating"] >= 2]
+    print(f"\n  Predictions distinguishing IRH from SM+GR+Λ: {len(high_disc)}")
+    for c in high_disc:
+        print(f"    [{c['discriminating']}] {c['name']}: {c['distinguishes_from']}")
 
-# ── TESTS 6-10: Formal falsifiability statements ──
-print("\n" + "─" * 70)
-print("TESTS 6-10: Formal falsifiability statements")
-print("─" * 70)
+    check("TEST 5: Multiple predictions distinguish IRH from SM+GR+Λ",
+          len(high_disc) >= 3,
+          f"{len(high_disc)}/5 with discriminating score ≥ 2")
 
-for i, pred in enumerate(top5):
-    letter = chr(65 + i)
-    test_num = 6 + i
+    # ── TESTS 6-10: Formal falsifiability statements ──
+    print("\n" + "─" * 70)
+    print("TESTS 6-10: Formal falsifiability statements")
+    print("─" * 70)
 
-    print(f"\n  ┌{'─'*66}┐")
-    print(f"  │ PREDICTION {letter}: {pred['name']:<52s} │")
-    print(f"  └{'─'*66}┘")
+    for i, pred in enumerate(top5):
+        letter = chr(65 + i)
+        test_num = 6 + i
 
-    statement = (
-        f"  IRH predicts {pred['predicted_value']}\n"
-        f"  with theoretical uncertainty {pred['theory_error']}.\n"
-        f"  Experiment: {pred['experiment']}\n"
-        f"  Experimental precision: {pred['exp_error']}\n"
-        f"  Current experimental value: {pred['exp_value']}\n"
-        f"  Falsification criterion: {pred['falsification']}\n"
-        f"  Calibration-free: {pred['calibration_free']}"
+        print(f"\n  ┌{'─'*66}┐")
+        print(f"  │ PREDICTION {letter}: {pred['name']:<52s} │")
+        print(f"  └{'─'*66}┘")
+
+        statement = (
+            f"  IRH predicts {pred['predicted_value']}\n"
+            f"  with theoretical uncertainty {pred['theory_error']}.\n"
+            f"  Experiment: {pred['experiment']}\n"
+            f"  Experimental precision: {pred['exp_error']}\n"
+            f"  Current experimental value: {pred['exp_value']}\n"
+            f"  Falsification criterion: {pred['falsification']}\n"
+            f"  Calibration-free: {pred['calibration_free']}"
+        )
+        print(statement)
+
+        # Check that formal statement has all required elements
+        has_prediction = bool(pred["predicted_value"])
+        has_theory_error = bool(pred["theory_error"])
+        has_experiment = bool(pred["experiment"])
+        has_falsification = bool(pred["falsification"])
+
+        check(f"TEST {test_num}: Prediction {letter} has complete falsifiability statement",
+              has_prediction and has_theory_error and has_experiment and has_falsification,
+              f"{pred['name']}: all elements present")
+
+    # ── TEST 11: Single most valuable computation ──
+    print("\n" + "─" * 70)
+    print("TEST 11: Most valuable unfinished computation")
+    print("─" * 70)
+
+    print("""
+      The single computation that would maximally strengthen falsifiability:
+
+      ┌────────────────────────────────────────────────────────────────┐
+      │  DERIVE α⁻¹ = 137 FROM FIRST PRINCIPLES                     │
+      │                                                                │
+      │  Currently: integer 137 is pre-assumed as bare coupling        │
+      │  Needed:    show α₀⁻¹ = Z₀/(2πR₀) = 137 from lattice        │
+      │             vacuum impedance Z₀ = √(μ₀/ε₀) on D₄ lattice     │
+      │                                                                │
+      │  If successful: α becomes a FULL DERIVATION (Grade A)         │
+      │  Impact: transforms the framework's most impressive-looking   │
+      │  result from motivated conjecture to genuine prediction        │
+      │                                                                │
+      │  Secondary: derive the correction 1/(28-π/14) from the BZ     │
+      │  integral structure, showing dim(SO(8))=28 and dim(G₂)=14     │
+      │  enter as natural loop-counting parameters                     │
+      └────────────────────────────────────────────────────────────────┘
+    """)
+
+    check("TEST 11: Most valuable computation identified",
+          True,
+          "Derive α₀⁻¹ = 137 from lattice vacuum impedance (not assumed)")
+
+    # ── TEST 12: All formal statements include precision ──
+    print("\n" + "─" * 70)
+    print("TEST 12: Precision completeness check")
+    print("─" * 70)
+
+    all_have_precision = all(
+        pred["theory_error"] and pred["exp_error"]
+        for pred in top5
     )
-    print(statement)
 
-    # Check that formal statement has all required elements
-    has_prediction = bool(pred["predicted_value"])
-    has_theory_error = bool(pred["theory_error"])
-    has_experiment = bool(pred["experiment"])
-    has_falsification = bool(pred["falsification"])
+    check("TEST 12: All top-5 formal statements include theory and exp error",
+          all_have_precision,
+          f"All {len(top5)} statements have both theory_error and exp_error fields")
 
-    check(f"TEST {test_num}: Prediction {letter} has complete falsifiability statement",
-          has_prediction and has_theory_error and has_experiment and has_falsification,
-          f"{pred['name']}: all elements present")
+    # ── TEST 13: Draft abstract ──
+    print("\n" + "─" * 70)
+    print("TEST 13: Draft abstract for focused paper")
+    print("─" * 70)
 
-# ── TEST 11: Single most valuable computation ──
-print("\n" + "─" * 70)
-print("TEST 11: Most valuable unfinished computation")
-print("─" * 70)
+    abstract = textwrap.dedent("""
+        ABSTRACT: Five Falsifiable Predictions from D₄ Lattice Dynamics
 
-print("""
-  The single computation that would maximally strengthen falsifiability:
+        We identify five quantitative predictions of the Intrinsic Harmonic
+        Resonance (IRH) framework that are (i) derived from the geometry of
+        the D₄ root lattice without calibration to experimental data,
+        (ii) sufficiently precise to be falsifiable by existing or near-future
+        experiments, and (iii) qualitatively distinct from Standard Model
+        predictions.
 
-  ┌────────────────────────────────────────────────────────────────┐
-  │  DERIVE α⁻¹ = 137 FROM FIRST PRINCIPLES                     │
-  │                                                                │
-  │  Currently: integer 137 is pre-assumed as bare coupling        │
-  │  Needed:    show α₀⁻¹ = Z₀/(2πR₀) = 137 from lattice        │
-  │             vacuum impedance Z₀ = √(μ₀/ε₀) on D₄ lattice     │
-  │                                                                │
-  │  If successful: α becomes a FULL DERIVATION (Grade A)         │
-  │  Impact: transforms the framework's most impressive-looking   │
-  │  result from motivated conjecture to genuine prediction        │
-  │                                                                │
-  │  Secondary: derive the correction 1/(28-π/14) from the BZ     │
-  │  integral structure, showing dim(SO(8))=28 and dim(G₂)=14     │
-  │  enter as natural loop-counting parameters                     │
-  └────────────────────────────────────────────────────────────────┘
-""")
+        (A) The Koide lepton phase angle θ₀ = 2/9 rad, derived as a geometric
+        eigenvalue on the SO(3)/S₃ orbifold, matches experiment to 0.02%
+        (9.2 ppm) and determines all three charged lepton masses given m_τ.
 
-check("TEST 11: Most valuable computation identified",
-      True,
-      "Derive α₀⁻¹ = 137 from lattice vacuum impedance (not assumed)")
+        (B) The CKM CP-violating phase δ = 2π/(3√3) ≈ 1.209 rad, derived as
+        a topological Berry phase on the triality manifold, matches PDG to
+        0.8% and is testable at Belle II.
 
-# ── TEST 12: All formal statements include precision ──
-print("\n" + "─" * 70)
-print("TEST 12: Precision completeness check")
-print("─" * 70)
+        (C) The weak mixing angle sin²θ_W = 3/13 from D₄ root counting gives
+        0.2308, within 2.4% of the measured value after accounting for the
+        Pati-Salam breaking chain.
 
-all_have_precision = all(
-    pred["theory_error"] and pred["exp_error"]
-    for pred in top5
-)
+        (D) The Poisson ratio ν = 1/4 and longitudinal/transverse speed ratio
+        c_L/c_T = √3 of the lattice medium are exact geometric consequences
+        of D₄ isotropy, testable via gravitational wave polarimetry.
 
-check("TEST 12: All top-5 formal statements include theory and exp error",
-      all_have_precision,
-      f"All {len(top5)} statements have both theory_error and exp_error fields")
+        (E) The lepton masses m_e = 0.51097 MeV and m_μ = 105.647 MeV follow
+        from the Koide formula with one input (m_τ), achieving 0.006% and
+        0.01% precision respectively.
 
-# ── TEST 13: Draft abstract ──
-print("\n" + "─" * 70)
-print("TEST 13: Draft abstract for focused paper")
-print("─" * 70)
+        We provide formal falsification criteria for each prediction and
+        identify the computation (first-principles derivation of α⁻¹ from
+        the D₄ BZ integral) that would most strengthen the framework's
+        empirical credibility. We honestly report that gauge coupling
+        unification is NOT achieved and the cosmological constant formula
+        is a postdiction. The framework's overall empirical grounding is
+        assessed at Grade C+ (GPA 2.33/4.0).
+    """).strip()
 
-abstract = textwrap.dedent("""
-    ABSTRACT: Five Falsifiable Predictions from D₄ Lattice Dynamics
+    print(f"\n{abstract}")
 
-    We identify five quantitative predictions of the Intrinsic Harmonic
-    Resonance (IRH) framework that are (i) derived from the geometry of
-    the D₄ root lattice without calibration to experimental data,
-    (ii) sufficiently precise to be falsifiable by existing or near-future
-    experiments, and (iii) qualitatively distinct from Standard Model
-    predictions.
+    check("TEST 13: Draft abstract generated",
+          len(abstract) > 500,
+          f"Abstract length: {len(abstract)} characters")
 
-    (A) The Koide lepton phase angle θ₀ = 2/9 rad, derived as a geometric
-    eigenvalue on the SO(3)/S₃ orbifold, matches experiment to 0.02%
-    (9.2 ppm) and determines all three charged lepton masses given m_τ.
+    # ── TEST 14: Overall falsifiability assessment ──
+    print("\n" + "─" * 70)
+    print("TEST 14: Overall falsifiability assessment")
+    print("─" * 70)
 
-    (B) The CKM CP-violating phase δ = 2π/(3√3) ≈ 1.209 rad, derived as
-    a topological Berry phase on the triality manifold, matches PDG to
-    0.8% and is testable at Belle II.
+    n_falsifiable = len([c for c in CANDIDATES if c["testability"] >= 2])
+    n_high_quality = len([c for c in CANDIDATES
+                          if c["total_score"] >= 9 and c["calibration_free"]])
 
-    (C) The weak mixing angle sin²θ_W = 3/13 from D₄ root counting gives
-    0.2308, within 2.4% of the measured value after accounting for the
-    Pati-Salam breaking chain.
+    print(f"""
+      Total predictions assessed:     {len(CANDIDATES)}
+      Falsifiable (testability ≥ 2):  {n_falsifiable}
+      High-quality + cal-free (≥9):   {n_high_quality}
+      Top prediction score:           {ranked[0]['total_score']}/12
 
-    (D) The Poisson ratio ν = 1/4 and longitudinal/transverse speed ratio
-    c_L/c_T = √3 of the lattice medium are exact geometric consequences
-    of D₄ isotropy, testable via gravitational wave polarimetry.
+      ASSESSMENT: The IRH framework produces {n_high_quality} genuinely
+      independent, high-quality, falsifiable predictions. These are
+      concentrated in the lepton mass sector (Koide formula) and the
+      geometric quantities (CKM phase, weak mixing angle). The framework's
+      weakest areas (gauge unification, inflation, cosmological constant)
+      are honestly reported as failures or postdictions.
 
-    (E) The lepton masses m_e = 0.51097 MeV and m_μ = 105.647 MeV follow
-    from the Koide formula with one input (m_τ), achieving 0.006% and
-    0.01% precision respectively.
+      The framework IS empirically testable — but its strongest predictions
+      are in areas where the SM makes no predictions at all (mass ratios,
+      mixing angles as free parameters). This means IRH's falsifiability
+      comes from explaining what the SM takes as input, not from predicting
+      phenomena the SM already explains differently.
+    """)
 
-    We provide formal falsification criteria for each prediction and
-    identify the computation (first-principles derivation of α⁻¹ from
-    the D₄ BZ integral) that would most strengthen the framework's
-    empirical credibility. We honestly report that gauge coupling
-    unification is NOT achieved and the cosmological constant formula
-    is a postdiction. The framework's overall empirical grounding is
-    assessed at Grade C+ (GPA 2.33/4.0).
-""").strip()
-
-print(f"\n{abstract}")
-
-check("TEST 13: Draft abstract generated",
-      len(abstract) > 500,
-      f"Abstract length: {len(abstract)} characters")
-
-# ── TEST 14: Overall falsifiability assessment ──
-print("\n" + "─" * 70)
-print("TEST 14: Overall falsifiability assessment")
-print("─" * 70)
-
-n_falsifiable = len([c for c in CANDIDATES if c["testability"] >= 2])
-n_high_quality = len([c for c in CANDIDATES
-                      if c["total_score"] >= 9 and c["calibration_free"]])
-
-print(f"""
-  Total predictions assessed:     {len(CANDIDATES)}
-  Falsifiable (testability ≥ 2):  {n_falsifiable}
-  High-quality + cal-free (≥9):   {n_high_quality}
-  Top prediction score:           {ranked[0]['total_score']}/12
-
-  ASSESSMENT: The IRH framework produces {n_high_quality} genuinely
-  independent, high-quality, falsifiable predictions. These are
-  concentrated in the lepton mass sector (Koide formula) and the
-  geometric quantities (CKM phase, weak mixing angle). The framework's
-  weakest areas (gauge unification, inflation, cosmological constant)
-  are honestly reported as failures or postdictions.
-
-  The framework IS empirically testable — but its strongest predictions
-  are in areas where the SM makes no predictions at all (mass ratios,
-  mixing angles as free parameters). This means IRH's falsifiability
-  comes from explaining what the SM takes as input, not from predicting
-  phenomena the SM already explains differently.
-""")
-
-check("TEST 14: Multiple high-quality falsifiable predictions exist",
-      n_high_quality >= 2,
-      f"{n_high_quality} high-quality calibration-free predictions with score ≥ 9")
+    check("TEST 14: Multiple high-quality falsifiable predictions exist",
+          n_high_quality >= 2,
+          f"{n_high_quality} high-quality calibration-free predictions with score ≥ 9")
 
 
-# =========================================================================
-# SUMMARY
-# =========================================================================
-print("\n" + "=" * 70)
-print(f"RESULTS: {passed}/{total} PASS, {failed} FAIL")
-print(f"{'=' * 70}")
-sys.exit(0 if failed == 0 else 1)
+    # =========================================================================
+    # SUMMARY
+    # =========================================================================
+    print("\n" + "=" * 70)
+    print(f"RESULTS: {passed}/{total} PASS, {failed} FAIL")
+    print(f"{'=' * 70}")
+    sys.exit(0 if failed == 0 else 1)
+
+
+if __name__ == "__main__":
+    main()

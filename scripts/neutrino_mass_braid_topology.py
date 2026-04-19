@@ -257,6 +257,8 @@ def main():
         check("Test 11: Three neutrino masses computed", False, "No valid φ_ν found")
         m_nu = np.array([0.001, 0.009, 0.050])  # fallback
         sigma_m_nu = np.sum(m_nu)
+        best_phi_nu = 0.479  # fallback value (rad)
+        sigma_m_nu_target = 0.059  # eV fallback
     
     # Test 12: Σm_ν prediction
     check("Test 12: Σm_ν prediction in meV",

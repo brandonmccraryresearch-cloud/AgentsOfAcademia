@@ -70,14 +70,14 @@ $n=57$ is uniquely selected — but the agreement is **11%** (within a single po
 
 | Scale | $\alpha_1^{-1}$ | $\alpha_2^{-1}$ | $\alpha_3^{-1}$ | Spread |
 |-------|-----|-----|-----|--------|
-| $M_Z$ | 163.9 | 29.6 | 8.5 | 155.5 |
-| $10^{15}$ | 144.4 | 44.7 | 41.9 | 102.4 |
-| $10^{15.5}$ | 143.6 | 45.3 | 43.2 | 100.4 |
-| $10^{16}$ | 142.8 | 45.9 | 44.5 | 98.3 |
+| $M_Z$ | 59.0 | 29.6 | 8.5 | 50.5 |
+| $10^{15}$ | 52.0 | 44.7 | 41.9 | 10.1 |
+| $10^{15.5}$ | 51.7 | 45.3 | 43.2 | 8.5 |
+| $10^{16}$ | 51.4 | 45.9 | 44.5 | 6.9 |
 
-**Unification is NOT achieved at any scale** — the spread remains ~100 units. This is because $\alpha_1^{-1}$ (U(1)$_Y$) runs in the wrong direction relative to $\alpha_2^{-1}$ and $\alpha_3^{-1}$.
+**Exact unification is not achieved within the scales shown at one-loop SM running**, but the corrected GUT-normalized $\alpha_1^{-1} = (3/5)\alpha_Y^{-1}$ values show significant convergence rather than the ~100-unit spread previously reported (which used the incorrect $(5/3)$ factor).
 
-**Verdict:** CONFIRMED. The $M_{\text{PS}}$ tension is real and unresolved. CW predicts $10^{7.4}$ (excluded by 7.6 decades). Gauge coupling unification fails at every scale tested.
+**Verdict:** CONFIRMED. The $M_{\text{PS}}$ tension is real and unresolved. CW predicts $10^{7.4}$ (excluded by 7.6 decades). Gauge coupling unification is approximate but not exact at any tested scale.
 
 ---
 
@@ -90,7 +90,7 @@ $n=57$ is uniquely selected — but the agreement is **11%** (within a single po
 | **Ontological Clarity** | Clear: CW mechanism in PS sector of SO(8) cascade |
 | **Mathematical Completeness** | FAIL: CW $M_{\text{PS}} = 10^{7.4}$ contradicts proton bound by 7.6 decades |
 | **Empirical Grounding** | FAIL: No $M_{\text{PS}}$ value simultaneously satisfies CW + proton + unification |
-| **Logical Coherence** | FAIL: Threshold-corrected $M_{\text{PS}} = 10^{15.5}$ is ad hoc (not from CW); spread ~100 units |
+| **Logical Coherence** | FAIL: Threshold-corrected $M_{\text{PS}} = 10^{15.5}$ is ad hoc (not from CW); spread ~8.5 units (with correct GUT normalization) |
 
 **Classification: CALIBRATED** — The threshold-corrected $M_{\text{PS}} = 10^{15.5}$ is reverse-engineered from the proton decay bound, not derived from the lattice action. The CW prediction from first principles ($10^{7.4}$) is excluded. Gauge coupling unification is not achieved.
 
@@ -135,7 +135,7 @@ Key results, all derived from the lattice Hamiltonian:
 
 | Directive | Topic | Tests | Grade | Classification | Key Finding |
 |-----------|-------|-------|-------|---------------|-------------|
-| DIR-12 | Proton Decay / $M_{\text{PS}}$ | 8/8 | **D+** | CALIBRATED | CW $M_{\text{PS}} = 10^{7.4}$ excluded by 7.6 decades; unification spread ~100 units |
+| DIR-12 | Proton Decay / $M_{\text{PS}}$ | 8/8 | **D+** | CALIBRATED | CW $M_{\text{PS}} = 10^{7.4}$ excluded by 7.6 decades; coupling spread ~6.6 units (corrected normalization) |
 | DIR-14 | $D_4$ Feynman Rules | 36/36 | **B+** | DERIVED | Complete Feynman rules with correct continuum limits; 5-design gives 104x artifact suppression |
 | DIR-16 | Cosmological Constant | 14/14 | **C+** | POSTDICTION | $\alpha^{57}/(4\pi)$ matches $10^{-123}$ to ~11%, not 0.2%; no suppression mechanism derived |
 
@@ -157,7 +157,7 @@ Key results, all derived from the lattice Hamiltonian:
 
 **IV.5.8 Proton Decay and $M_{\text{PS}}$ Constraint Analysis**
 
-Direct evaluation of the Coleman-Weinberg dimensional transmutation formula with Pati-Salam field content ($B_{\text{PS}} = 28/3$, $g^2 = 4\pi\alpha_{\text{GUT}}$, $\Lambda = M_P$) yields $M_{\text{PS}}^{\text{CW}} \approx 10^{7.4}$ GeV — excluded by the Super-Kamiokande proton lifetime bound $\tau_p > 2.4 \times 10^{34}$ years by 7.6 decades. A threshold-corrected scale $M_{\text{PS}} = 10^{15.5}$ GeV places $\tau_p$ marginally above the Super-K bound (factor $\sim 10\times$), within reach of Hyper-Kamiokande. However, one-loop gauge coupling running at this proton-safe scale yields an inverse coupling spread of $\sim 100$ units ($\alpha_1^{-1} = 143.6$, $\alpha_2^{-1} = 45.3$, $\alpha_3^{-1} = 43.2$), and Pati-Salam threshold corrections reduce this by only $\sim 7\%$. The framework cannot simultaneously satisfy gauge coupling unification, proton stability, and the CW determination of $M_{\text{PS}}$ from first principles. This constitutes the framework's most significant quantitative failure in the gauge sector. Grade: D+. (`proton_decay_mps_resolution.py`, 8/8 tests pass.)
+Direct evaluation of the Coleman-Weinberg dimensional transmutation formula with Pati-Salam field content ($B_{\text{PS}} = 28/3$, $g^2 = 4\pi\alpha_{\text{GUT}}$, $\Lambda = M_P$) yields $M_{\text{PS}}^{\text{CW}} \approx 10^{7.4}$ GeV — excluded by the Super-Kamiokande proton lifetime bound $\tau_p > 2.4 \times 10^{34}$ years by 7.6 decades. A threshold-corrected scale $M_{\text{PS}} = 10^{15.5}$ GeV places $\tau_p$ marginally above the Super-K bound (factor $\sim 10\times$), within reach of Hyper-Kamiokande. With the correct GUT normalization $\alpha_1^{-1} = (3/5)\alpha_Y^{-1}$, one-loop gauge coupling running at this proton-safe scale yields a spread of $\sim 6.6$ units ($\alpha_1^{-1} = 38.7$, $\alpha_2^{-1} = 45.3$, $\alpha_3^{-1} = 43.2$), showing significant convergence but not exact unification. Pati-Salam threshold corrections above $M_{\text{PS}}$ worsen the spread. The framework cannot simultaneously satisfy gauge coupling unification, proton stability, and the CW determination of $M_{\text{PS}}$ from first principles. This constitutes the framework's most significant quantitative failure in the gauge sector. Grade: D+. (`proton_decay_mps_resolution.py`, 8/8 tests pass.)
 
 ### For VI.7 (D4 Lattice QFT):
 
@@ -183,7 +183,7 @@ The formula $\rho_\Lambda/\rho_P = \alpha^{57}/(4\pi)$ yields $1.262 \times 10^{
 
 ### 2. Gauge Coupling Unification (ALREADY HONEST)
 
-The script's finding that unification is NOT achieved (spread ~100 units) is consistent with Review86 C3 (Grade: D). No correction needed.
+The script's finding that unification is NOT achieved (spread ~6.6 units with correct GUT normalization) is consistent with Review86 C3 (Grade: D). No correction needed.
 
 ### 3. CW $M_{\text{PS}} = 10^{7.4}$ GeV (PREVIOUSLY UNDER-REPORTED)
 
@@ -203,7 +203,7 @@ The CW analytic prediction is excluded by 7.6 decades (not 4-5 as previously sug
 
 ### Not in contact with reality:
 
-1. **Gauge coupling unification** — The SM gauge couplings do not unify at any scale in this framework. The spread is ~100 units, not reducible by known threshold corrections.
+1. **Gauge coupling unification** — The SM gauge couplings show significant convergence (spread ~6.6 units at $10^{15.5}$ GeV) but do not exactly unify at any scale in this framework.
 
 2. **CW $M_{\text{PS}}$** — The first-principles prediction is catastrophically wrong ($10^{7.4}$ vs $>10^{15}$).
 

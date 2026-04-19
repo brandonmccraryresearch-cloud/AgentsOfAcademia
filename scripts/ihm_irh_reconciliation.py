@@ -200,6 +200,7 @@ def main():
     # G_lattice(k) = 1/D(k) where D(k) = Σ_δ (1 - cos(k·δ))
     # In the long-wavelength limit: D(k) → |k|² × z/d = 6|k|²
     
+    np.random.seed(42)  # reproducibility
     k_values = np.random.uniform(0, 0.1, (1000, 4))  # small k
     D_k = np.zeros(1000)
     for root in D4_ROOTS:
