@@ -289,29 +289,33 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-19 — Session 32: Review86 Directives 19, 23, 25)
+### Current State (v87.0, 2026-04-19 — Session 33: HLRE Audit Manuscript Edits)
 
-The manuscript is at v87.0. Session 32 completes Review86 directives 19, 23, and 25. 89 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 23 of 27 Review86 directives complete.
+The manuscript is at v87.0. Session 33 implements HLRE audit manuscript edits for structural/mathematical/empirical grounding honesty. 90 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 23 of 27 Review86 directives complete.
+
+**Session 33 results:**
+- **HLRE audit verification:** `scripts/hlre_audit_verification.py` — 15/15 PASS, 5 INFO. Confirmed 5 genuine derivations, 4 parametric fits, 3 tautologies. Overall grade: C+ (GPA 2.33/4.0).
+- **Manuscript honesty edits:** Abstract overclaims fixed; §II.5 ℏ/c/G → Tautological; α → Motivated conjecture; Higgs VEV → Parametric fit; parsimony 1.7–5.0; Z_λ clarified; Lean 4 scope clarified; honest residuals expanded.
 
 **Session 32 results:**
 - **Triality braid wavefunction (Directive 19):** `scripts/triality_braid_wavefunction.py` — 20/20 PASS. Wilson-Dirac zero mode ⟨γ₅⟩=-0.999, mass gap 241×. Grade: C+.
 - **IHM-IRH reconciliation (Directive 23):** `scripts/ihm_irh_reconciliation.py` — 20/20 PASS. S_unified DOUBLE-COUNTS. IHM = continuum limit of IRH. Grade: C.
 - **Neutrino mass (Directive 25):** `scripts/neutrino_mass_braid_topology.py` — 22/22 PASS. Σm_ν=59 meV, normal hierarchy. Grade: D+ (PARAMETRIC FIT).
 
-**Review86 directive status:** 20 of 27 complete (01-06, 08-14, 16-18, 20, 24, 26, 27).
+**Review86 directive status:** 23 of 27 complete (01-06, 08-14, 16-20, 23-27). Remaining: 07 (Lean4 Lorentzian), 15 (Lean4 phase lag), 21 (4D simulation extended), 22 (Lean4 Koide).
 
-**Script verification:** 86 scripts total, all pass.
+**Script verification:** 90 scripts total, all pass.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
 | α BZ integral | **Gap 0.044% (Session 12)** | Padé resummed: 0.038%; 25× improvement over Session 6 |
 | D₄ phonon spectrum | **Computed** | 4 branches, zone-boundary zero at R=(π,π,π,π), ν=1/4 |
-| Koide formula | **θ₀ DERIVED (Session 7)** | 2/9 from SO(3)/S₃ geometry; 3 methods agree exactly |
+| Koide formula | **θ₀ Berry holonomy confirmed (Session 29)** | 2/9 from SO(3)/S₃ geometry; discrepancy 0.02%; 3π divisor ad hoc |
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **78 total, all pass** | 2 new Session 27 scripts |
+| Scripts | **90 total, all pass** | +1 HLRE audit verification (Session 33) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -322,17 +326,19 @@ The manuscript is at v87.0. Session 32 completes Review86 directives 19, 23, and
 | SM gauge cascade | **42/42 PASS (Session 6)** | SO(8)→G₂→SU(3)×U(1)→SM algebraic |
 | Lattice QFT | **Møller scattering verified (Session 6)** | D₄ propagator → continuum in IR |
 | CW effective potential | **VEV 0.17%, hierarchy exact (Session 7)** | Mode decomposition R²⁴ = 1⊕4⊕19 |
-| Triality braid | **3D vortex line, 11/11 PASS (Session 7)** | τ=643, ring annihilation, w=±1,±2 |
-| Higgs quartic Z_λ | **Z_λ = 0.21; ab initio CW minimum 0.5% (S20)** | Multi-threshold matching; hierarchy exact |
-| Two-loop unification | **Spread 0.4 units; M_PS ~ 10¹⁴ derived (S8)** | Threshold corrections reduce spread 62% |
+| Triality braid | **4D hedgehog + Wilson-Dirac 2D, 20/20 PASS (Session 32)** | ⟨γ₅⟩=-0.999, mass gap 241×, full 4D G₂ needed |
+| Higgs quartic Z_λ | **Z_λ = 0.21 (D₄) or 0.469 (SM); not first-principles** | Two competing conventions; neither derived |
+| Two-loop unification | **Spread ~17 units; Δb₂=0 obstruction** | Threshold corrections reduce spread 62% but unification NOT achieved |
 | M_PS tension | **Gap reduced; threshold corrections 62% (S20)** | Proton decay safe at 10^{15.5} |
-| Proton decay | **τ_p too short at M_PS=3.5e12 (Session 11)** | Constrains M_PS > 2×10¹⁴ with D₄ |
-| Cosmological constant | **α⁵⁷/(4π) matches to 0.2%; BZ integral + triality (S8)** | Spectral density computed + triality averaged |
-| Higgs VEV | **v = E_P α⁹ π⁵(9/8); CW Z_λ=0.21 (S8)** | RG-improved; hierarchy self-consistent |
+| Proton decay | **CW M_PS=10^7.4 EXCLUDED; threshold 10^{15.5} marginal (S30)** | Constrains M_PS > 10^{15}; unification NOT achieved |
+| Cosmological constant | **α⁵⁷/(4π) matches to ~11% (S30 corrected); postdiction** | n=57 uniquely selected; triality averaging gives NO suppression |
+| Higgs VEV | **v = E_P α⁹ π⁵(9/8); parametric fit (D+)** | Blind extraction gives N≈8 not 9 |
 | 4D simulation | **Anharmonic + scaling (Session 11)** | κ₄ terms, vectorized, 64⁴ extrapolation |
 | Regge continuum limit | **7 theorems, 0 sorry (Session 11)** | O(a₀²) convergence, 5-design improvement |
-| Parsimony | **2.5–5.0 (corrected)** | All references consistent |
-| Overall confidence | **94%** | +1% from Session 20 |
+| Parsimony | **Conservative 1.7, generous 5.0 (S31/S33 audit)** | 5 genuine derivations / 2–6 effective parameters |
+| α formula | **MOTIVATED CONJECTURE (S31); 14 sub-ppm alternatives** | 27 ppb match, but R normalization not derived |
+| Empirical grounding | **C+ (GPA 2.33/4.0) — S33 honest assessment** | 5 genuine, 4 parametric fits, 3 tautologies |
+| Overall confidence | **C+ (GPA 2.33/4.0)** | HLRE audit: genuine insights + significant gaps |
 
 ### Priority 1: Close the α BZ Integral (gap now 0.044%)
 
@@ -371,35 +377,28 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 80 scripts as supplementary material
+3. Include all 90 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
-### Open Problem Status (as of v87.0 Session 27)
+### Open Problem Status (as of v87.0 Session 33)
 
 | # | Problem | Status | Next Step |
 |---|---------|--------|-----------|
 | 1 | α BZ integral | **Gap 0.044% (Session 12: Padé + two-loop)** | Three-loop lattice MC confirmation |
-| 2 | M_PS tension | **Gap 4→2 decades (Session 11: 3 methods)** | Full PS two-loop beta functions |
-| 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
-| 4 | CKM magnitudes | **V_us=0.164, lattice Dirac, 7/7 PASS (Session 13)** | QCD running corrections |
-| 5 | Proton decay | **Constrains M_PS > 2×10¹⁴ (Session 11)** | Resolves M_PS in favor of CW analytic |
-| 6 | 4D simulation | **κ₄=0.70, Z_λ(dyn)=0.108, 8/8 PASS (Session 13)** | GPU 64⁴ |
-| 7 | Regge continuum | **7 theorems, 0 sorry (Session 11)** | Complete |
-| 8 | Two-loop unification | **Spread 0.4; M_PS ~ 10¹⁴ derived (S8)** | Consistent with proton decay bound |
-| 9 | Z_λ effective potential | **RG-improved Z_λ = 0.21; κ₄ derived (S12)** | Two-loop SO(8) correction |
-| 10 | ρ_Λ spectral density | **BZ integral + triality + α⁵⁷/(4π) (S8)** | Derive f_supp mechanism |
-| 11 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Complete |
-| 12 | D₄ anharmonic κ₄ / force constant J | **κ₄≈0.70 derived (Session 12): 4 methods** | Two-loop SO(8) correction to λ |
-| 13 | Circularity resolution | **PROVEN (Lean 4)** | Complete |
-| 14 | D₄ uniqueness | **GLOBAL MIN d=2–8 (Session 7)** | Complete; gap=0.825 |
-| 15 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
-| 16 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
-| 17 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
-| 18 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Complete |
-| 19 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
-| 20 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
-| 21 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (Session 7)** | Complete; 3 methods agree |
-| 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
-| 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
-| 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v87.0 complete; 80 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 2 | α normalization R | **NOT DERIVED — CRITICAL GAP** | Single most important open calculation |
+| 3 | M_PS tension | **Threshold corrections 62% (Session 20); unification NOT achieved** | Full PS two-loop; Δb₂=0 obstruction |
+| 4 | Full CW Z_λ | **28 modes, threshold matching (Session 11); 0.21 vs 0.469** | First-principles two-loop CW |
+| 5 | CKM magnitudes | **V_us=0.2246 (0.1%), NLO matching (Session 20)** | V_cb 23% off (NNLO needed) |
+| 6 | Proton decay | **CW M_PS=10^{7.4} EXCLUDED; threshold 10^{15.5} marginal (S30)** | Unification NOT achieved at proton-safe scale |
+| 7 | 4D simulation | **κ₄=0.70, Z_λ(dyn)=0.108, 8/8 PASS (Session 13)** | GPU 64⁴ |
+| 8 | Regge continuum | **7 theorems, 0 sorry (Session 11)** | Complete |
+| 9 | ρ_Λ spectral density | **α⁵⁷/(4π) ~11% match, POSTDICTION (S30)** | Mechanism for α^n suppression unresolved |
+| 10 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Complete |
+| 11 | Circularity resolution | **PROVEN TAUTOLOGICAL (Lean 4)** | Complete |
+| 12 | D₄ uniqueness | **GLOBAL MIN d=2–8 (Session 7)** | Complete; gap=0.825 |
+| 13 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
+| 14 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
+| 15 | Parsimony ratio | **Conservative 1.7, generous 5.0 (S31/S33)** | Complete |
+| 16 | θ₀ Koide phase | **Berry holonomy 2π/3 genuine; 3π divisor ad hoc** | Derive 3π normalization |
+| 17 | Higgs VEV | **Parametric fit (Grade D+); N_raw=8 not 9** | Derive α⁹ exponent from CW |
+| 18 | Manuscript / arXiv | **v87.0 complete; 90 scripts, 311 declarations** | Priority 1-2 closure → submit |
