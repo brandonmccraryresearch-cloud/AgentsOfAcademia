@@ -54,7 +54,7 @@ def main():
     sin2_thetaW = 0.23122          # sin²θ_W(M_Z)
 
     # SM inverse couplings at M_Z (GUT normalization: α₁ = (5/3)α_Y)
-    # α₁⁻¹ = (3/5)α_Y⁻¹  where α_Y = α_em/(1 - sin²θ_W)
+    # α_Y⁻¹ = (1 - sin²θ_W)/α_em, then α₁⁻¹ = (3/5)α_Y⁻¹
     alpha_Y_inv = (1.0 - sin2_thetaW) / alpha_em_MZ
     alpha1_inv = (3.0 / 5.0) * alpha_Y_inv
     alpha2_inv = sin2_thetaW / alpha_em_MZ
@@ -245,7 +245,7 @@ def main():
     print(f"  α₂⁻¹(Λ) = {alpha2_inv_Lattice:.2f}")
     print(f"  α₃⁻¹(Λ) = {alpha3_inv_Lattice:.2f}")
     spread_change = spread_with_PS - spread
-    print(f"  Spread at Λ = {spread_with_PS:.1f} (change: {'+' if spread_change > 0 else ''}{spread_change:.1f})")
+    print(f"  Spread at Λ = {spread_with_PS:.1f} (change: {spread_change:+.1f})")
     # Honest finding: PS thresholds may worsen convergence with correct GUT normalization
     test("PS threshold effect on coupling spread computed",
          np.isfinite(spread_with_PS))
