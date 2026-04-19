@@ -205,6 +205,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/alpha_formula_alternatives.py` | α formula alternatives search (Review86 Directive 24) | 18/18 PASS, MOTIVATED CONJECTURE, 14 sub-ppm alternatives |
 | `scripts/comprehensive_parameter_audit.py` | Comprehensive parameter audit (Review86 Directive 26) | 16/16 PASS, C+ empirical grounding (GPA 2.33/4.0) |
 | `scripts/falsifiable_predictions.py` | Falsifiable prediction set (Review86 Directive 27) | 14/14 PASS, 3 high-quality calibration-free predictions |
+| `scripts/triality_braid_wavefunction.py` | Triality braid wavefunction construction (Review86 Directive 19) | 20/20 PASS, Wilson-Dirac zero mode ⟨γ₅⟩=-0.999, mass gap 241× |
+| `scripts/ihm_irh_reconciliation.py` | IHM-IRH reconciliation via √24 bridge (Review86 Directive 23) | 20/20 PASS, S_unified double-counts, IHM = continuum limit of IRH |
+| `scripts/neutrino_mass_braid_topology.py` | Neutrino mass from incomplete braid topology (Review86 Directive 25) | 22/22 PASS, Σm_ν=59 meV, normal hierarchy, φ_ν fit |
 
 ## MCP Server Usage
 
@@ -343,9 +346,16 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-18 — Session 31: Review86 Directives 24, 26, 27)
+### Current State (v87.0, 2026-04-19 — Session 32: Review86 Directives 19, 23, 25)
 
-The manuscript is at v87.0. Session 31 completes 3 Review86 directives: α formula alternatives test (Directive 24), comprehensive parameter audit (Directive 26), and falsifiable prediction set (Directive 27). MCP math tools used for verification. Total: 20 of 27 directives complete.
+The manuscript is at v87.0. Session 32 completes 3 Review86 directives: triality braid wavefunction construction (Directive 19), IHM-IRH reconciliation (Directive 23), and neutrino mass from braid topology (Directive 25). MCP math tools used for verification. Total: 23 of 27 directives complete.
+
+**Session 32 results:**
+- **Triality braid wavefunction (Directive 19):** `scripts/triality_braid_wavefunction.py` — 20/20 PASS. Explicit hedgehog defect on L=4 D₄ lattice. Wilson-Dirac spectrum (2D, L=8) shows near-zero modes with chirality ⟨γ₅⟩ = -0.999, mass gap 241.7×, doubler ratio 3917×. Full 4D non-Abelian G₂ construction remains open. Grade: C+. Classification: CONSTRUCTIVE DEMONSTRATION.
+- **IHM-IRH reconciliation (Directive 23):** `scripts/ihm_irh_reconciliation.py` — 20/20 PASS. √24 bridge is ALGEBRAICALLY CONSISTENT (a₀, M*, J, Ω_P self-consistent). CRITICAL FINDING: S_unified = S_IHM + S_IRH is ILL-DEFINED (double-counts). IHM is the continuum limit of IRH, not an independent theory. κ/ρ₀ = c²/24, requiring κ_IHM = zJ/a₀ = 24J/a₀. 4 table entries incomplete. Grade: C. Classification: PARTIALLY CONSISTENT.
+- **Neutrino mass (Directive 25):** `scripts/neutrino_mass_braid_topology.py` — 22/22 PASS. Koide-like parametrization with φ_ν = 0.479 rad matches mass splittings (Δm²₂₁/Δm²₃₂ within 0.1% of PDG). Σm_ν = 59 meV (within cosmological bound). Normal hierarchy predicted. θ₁₂ ≈ 35.3° (1.9° off tribimaximal), θ₁₃ = 0.45° (8.1° off — D₄ correction insufficient). Seesaw is standard physics, δ_ν is a free parameter. Grade: D+. Classification: PARAMETRIC FIT.
+- **MCP verification:** math-mcp confirmed Koide identities Σcos(θ+2πn/3) = 0 and Σcos²(θ+2πn/3) = 3/2. Koide sum rule Σm_i = 6×M_scale confirmed.
+- **Total:** 89 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
 
 **Session 31 results:**
 - **α formula alternatives (Directive 24):** `scripts/alpha_formula_alternatives.py` — 18/18 PASS. Exhaustive search over 11,250 group-theoretic expressions. 14 sub-ppm alternatives found; 2 within 100 ppb. (28,14) = (dim SO(8), dim G₂) is the best N=137 match at 27.3 ppb BUT not uniquely selected. Verdict: MOTIVATED CONJECTURE. Grade: B.
@@ -426,7 +436,7 @@ The manuscript is at v87.0. Session 31 completes 3 Review86 directives: α formu
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 31):** 86 scripts total. All prior scripts unchanged + 3 new (Directives 24, 26, 27). α formula verdict: MOTIVATED CONJECTURE. Overall empirical grounding: C+ (GPA 2.33/4.0).
+**Script verification (Session 32):** 89 scripts total. All prior scripts unchanged + 3 new (Directives 19, 23, 25). Neutrino mass is PARAMETRIC FIT (φ_ν free). IHM-IRH: S_unified double-counts. Triality braid: constructive demo on small lattice.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -437,7 +447,7 @@ The manuscript is at v87.0. Session 31 completes 3 Review86 directives: α formu
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **86 total, all pass** | 3 new scripts (Directives 24, 26, 27) |
+| Scripts | **89 total, all pass** | 3 new scripts (Directives 19, 23, 25) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
@@ -448,7 +458,7 @@ The manuscript is at v87.0. Session 31 completes 3 Review86 directives: α formu
 | SM gauge cascade | **42/42 PASS (Session 6)** | SO(8)→G₂→SU(3)×U(1)→SM algebraic |
 | Lattice QFT | **Møller scattering verified (Session 6)** | D₄ propagator → continuum in IR |
 | CW effective potential | **VEV 0.17%, hierarchy exact (Session 7)** | Mode decomposition R²⁴ = 1⊕4⊕19 |
-| Triality braid | **3D vortex line, 11/11 PASS (Session 7)** | τ=643, ring annihilation, w=±1,±2 |
+| Triality braid | **4D hedgehog + Wilson-Dirac 2D, 20/20 PASS (Session 32)** | ⟨γ₅⟩=-0.999, mass gap 241×, full 4D G₂ needed |
 | Higgs quartic Z_λ | **Z_λ = 0.21; ab initio CW minimum 0.5% (S20)** | Multi-threshold matching; hierarchy exact |
 | Two-loop unification | **Spread 0.4 units; M_PS ~ 10¹⁴ derived (S8)** | 4-decade tension with scan; proton stability ✅ |
 | M_PS tension | **Gap reduced; threshold corrections 62% (S20)** | Proton decay safe at 10^{15.5} |
@@ -499,7 +509,7 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 80 scripts as supplementary material
+3. Include all 89 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
 ### Open Problem Status (as of v85.0 Session 12)
@@ -528,6 +538,6 @@ When Priorities 1-4 close:
 | 20 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
 | 21 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (S7), Berry holonomy confirmed (S29)** | Complete; discrepancy 0.02% |
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
-| 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
+| 23 | Topological defects | **4D hedgehog + Wilson-Dirac 2D + 3D vortex (S7+S32)** | Full 4D non-Abelian G₂ gauge |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v87.0 complete; 86 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v87.0 complete; 89 scripts, 311 declarations** | Priority 2,4 closure → submit |

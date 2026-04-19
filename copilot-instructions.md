@@ -289,14 +289,14 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-18 — Session 31: Review86 Directives 24, 26, 27)
+### Current State (v87.0, 2026-04-19 — Session 32: Review86 Directives 19, 23, 25)
 
-The manuscript is at v87.0. Session 31 completes Review86 directives 24, 26, and 27. 86 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 20 of 27 Review86 directives complete.
+The manuscript is at v87.0. Session 32 completes Review86 directives 19, 23, and 25. 89 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 23 of 27 Review86 directives complete.
 
-**Session 31 results:**
-- **α formula alternatives (Directive 24):** `scripts/alpha_formula_alternatives.py` — 18/18 PASS. MOTIVATED CONJECTURE verdict. 14 sub-ppm alternatives exist.
-- **Comprehensive parameter audit (Directive 26):** `scripts/comprehensive_parameter_audit.py` — 16/16 PASS. Overall empirical grounding: C+ (GPA 2.33/4.0).
-- **Falsifiable predictions (Directive 27):** `scripts/falsifiable_predictions.py` — 14/14 PASS. 3 high-quality calibration-free predictions.
+**Session 32 results:**
+- **Triality braid wavefunction (Directive 19):** `scripts/triality_braid_wavefunction.py` — 20/20 PASS. Wilson-Dirac zero mode ⟨γ₅⟩=-0.999, mass gap 241×. Grade: C+.
+- **IHM-IRH reconciliation (Directive 23):** `scripts/ihm_irh_reconciliation.py` — 20/20 PASS. S_unified DOUBLE-COUNTS. IHM = continuum limit of IRH. Grade: C.
+- **Neutrino mass (Directive 25):** `scripts/neutrino_mass_braid_topology.py` — 22/22 PASS. Σm_ν=59 meV, normal hierarchy. Grade: D+ (PARAMETRIC FIT).
 
 **Review86 directive status:** 20 of 27 complete (01-06, 08-14, 16-18, 20, 24, 26, 27).
 
