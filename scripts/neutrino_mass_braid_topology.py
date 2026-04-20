@@ -195,13 +195,26 @@ def main():
             masses.append(M_scale * val**2)
         return np.array(masses)
     
-    # Verify Koide identity for charged leptons
+    # Verify Koide identity across several physically valid φ values
+    # Q = 2/3 holds exactly when all (1 + √2 cos(φ + 2πn/3)) ≥ 0
+    # (otherwise sqrt(m) picks up |·| and the identity breaks).
+    # Valid ranges: φ ∈ [0, ~0.26], [~1.84, ~2.35], [~3.93, ~4.45], [~6.02, 2π]
     M_lep_scale = (np.sqrt(M_E) + np.sqrt(M_MU) + np.sqrt(M_TAU))**2 / 9
-    m_lep = koide_masses(M_lep_scale, theta_0)
-    koide_Q = np.sum(m_lep) / (np.sum(np.sqrt(m_lep)))**2
-    check("Test 9: Koide parametrization gives Q = 2/3 for any φ",
-          np.isclose(koide_Q, 2.0/3.0, atol=1e-10),
-          f"Q(charged leptons) = {koide_Q:.12f}")
+    phi_samples = [
+        0.0,
+        0.1,
+        theta_0,         # 2/9 ≈ 0.222
+        0.25,
+        2.1,             # near 2π/3 range
+    ]
+    koide_Q_values = []
+    for phi in phi_samples:
+        m_lep = koide_masses(M_lep_scale, phi)
+        koide_Q_values.append(np.sum(m_lep) / (np.sum(np.sqrt(m_lep)))**2)
+    max_koide_dev = max(abs(q - 2.0 / 3.0) for q in koide_Q_values)
+    check("Test 9: Koide parametrization gives Q = 2/3 for valid φ",
+          all(np.isclose(q, 2.0 / 3.0, atol=1e-10) for q in koide_Q_values),
+          f"tested {len(phi_samples)} φ values; max |Q-2/3| = {max_koide_dev:.2e}")
     
     # Test 10: Trigonometric identity
     phi_test = 0.37  # arbitrary test value

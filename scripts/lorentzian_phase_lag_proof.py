@@ -115,7 +115,7 @@ def main():
         Numerator → 2ζ·1 = 2ζ > 0  (for any ζ > 0)
         Denominator → 1 − 1 = 0
 
-    Since 2ζ > 0 and 0⁺ from below (approaching from ω < ω₀):
+    Since 2ζ > 0 and the denominator approaches 0⁺ (as ω → ω₀ with ω < ω₀):
         arctan(2ζ/0⁺) = arctan(+∞) = π/2
 
     QED: The phase lag at resonance is π/2 for ANY ζ > 0.

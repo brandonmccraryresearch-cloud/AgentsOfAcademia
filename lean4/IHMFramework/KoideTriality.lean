@@ -103,6 +103,7 @@ noncomputable def koideRatio : ℝ := 2 / 3
 /-- The Koide ratio Q = 2/3. -/
 theorem koide_ratio_value : koideRatio = 2 / 3 := by
   unfold koideRatio
+  rfl
 
 /-- The Koide ratio is strictly between 1/3 and 1. -/
 theorem koide_ratio_bounds : 1 / 3 < koideRatio ∧ koideRatio < 1 := by
@@ -140,6 +141,7 @@ noncomputable def koidePhase : ℝ := 2 / 9
 /-- θ₀ = 2/9 (definition). -/
 theorem koide_phase_value : koidePhase = 2 / 9 := by
   unfold koidePhase
+  rfl
 
 /-- θ₀ is strictly positive. -/
 theorem koide_phase_pos : 0 < koidePhase := by

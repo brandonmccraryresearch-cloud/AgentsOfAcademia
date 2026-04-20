@@ -41,6 +41,8 @@ permissions:
   contents: read
 
 env:
+  # Resolved dynamically — see version-consistency job.
+  # Fallback value used only if dynamic resolution fails.
   MANUSCRIPT: "89.0IRH.md"
 
 jobs:

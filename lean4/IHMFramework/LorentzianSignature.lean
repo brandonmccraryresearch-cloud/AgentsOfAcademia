@@ -120,6 +120,7 @@ def resonantPhaseLag : ℝ := π / 2
 /-- The resonant phase lag equals π/2 (definition). -/
 theorem resonant_phase_lag_value : resonantPhaseLag = π / 2 := by
   unfold resonantPhaseLag
+  rfl
 
 /-- The resonant phase lag is strictly positive. -/
 theorem resonant_phase_lag_pos : 0 < resonantPhaseLag := by
@@ -233,6 +234,7 @@ theorem lorentzian_not_euclidean :
 theorem phase_lag_universal (dr : DampingRatio) :
     resonantPhaseLag = π / 2 := by
   unfold resonantPhaseLag
+  rfl
 
 /-- The Caldeira-Leggett damping ratio from D₄ phonon bath.
     ζ_CL = π/12 ≈ 0.262 (underdamped regime). -/
