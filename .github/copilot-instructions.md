@@ -209,6 +209,9 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/ihm_irh_reconciliation.py` | IHM-IRH reconciliation via √24 bridge (Review86 Directive 23) | 20/20 PASS, S_unified double-counts, IHM = continuum limit of IRH |
 | `scripts/neutrino_mass_braid_topology.py` | Neutrino mass from incomplete braid topology (Review86 Directive 25) | 22/22 PASS, Σm_ν=59 meV, normal hierarchy, φ_ν fit |
 | `scripts/hlre_audit_verification.py` | HLRE audit structural/mathematical/empirical grounding verification (Session 33) | 15/15 PASS, 5 INFO, GPA 2.33/4.0 |
+| `scripts/alpha_normalization_derivation.py` | α normalization R exhaustive search (HLRE P1, Session 35) | 15/15 PASS, NOT DERIVED (Grade D+), best h∨³×12=2592 (0.12%) |
+| `scripts/theta0_3pi_derivation.py` | θ₀ = 2/9 factor 3π geometric identification (HLRE P2, Session 35) | 15/15 PASS, MOTIVATED CONJECTURE (Grade C+), 3π uniquely selected |
+| `scripts/dirac_gamma_explicit.py` | Explicit D₄ Dirac gamma matrices + Clifford algebra (HLRE P3, Session 35) | 21/21 PASS, DERIVATION (Grade B), 96 coefficients + 10 relations |
 
 ## MCP Server Usage
 
@@ -347,9 +350,17 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-19 — Session 33: HLRE Audit Manuscript Edits)
+### Current State (v87.0, 2026-04-20 — Session 35: HLRE Audit Priority Scripts)
 
-The manuscript is at v87.0. Session 33 implements the HLRE audit recommendations from Session 32, making systematic honesty corrections throughout the manuscript based on the exhaustive structural/mathematical/empirical grounding assessment. MCP math tools verified all key claims. Total: 23 of 27 directives complete + HLRE audit corrections applied.
+The manuscript is at v87.0. Session 35 addresses the top 3 HLRE audit priorities with exhaustive computational scripts verified by MCP math tools. 93 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 23 of 27 Review86 directives complete + 3 HLRE priority scripts.
+
+**Session 35 results:**
+- **α normalization R (HLRE P1):** `scripts/alpha_normalization_derivation.py` — 15/15 PASS. R NOT DERIVED. Best candidate h∨³×12=2592 (0.12% gap). Two routes (impedance, partition function) both ~11% off. Classification: NOT DERIVED (Grade D+).
+- **θ₀ = 2/9 factor 3π (HLRE P2):** `scripts/theta0_3pi_derivation.py` — 15/15 PASS. 3π uniquely best normalization; 3 geometric identifications (geodesic boundary, holonomy deficit, triality×angular). Classification: MOTIVATED CONJECTURE (Grade C+).
+- **Dirac gamma matrices (HLRE P3):** `scripts/dirac_gamma_explicit.py` — 21/21 PASS. All 96 c^μ_R coefficients, 10 Clifford relations, γ⁵, Wilson term. Classification: DERIVATION (Grade B).
+- **Manuscript:** §II.3.9 (R search), §III.6.2 (3π identification), §VI.6 (explicit gamma construction).
+- **MCP verification:** (2π/3)/(3π)=2/9, |W|×dim(G₂)=2688, 2⁵×3⁴−3=2589, (γ⁰)²=I₄.
+- **Total:** 93 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
 
 **Session 33 results:**
 - **HLRE audit verification:** `scripts/hlre_audit_verification.py` — 15/15 PASS, 5 INFO. MCP-verified: α formula 27 ppb, θ₀ = (2π/3)/(3π) = 2/9, sin²θ_W = 3/13 (0.19%), α^57/(4π) ~11% match. Confirmed 5 genuine derivations, 4 parametric fits, 3 tautologies. Critical gap: α normalization R not derived.
@@ -452,7 +463,7 @@ The manuscript is at v87.0. Session 33 implements the HLRE audit recommendations
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 33):** 90 scripts total. All prior scripts unchanged + 1 new (HLRE audit verification). Manuscript honesty edits applied: Abstract, §II.5, Appendix J, §XV, honest residuals, Lean 4 scope. α normalization R remains #1 open problem.
+**Script verification (Session 35):** 93 scripts total. All prior scripts unchanged + 3 new (HLRE P1-P3). Manuscript updated: §II.3.9, §III.6.2, §VI.6. α normalization R remains #1 open problem.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -463,7 +474,7 @@ The manuscript is at v87.0. Session 33 implements the HLRE audit recommendations
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **90 total, all pass** | +1 HLRE audit verification (Session 33) |
+| Scripts | **93 total, all pass** | +3 HLRE audit priority scripts (Session 35) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
