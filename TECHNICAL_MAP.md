@@ -83,7 +83,7 @@ This document provides the technical map of the IRH framework: the logical depen
 ```
 AgentsOfAcademia/
 │
-├── 86.0IRH.md                    # Main manuscript (v86.0) — the theory
+├── 89.0IRH.md                    # Main manuscript (v89.0) — the theory
 ├── README.md                      # Project overview + badges
 ├── copilot-instructions.md        # Agent session configuration
 ├── TECHNICAL_MAP.md               # This file
@@ -92,7 +92,7 @@ AgentsOfAcademia/
 │   ├── IHMFramework.lean          # Root module (imports all submodules)
 │   ├── lakefile.toml              # Build config (Lean v4.30.0-rc1)
 │   ├── lean-toolchain             # Lean version pin
-│   └── IHMFramework/              # 16 Lean source files
+│   └── IHMFramework/              # 17 Lean source files + registry
 │       ├── Basic.lean             #   30 decl: core substrate axioms
 │       ├── V2Basic.lean           #   13 decl: stability, phonon
 │       ├── V2Problems.lean        #   17 decl: holographic projection
@@ -108,13 +108,15 @@ AgentsOfAcademia/
 │       ├── DiracEquation.lean     #   49 decl: lattice Dirac, Clifford
 │       ├── BornRule.lean          #   21 decl: Born rule, Gleason
 │       ├── ModeDecomposition.lean #   58 decl: irrep, Schur, branching
+│       ├── LorentzianSignature.lean # 31 decl: phase lag → metric
+│       ├── KoideTriality.lean     #   34 decl: Koide from triality
 │       └── FormalVerificationRegistry.lean  # Registry + stub axioms
 │
-├── scripts/                       # Computational verification (66 Python scripts)
+├── scripts/                       # Computational verification (99 Python scripts)
 │   ├── verify_numerical_predictions.py     # Master verification
 │   ├── alpha_first_principles_bz.py        # α blind BZ (18/18 PASS)
 │   ├── critical_damping_caldeira_leggett.py # Caldeira-Leggett (25/25)
-│   ├── ...                                  # (66 scripts total)
+│   ├── ...                                  # (99 scripts total)
 │   └── ward_identity_closure_v2.py
 │
 ├── docs/                          # Documentation
@@ -236,11 +238,11 @@ The following shows which results depend on which prior results. Each node lists
 
 | Task | Command | Expected Result |
 |------|---------|-----------------|
-| Build Lean proofs | `cd lean4/ && lake update && lake build` | 311 declarations, 0 errors |
+| Build Lean proofs | `cd lean4/ && lake update && lake build` | 376 declarations, 0 errors |
 | Check for sorry | `grep -r "sorry" lean4/IHMFramework/*.lean` | 0 matches (only in comments) |
 | Run all scripts | `for f in scripts/*.py; do python3 "$f"; done` | All PASS |
 | Run single script | `python3 scripts/<name>.py` | PASS/FAIL per test |
-| Build PDF | `cd tools/ && bash build-pdf.sh` | 86.0IRH.pdf |
+| Build PDF | `cd tools/ && bash build-pdf.sh` | 89.0IRH.pdf |
 
 ---
 

@@ -6,11 +6,11 @@
   It maps each manuscript formula or claim to its derivation grade, Lean 4
   file, key theorem(s), and verification status.
 
-  Total: 311 declarations across 15 files, zero sorry.
+  Total: 376 declarations across 17 files, zero sorry.
   Lean version: v4.30.0-rc1 + Mathlib
   Build command: lake build
 
-  Registry synchronized with IRH v86.0 manuscript.
+  Registry synchronized with IRH v89.0 manuscript.
   Live link: https://github.com/brandonmccraryresearch-cloud/AgentsOfAcademia/blob/main/lean4/IHMFramework/FormalVerificationRegistry.lean
 -/
 
@@ -27,6 +27,8 @@ import IHMFramework.DiracEquation
 import IHMFramework.Goldstone
 import IHMFramework.LiebRobinson
 import IHMFramework.MeasureUniqueness
+import IHMFramework.LorentzianSignature
+import IHMFramework.KoideTriality
 
 /-! # Formal Verification Registry
 
@@ -60,6 +62,8 @@ import IHMFramework.MeasureUniqueness
   | V.4/VI.7 | GR continuum limit + lattice QFT roadmap | A | ReggeContinuumLimit.lean | `regge_limit_error` | Verified | Error <10^{-70} |
   | VIII.3 | Higgs VEV scaling v = E_P · α^9 · π^5 · 9/8 | C | FormalVerificationRegistry.lean | `higgs_vev_exponent_stub` | Stub | Impedance cascade; CW ab initio 0.5% |
   | X.3 | CKM magnitudes |V_us|, |V_cb| | C | FormalVerificationRegistry.lean | `ckm_magnitudes_stub` | Stub | V_us 0.1% (NLO); V_cb 23% off |
+  | I.4 | Lorentzian signature from π/2 phase lag | B | LorentzianSignature.lean | `phase_lag_gives_lorentzian`, `resonant_phase_lag_value` | Verified | Universal for all ζ > 0; Caldeira-Leggett ζ = π/12 |
+  | III.6 | Koide Q = 2/3 from triality phase θ₀ = 2/9 | C+ | KoideTriality.lean | `berry_phase_normalization`, `koide_ratio_value` | Verified | θ₀ = (2π/3)/(3π) = 2/9; lepton errors < 0.01% |
 
   ## Grade Legend
 
@@ -73,7 +77,7 @@ import IHMFramework.MeasureUniqueness
   ```
   cd lean4/
   lake update
-  lake build       -- 311 declarations, 0 sorry, 2528 jobs
+  lake build       -- 376 declarations, 0 sorry
   ```
 -/
 

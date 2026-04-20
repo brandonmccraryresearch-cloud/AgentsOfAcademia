@@ -6,11 +6,11 @@
 
 ### Rule 1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`86.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
+**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`89.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
 
 ### Rule 2: Manuscript Update Reminder
 
-The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
+The current manuscript is **`89.0IRH.md`** (v89.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
 
 - **Only finalized theoretical content** goes into the manuscript — never in-progress drafts, debug output, or intermediate results.
 - **Paper style and syntax** must be maintained — LaTeX-compatible markdown, section numbering, citation format.
@@ -55,13 +55,13 @@ The current manuscript is **`86.0IRH.md`** (v86.0). After every agent session th
 
 ### Rule 2.2: ⚠️ NO VERSION OR SESSION MARKERS IN MANUSCRIPT — NON-NEGOTIABLE
 
-> **The ONLY place a version marker (e.g., "v86.0") may appear in the manuscript is in the preamble/header block (title, date, version line). Version and session markers MUST NOT appear anywhere else in the document.**
+> **The ONLY place a version marker (e.g., "v87.0") may appear in the manuscript is in the preamble/header block (title, date, version line). Version and session markers MUST NOT appear anywhere else in the document.**
 
 The manuscript must read as a professional academic paper at all times. The following are **strictly prohibited** anywhere outside the preamble:
 
-- Version annotations: `v75.0`, `v78.0`, `v83.0`, `v86.0`, etc.
+- Version annotations: `v75.0`, `v78.0`, `v83.0`, `v87.0`, etc.
 - Session annotations: `Session 3`, `Session 12`, `Session 20`, etc.
-- Update markers: `**v86.0 update:**`, `**v79.0 Response:**`, `(added v75.0)`, `(v80.0, Review4 §2)`, etc.
+- Update markers: `**v87.0 update:**`, `**v79.0 Response:**`, `(added v75.0)`, `(v80.0, Review4 §2)`, etc.
 - Grade evolution markers: `Grade: C+ → D+ → B+` (use only the current grade)
 - Inline version-change commentary: "The v74.0 formula...", "In v75.0, this was resolved...", "upgraded from Session 2", etc.
 
@@ -72,7 +72,7 @@ The manuscript must read as a professional academic paper at all times. The foll
 - Use `audit_results/` or commit messages to track version-by-version changes, not the manuscript itself
 
 **Example — WRONG:**
-> **v86.0 corrections (Session 20):** The Ward-identity estimator has been corrected to normalize by accepted samples.
+> **v87.0 corrections (Session 20):** The Ward-identity estimator has been corrected to normalize by accepted samples.
 
 **Example — CORRECT:**
 > The Ward-identity estimator normalizes by the number of accepted samples to avoid systematic bias from the rejection rate.
@@ -83,7 +83,7 @@ When any session produces changes or advancements, agents **MUST** update all th
 
 1. **`.github/copilot-instructions.md`** — This file. Update current state, version numbers, theorem counts, priority lists, and continuation plan.
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep MCP tool guides, constraint lists, and operational directives current.
-3. **`86.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
+3. **`89.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
 
 ### Rule 4: Specialized Agent Preference
 
@@ -106,14 +106,14 @@ When a session context involves mathematical expressions, physical constants, qu
 
 ## File Naming Convention
 
-The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `86.0IRH.md`). When bumping to a new version:
+The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `89.0IRH.md`). When bumping to a new version:
 
 1. **Rename the file** using `git mv {old_version}IRH.md {new_version}IRH.md`
 2. **Update the version header** in the manuscript header near the top of the document
 3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
-The current manuscript file is: **`86.0IRH.md`**
+The current manuscript file is: **`89.0IRH.md`**
 
 ## Environment Setup
 
@@ -155,7 +155,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/d4_uniqueness.py` | D₄ Gibbs free energy minimum among 4D root lattices + cross-dim d=2–8 | D₄ global minimum, gap=0.825 |
 | `scripts/two_loop_unification_v3.py` | Pati-Salam unification (Session 4) | Spread 17→0.4 units |
 | `scripts/lattice_g_minus_2.py` | Anomalous magnetic moment on D₄ (Session 4) | Schwinger α/(2π) verified |
-| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) matches 0.2% |
+| `scripts/cosmological_constant_spectral.py` | Vacuum energy spectral density (Session 4) | α⁵⁷/(4π) ~11% match (corrected S30) |
 | `scripts/higgs_vev_derivation.py` | Higgs VEV derivation attempt (Session 4) | Fitting, not derived |
 | `scripts/bz_two_loop.py` | Two-loop BZ integral: V₃≡0 + self-energy (Session 6) | Gap 1.7%→0.95% |
 | `scripts/symmetry_breaking_cascade.py` | SO(8)→G₂→SU(3)→SM algebraic cascade (Session 6) | 42/42 PASS |
@@ -187,6 +187,32 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/mps_threshold_corrections.py` | M_PS threshold corrections from PS heavy fields (Directive 7, Session 20) | 6/6 PASS, spread reduction 62% |
 | `scripts/higgs_cw_ab_initio.py` | Ab initio CW minimum search on D₄ (Directive 6, Session 20) | 8/8 PASS, VEV 0.5% |
 | `scripts/ckm_nlo_matching.py` | CKM NLO matching with QCD running (Directive 8, Session 20) | 7/7 PASS, V_us 0.1% |
+| `scripts/phonon_velocity_resolution.py` | Phonon velocity from D₄ dynamical matrix (Review86 Directive 10) | 12/12 PASS, c²=3J verified |
+| `scripts/alpha57_independent_test.py` | α^57/(4π) uniqueness validation (Review86 Directive 17) | 18/18 PASS, n=57 unique |
+| `scripts/gibbs_free_energy_lattice.py` | Gibbs free energy from phonon partition function (Review86 Directive 09) | 16/16 PASS, simple Gibbs selects A₄; D₄ requires multi-factor score |
+| `scripts/lorentzian_phase_lag_proof.py` | Lorentzian signature for any ζ > 0 (Review86 Directive 01) | 12/12 PASS, π/2 at resonance for all ζ |
+| `scripts/nmixing_v3_resolution.py` | N_mixing vs V₃≡0 contradiction resolution (Review86 Directive 02) | 12/12 PASS, CW mass channels ≠ cubic vertices |
+| `scripts/svea_lorentzian_derivation.py` | SVEA envelope → Lorentzian signature (Review86 Directive 04) | 16/16 PASS, corrects §I.4 derivation |
+| `scripts/bz_vacuum_polarization_explicit.py` | Explicit one-loop BZ vacuum polarization (Review86 Directive 03) | 20/20 PASS, Π(0)=0.0528, R≈2597 |
+| `scripts/higgs_vev_blind_derivation.py` | Blind CW exponent extraction for Higgs VEV (Review86 Directive 05) | 20/20 PASS, N_raw=7.81, grade C+ |
+| `scripts/damping_from_d4_hamiltonian.py` | Spectral density verification of ζ=π/12 (Review86 Directive 06) | 21/21 PASS, ζ_max≈0.73, critical damping unachievable |
+| `scripts/g2_stabilizer_justification.py` | G₂ stabilizer from triality equivariance (Review86 Directive 11) | 87/87 PASS, G₂=∩ three Spin(7) |
+| `scripts/koide_geometric_eigenvalue.py` | θ₀=2/9 as geometric eigenvalue (Review86 Directive 08) | 20/22 PASS (2 expected FAIL), Berry holonomy confirms 2/9, discrepancy 0.02% |
+| `scripts/aro_spatial_uniformity.py` | ARO spatial uniformity resolution (Review86 Directive 13) | 22/22 PASS, description error not physics error |
+| `scripts/proton_decay_mps_resolution.py` | Proton decay M_PS constraint (Review86 Directive 12) | 8/8 PASS, CW M_PS=10^7.4 excluded, grade D+ |
+| `scripts/d4_feynman_rules.py` | D₄ lattice QED Feynman rules (Review86 Directive 14) | 36/36 PASS, D=J(k²δ+2k⊗k), 104× artifact suppression |
+| `scripts/cosmo_constant_spectral_derivation.py` | α^57 spectral derivation assessment (Review86 Directive 16) | 14/14 PASS, ~11% match (postdiction), n=57 unique |
+| `scripts/alpha_formula_alternatives.py` | α formula alternatives search (Review86 Directive 24) | 18/18 PASS, MOTIVATED CONJECTURE, 14 sub-ppm alternatives |
+| `scripts/comprehensive_parameter_audit.py` | Comprehensive parameter audit (Review86 Directive 26) | 16/16 PASS, C+ empirical grounding (GPA 2.33/4.0) |
+| `scripts/falsifiable_predictions.py` | Falsifiable prediction set (Review86 Directive 27) | 14/14 PASS, 3 high-quality calibration-free predictions |
+| `scripts/triality_braid_wavefunction.py` | Triality braid wavefunction construction (Review86 Directive 19) | 20/20 PASS, Wilson-Dirac zero mode ⟨γ₅⟩=-0.999, mass gap 241× |
+| `scripts/ihm_irh_reconciliation.py` | IHM-IRH reconciliation via √24 bridge (Review86 Directive 23) | 20/20 PASS, S_unified double-counts, IHM = continuum limit of IRH |
+| `scripts/neutrino_mass_braid_topology.py` | Neutrino mass from incomplete braid topology (Review86 Directive 25) | 22/22 PASS, Σm_ν=59 meV, normal hierarchy, φ_ν fit |
+| `scripts/hlre_audit_verification.py` | HLRE audit structural/mathematical/empirical grounding verification (Session 33) | 15/15 PASS, 5 INFO, GPA 2.33/4.0 |
+| `scripts/alpha_normalization_derivation.py` | α normalization R exhaustive search (HLRE P1, Session 35) | 15/15 PASS, NOT DERIVED (Grade D+), best h∨³×12=2592 (0.12%) |
+| `scripts/theta0_3pi_derivation.py` | θ₀ = 2/9 factor 3π geometric identification (HLRE P2, Session 35) | 15/15 PASS, MOTIVATED CONJECTURE (Grade C+), 3π uniquely selected |
+| `scripts/dirac_gamma_explicit.py` | Explicit D₄ Dirac gamma matrices + Clifford algebra (HLRE P3, Session 35) | 21/21 PASS, DERIVATION (Grade B), 96 coefficients + 10 relations |
+| `scripts/session38_meta_verification.py` | Session 38 meta-verification: DIR-07/15 + DIR-22 + all framework claims | 20/20 PASS, phase lag π/2, Koide θ₀=2/9, all 27 DIR complete |
 
 ## MCP Server Usage
 
@@ -300,7 +326,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 311 verified declarations across 15 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
+Current state: 376 verified declarations across 17 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58, LorentzianSignature.lean: 31, KoideTriality.lean: 34). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: Lean v4.30.0-rc1 + Mathlib.
 
 ## Agent Architecture
 
@@ -325,11 +351,98 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v86.0, 2026-04-13 — Session 20: Directives 4-8 Scripts + Manuscript Update)
+### Current State (v89.0, 2026-04-20 — Session 38: Lean 4 DIR-07/15 + DIR-22 + Resolution Plan)
 
-The manuscript is at v86.0. Session 20 creates 5 scripts addressing Critical Review Directives 4-8 and integrates results into the manuscript body.
+The manuscript is at v89.0. Session 38 completes all 27 Review86 directives by formalizing the Lorentzian signature (DIR-07/15) and Koide relation (DIR-22) in Lean 4. An exhaustive resolution plan for the 5 UNRESOLVED concerns (E3, E5, G1, G3, Core) is created in `audit_results/session38_resolution_plan.md`. 99 Python scripts, 376 Lean 4 declarations across 17 files, 0 sorry.
 
-**Session 20 results:**
+**Session 38 results:**
+- **LorentzianSignature.lean (DIR-07/15):** 31 declarations, 0 sorry. Formalizes: phase lag π/2 at resonance for all ζ > 0, Lorentzian metric signature (-,+,+,+) from single negative eigenvalue, Caldeira-Leggett ζ = π/12 (underdamped), transient timescale 12/π < 4 Planck times.
+- **KoideTriality.lean (DIR-22):** 34 declarations, 0 sorry. Formalizes: Koide ratio Q = 2/3 (trigonometric identity), θ₀ = 2/9 from Berry phase normalization (2π/3)/(3π), D₄ triality gives exactly 3 generations, M_scale normalization factor 9 = 3², lepton mass errors < 0.01%.
+- **Verification script:** `scripts/session38_meta_verification.py` — 20/20 PASS. Independent verification covering D₄ roots, 5-design, α formula, Koide identities, lepton masses, Lorentzian phase lag, CKM phase, cosmological constant, Higgs VEV, anomaly cancellation.
+- **Resolution plan:** `audit_results/session38_resolution_plan.md` — Exhaustive action directives for all 5 UNRESOLVED concerns with phase-by-phase computational strategies.
+- **All 27 Review86 directives now complete.** DIR-07/15 (Lean4 Lorentzian) ✅, DIR-22 (Lean4 Koide) ✅.
+- **Manuscript bumped:** v88.0 → v89.0. Declaration count 311→376, script count 98→99, file count 15→17.
+- **Total:** 99 Python scripts, 376 Lean 4 declarations across 17 files, 0 sorry.
+
+**Session 37 results:**
+- **Meta-audit report:** `audit_results/session37_meta_audit.md` — Grades all 32 Review86 concerns. 10 RESOLVED, 5 SUBSTANTIALLY RESOLVED, 12 PARTIALLY RESOLVED, 5 UNRESOLVED.
+- **Verification script:** `scripts/session37_meta_verification.py` — 20/20 PASS. Independent verification of D₄ root count (24), 5-design moments, α⁻¹ formula (27 ppb), sin²θ_W (0.2%), Koide identities, group dimensions, anomaly cancellation, lepton masses, CKM phase (2.4σ), cosmological constant (11.7%), Higgs VEV (0.17%).
+- **Four Pillars grades corrected:** Ontological Clarity A→B+, Mathematical Completeness A→C+, Empirical Grounding B+→B−, Logical Coherence A→B. Overall honest GPA: 2.33–2.67 (C+ to B−).
+- **Key grade evolutions from Review86:** A4 QFT F→D+, B2 Lorentzian D+→C+, C3 Unification D→D+, C5 Higgs C→C+.
+- **Three critical open problems confirmed:** (1) α normalization R not derived, (2) Higgs VEV exponent not derived from CW, (3) cosmological constant suppression mechanism postulated.
+- **Manuscript updated:** Script count 90→98, Four Pillars §XV.2 corrected to honest grades, version bumped to v88.0.
+- **Total:** 98 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 35 results:**
+- **α normalization R (HLRE P1):** `scripts/alpha_normalization_derivation.py` — 15/15 PASS. R NOT DERIVED. Best candidate h∨³×12=2592 (0.12% gap). Two routes (impedance, partition function) both ~11% off. Classification: NOT DERIVED (Grade D+).
+- **θ₀ = 2/9 factor 3π (HLRE P2):** `scripts/theta0_3pi_derivation.py` — 15/15 PASS. 3π uniquely best normalization; 3 geometric identifications (geodesic boundary, holonomy deficit, triality×angular). Classification: MOTIVATED CONJECTURE (Grade C+).
+- **Dirac gamma matrices (HLRE P3):** `scripts/dirac_gamma_explicit.py` — 21/21 PASS. All 96 c^μ_R coefficients, 10 Clifford relations, γ⁵, Wilson term. Classification: DERIVATION (Grade B).
+- **Manuscript:** §II.3.9 (R search), §III.6.2 (3π identification), §VI.6 (explicit gamma construction).
+- **MCP verification:** (2π/3)/(3π)=2/9, |W|×dim(G₂)=2688, 2⁵×3⁴−3=2589, (γ⁰)²=I₄.
+- **Total:** 93 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 33 results:**
+- **HLRE audit verification:** `scripts/hlre_audit_verification.py` — 15/15 PASS, 5 INFO. MCP-verified: α formula 27 ppb, θ₀ = (2π/3)/(3π) = 2/9, sin²θ_W = 3/13 (0.19%), α^57/(4π) ~11% match. Confirmed 5 genuine derivations, 4 parametric fits, 3 tautologies. Critical gap: α normalization R not derived.
+- **Manuscript honesty edits (HLRE audit Priority 1–3):**
+  - Abstract: "first-principles derivations" → honest spectrum (derivations / conjectures / fits)
+  - §II.5 table: ℏ/c/G status changed from "Resolved" → "Tautological"/"Definitional"/"Partially geometric" (Circularity.lean proven)
+  - α status: "Derived" → "Motivated conjecture (Grade B, normalization R open)"
+  - Higgs VEV: "Derived" → "Parametric fit (Grade D+, blind extraction gives N≈8 not 9)"
+  - Parsimony ratio: 16/2 = 8 → 1.7–5.0 range (honest accounting)
+  - Z_λ: Clarified that 0.469 and 0.21 are different bare mass conventions; neither is first-principles
+  - Lean 4 scope: Added explicit clarification that theorems verify mathematical structure, not physical derivations
+  - Honest residuals: expanded from 3 to 6 items; α normalization R elevated to #1 priority
+  - Confidence grades: adjusted to match HLRE assessment (θ₀ A− → C+, α A− → B)
+- **MCP verification:** math-mcp confirmed 14/(392-π) = 1/(28-π/14), (2π/3)/(3π) = 2/9, α^57/(4π) = 1.262×10^{-123}.
+- **Total:** 90 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 32 results:**
+- **Triality braid wavefunction (Directive 19):** `scripts/triality_braid_wavefunction.py` — 20/20 PASS. Explicit hedgehog defect on L=4 D₄ lattice. Wilson-Dirac spectrum (2D, L=8) shows near-zero modes with chirality ⟨γ₅⟩ = -0.999, mass gap 241.7×, doubler ratio 3917×. Full 4D non-Abelian G₂ construction remains open. Grade: C+. Classification: CONSTRUCTIVE DEMONSTRATION.
+- **IHM-IRH reconciliation (Directive 23):** `scripts/ihm_irh_reconciliation.py` — 20/20 PASS. √24 bridge is ALGEBRAICALLY CONSISTENT (a₀, M*, J, Ω_P self-consistent). CRITICAL FINDING: S_unified = S_IHM + S_IRH is ILL-DEFINED (double-counts). IHM is the continuum limit of IRH, not an independent theory. κ/ρ₀ = c²/24, requiring κ_IHM = zJ/a₀ = 24J/a₀. 4 table entries incomplete. Grade: C. Classification: PARTIALLY CONSISTENT.
+- **Neutrino mass (Directive 25):** `scripts/neutrino_mass_braid_topology.py` — 22/22 PASS. Koide-like parametrization with φ_ν = 0.479 rad matches mass splittings (Δm²₂₁/Δm²₃₂ within 0.1% of PDG). Σm_ν = 59 meV (within cosmological bound). Normal hierarchy predicted. θ₁₂ ≈ 35.3° (1.9° off tribimaximal), θ₁₃ = 0.45° (8.1° off — D₄ correction insufficient). Seesaw is standard physics, δ_ν is a free parameter. Grade: D+. Classification: PARAMETRIC FIT.
+- **MCP verification:** math-mcp confirmed Koide identities Σcos(θ+2πn/3) = 0 and Σcos²(θ+2πn/3) = 3/2. Koide sum rule Σm_i = 6×M_scale confirmed.
+- **Total:** 89 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 31 results:**
+- **α formula alternatives (Directive 24):** `scripts/alpha_formula_alternatives.py` — 18/18 PASS. Exhaustive search over 11,250 group-theoretic expressions. 14 sub-ppm alternatives found; 2 within 100 ppb. (28,14) = (dim SO(8), dim G₂) is the best N=137 match at 27.3 ppb BUT not uniquely selected. Verdict: MOTIVATED CONJECTURE. Grade: B.
+- **Comprehensive parameter audit (Directive 26):** `scripts/comprehensive_parameter_audit.py` — 16/16 PASS. 26 parameters tracked: 0 primitive, 8 derived-exact, 10 derived-approx, 2 calibrated, 4 ad-hoc, 2 undetermined. Parsimony: conservative 1.7, generous 5.0 (manuscript claims 2.5-5.0). Tautological derivations (c, ℏ, G) correctly identified. Overall empirical grounding: C+ (GPA 2.33/4.0).
+- **Falsifiable predictions (Directive 27):** `scripts/falsifiable_predictions.py` — 14/14 PASS. 10 candidates scored on derivation quality, precision, discriminating power, testability (0-3 each). Top 5: (A) θ₀=2/9 [12/12], (B) δ_CKM=2π/(3√3) [10/12], (C) sin²θ_W=3/13 [8/12], (D) ν=1/4 [10/12], (E) lepton masses [11/12]. 3 high-quality calibration-free predictions identified. Draft PRL abstract generated.
+- **MCP verification:** math-mcp confirmed Koide identities (Σcos=0, Σcos²=3/2), CKM phase 2π/(3√3)=2√3π/9, α formula 14/(392-π).
+- **Total:** 86 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 30 results (prior session):**
+- **Proton decay M_PS constraint (Directive 12):** `scripts/proton_decay_mps_resolution.py` — 8/8 PASS. CW analytic M_PS = 10^{7.4} GeV is EXCLUDED by Super-K (7.6 decades too low). Threshold-corrected M_PS = 10^{15.5} marginally above Super-K bound (factor ~10×). Gauge coupling spread ~6.6 units at proton-safe scale (with correct GUT normalization α₁⁻¹ = (3/5)α_Y⁻¹) — significant convergence but unification NOT achieved. Grade: D+. Classification: CALIBRATED.
+- **D₄ Feynman rules (Directive 14):** `scripts/d4_feynman_rules.py` — 36/36 PASS. Complete Feynman rules from lattice action: D_αβ(k) = J(k²δ_αβ + 2k_αk_β) in long-wavelength limit (verified by MCP math T_abcd tensor). 3 transverse modes ω²=Jk², 1 longitudinal ω²=3Jk². Vertex Γ_μ → (2p+q)_μ in continuum (QED vertex). 5-design suppresses artifacts 104× vs Z⁴. Self-energy UV-finite. Grade: B+. Classification: DERIVED.
+- **Cosmological constant (Directive 16):** `scripts/cosmo_constant_spectral_derivation.py` — 14/14 PASS. **CRITICAL CORRECTION:** α^57/(4π) = 1.262×10^{-123} matches observational ρ_Λ/ρ_P = 1.134×10^{-123} to ~11% (NOT 0.2% as previously claimed — earlier comparison was against predicted value, not observed). n=57 uniquely selected. Triality averaging gives NO suppression (all sectors identical). Formula is postdiction, not derivation. Grade: C+. Classification: POSTDICTION.
+- **Manuscript updated:** §IV.5.8 (proton decay), §VI.7.3 (Feynman rules), §V.5.4 (cosmo constant assessment). Cosmological constant precision corrected from "1.5%" to "~11%" throughout (8 instances). Script counts updated 80→83.
+- **MCP verification:** math-mcp confirmed T_abcd = 4(δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc), D eigenvalues k² (×3) and 3k² (×1), α^57/(4π) = 1.262×10^{-123}.
+- **Total:** 83 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 27 results (prior session):**
+- **Two-loop beta hidden DOF (Directive 18):** `scripts/two_loop_beta_hidden_dof.py` — 31/31 PASS. Full Machacek-Vaughn matrix with 20 hidden G₂ modes. Fundamental obstacle: all hidden modes are SU(2)_L singlets (Δb₂=0). Hidden DOF reduce spread by only 0.6%. PS Higgs (15,2,2) gives 4.3% improvement. Grade: D→D+.
+- **Independent α derivation (Directive 20):** `scripts/alpha_independent_derivation.py` — 25/25 PASS. Multi-channel BZ integral hierarchy L1→L4 recovers 99.2% of correction at L3. Integer 137 from bare impedance, not BZ integral. Normalization R≈2589 NOT uniquely derived; best candidate |W(D₄)|×dim(G₂)=2688 (3.8% gap). Grade: C+→B (motivated conjecture).
+- **Manuscript updated:** §II.3.8 (independent α attempt), §IV.5.7 (two-loop hidden DOF). TOC and script counts updated 76→78.
+- **MCP verification:** math-mcp confirmed 1/(28-π/14)=14/(392-π), dim(SO(8))=28, 14+7+7=28.
+- **Total:** 78 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 24 results (prior session):**
+- **Higgs VEV blind derivation (Directive 05):** `scripts/higgs_vev_blind_derivation.py` — 20/20 PASS. Blind CW exponent N_raw=7.81; N=9 is consistent but not derived. Formula v=E_P·α⁹·π⁵·(9/8) is a 0.17% fit, not a derivation. Grade: C+.
+- **Damping spectral density (Directive 06):** `scripts/damping_from_d4_hamiltonian.py` — 21/21 PASS. Caldeira-Leggett J(ω) independently confirms ζ=π/12. Anharmonic κ₄ corrections give ζ_max≈0.73; critical damping unachievable without lattice instability.
+- **G₂ stabilizer justification (Directive 11):** `scripts/g2_stabilizer_justification.py` — 87/87 PASS. G₂ = SO(7)_v ∩ Spin(7)_s ∩ Spin(7)_c: triality equivariance forces simultaneous condensation in all three 8-dim reps. Explicit D₄ root system, Weyl group, Dynkin folding, branching rules verified.
+- **Manuscript updated:** §I.4.2 (spectral density damping), §IV.3.3 (G₂ stabilizer), §VIII.4.8 (blind CW exponent). Derivation status of §IV.3 updated. Script count 73 → 76.
+- **MCP verification:** math-mcp confirmed dim(SO(8))=28 from n(n-1)/2, branching 14+7+7=28, |W(D₄)|=2³×4!=192.
+- **CodeQL:** 0 alerts.
+- **Total:** 76 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 21 results (prior session):**
+- **Lorentzian phase lag proof (Directive 01):** `scripts/lorentzian_phase_lag_proof.py` — 12/12 PASS. Proves φ(ω→ω₀) = π/2 for ANY ζ > 0 at resonance. Transient duration τ_ss = 12/(πΩ_P) ≈ 3.82 t_P. Grade upgrade D+ → B.
+- **N_mixing V₃ resolution (Directive 02):** `scripts/nmixing_v3_resolution.py` — 12/12 PASS. T_μνρ = 0 by centrosymmetry confirmed. N_mixing = 2 refers to CW background-field mass channels, not cubic scattering vertices. V₃ ≡ 0 and N_mixing = 2 are NOT contradictory.
+- **SVEA Lorentzian derivation (Directive 04):** `scripts/svea_lorentzian_derivation.py` — 16/16 PASS. Corrects §I.4: coordinate translation does NOT change derivatives; SVEA envelope extraction with π/2 phase lag produces Lorentzian signature.
+- **Manuscript corrected:** §I.4 derivation rewritten (SVEA mechanism, not coordinate redefinition), §I.4.1 assessment D+ → B, §VIII.3 N_mixing clarified as CW mass channels, script count 69 → 72.
+- **MCP verification:** math-mcp confirmed arctan(∞) = π/2, SVEA second derivative expansion, and π⁵×(9/8) prefactor.
+- **Total:** 72 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 20 results (prior session):**
 - **Nielsen-Ninomiya doubler mass mechanism (Directive 4):** `scripts/nn_doubler_mass_mechanism.py` — 8/8 PASS. G₂ mass splitting mechanism gaps 15 doublers while preserving one physical mode. Z₃ triality index = 1. Mass ratio > 500.
 - **α lattice MC three-loop (Directive 5):** `scripts/alpha_lattice_mc_threeloop.py` — 9/9 PASS. One-loop D₄ MC verification with proper D₄ root-based propagator + multi-loop Padé summary. Convergence 1/√N confirmed.
 - **M_PS threshold corrections (Directive 7):** `scripts/mps_threshold_corrections.py` — 6/6 PASS. PS heavy field thresholds reduce coupling spread by 62%. Proton decay safe at M_PS = 10^{15.5}.
@@ -369,39 +482,41 @@ The manuscript is at v86.0. Session 20 creates 5 scripts addressing Critical Rev
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 20):** 61 scripts total. All prior scripts unchanged + 5 new (Directives 4-8).
+**Script verification (Session 38):** 99 scripts total. All prior scripts unchanged + 1 new (session38_meta_verification.py). Lean 4: +2 new files (LorentzianSignature.lean: 31 decl, KoideTriality.lean: 34 decl). All 27 Review86 directives now complete. Exhaustive resolution plan for 5 UNRESOLVED concerns in `audit_results/session38_resolution_plan.md`.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
 | α BZ integral | **Gap 0.044% (Session 12)** | Padé resummed: 0.038%; 25× improvement over Session 6 |
 | D₄ phonon spectrum | **Computed** | 4 branches, zone-boundary zero at R=(π,π,π,π), ν=1/4 |
-| Koide formula | **θ₀ DERIVED (Session 7)** | 2/9 from SO(3)/S₃ geometry; 3 methods agree exactly |
+| Koide formula | **θ₀ DERIVED (Session 7), Berry holonomy confirmed (Session 29)** | 2/9 from SO(3)/S₃ geometry; discrepancy 0.02% |
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
-| Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **61 total, all pass** | 5 new scripts (Directives 4-8, Session 20) |
+| Lean 4 | **376 declarations, 0 sorry** | Build verified across 17 files (v4.30.0-rc1) |
+| Scripts | **99 total, all pass** | +1 meta-verification script (Session 38) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
-| CKM magnitudes | **V_us = 0.164 (27%), lattice Dirac (Session 13)** | QCD running corrections |
+| CKM magnitudes | **V_us = 0.2246 (0.1%), NLO matching (Session 20)** | V_cb 23% off (NNLO needed) |
 | Lattice QED / g−2 | **σ = 4πα²/(3s) verified; Schwinger α/(2π) ✅** | D₄ suppresses artifacts by 10⁶⁸ |
 | Yang-Mills | **g² = 2/(Ja₀⁴); sin²θ_W = 3/13** | From D₄ phonon stress tensor |
 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | Corrected LH Weyl basis |
 | SM gauge cascade | **42/42 PASS (Session 6)** | SO(8)→G₂→SU(3)×U(1)→SM algebraic |
 | Lattice QFT | **Møller scattering verified (Session 6)** | D₄ propagator → continuum in IR |
 | CW effective potential | **VEV 0.17%, hierarchy exact (Session 7)** | Mode decomposition R²⁴ = 1⊕4⊕19 |
-| Triality braid | **3D vortex line, 11/11 PASS (Session 7)** | τ=643, ring annihilation, w=±1,±2 |
+| Triality braid | **4D hedgehog + Wilson-Dirac 2D, 20/20 PASS (Session 32)** | ⟨γ₅⟩=-0.999, mass gap 241×, full 4D G₂ needed |
 | Higgs quartic Z_λ | **Z_λ = 0.21; ab initio CW minimum 0.5% (S20)** | Multi-threshold matching; hierarchy exact |
 | Two-loop unification | **Spread 0.4 units; M_PS ~ 10¹⁴ derived (S8)** | 4-decade tension with scan; proton stability ✅ |
 | M_PS tension | **Gap reduced; threshold corrections 62% (S20)** | Proton decay safe at 10^{15.5} |
-| Proton decay | **τ_p too short at M_PS=3.5e12 (Session 11)** | Constrains M_PS > 2×10¹⁴ with D₄ |
-| Cosmological constant | **α⁵⁷/(4π) matches to 0.2%; BZ integral + triality (S8)** | Spectral density computed + triality averaged |
+| Proton decay | **CW M_PS=10^7.4 EXCLUDED; threshold 10^{15.5} marginal (S30)** | Constrains M_PS > 10^{15}; unification NOT achieved |
+| Cosmological constant | **α⁵⁷/(4π) matches to ~11% (S30 corrected); postdiction** | n=57 uniquely selected; triality averaging gives NO suppression |
 | Higgs VEV | **v = E_P α⁹ π⁵(9/8); CW Z_λ=0.21 (S8)** | RG-improved; hierarchy self-consistent |
 | 4D simulation | **Anharmonic + scaling (Session 11)** | κ₄ terms, vectorized, 64⁴ extrapolation |
 | Regge continuum limit | **7 theorems, 0 sorry (Session 11)** | O(a₀²) convergence, 5-design improvement |
-| Parsimony | **2.5–5.0 (corrected)** | All references consistent |
-| Overall confidence | **94%** | +1% from Session 20 (N-N, CKM NLO, CW ab initio) |
+| Parsimony | **Conservative 1.7, generous 5.0 (S31 audit)** | Independent predictions / effective inputs |
+| α formula | **MOTIVATED CONJECTURE (S31); 14 sub-ppm alternatives** | 27 ppb match, but not uniquely selected |
+| Empirical grounding | **C+ (GPA 2.33/4.0) — S31 honest assessment** | Strong in Koide/GR, weak in unification/inflation |
+| Overall confidence | **C+ (GPA 2.33/4.0)** | HLRE audit: 5 genuine derivations, 4 parametric fits, 3 tautologies |
 
 ### Priority 1: Close the α BZ Integral (gap now 0.044%)
 
@@ -440,7 +555,7 @@ Session 13 implemented the lattice Dirac approach — V_us = 0.164 (27% off), ma
 When Priorities 1-4 close:
 1. Extract Paper 1 from manuscript: "Explicit D₄ Lattice Derivation of α, Koide, and SM Parameters"
 2. Format for arXiv: hep-th or hep-ph classification
-3. Include all 61 scripts as supplementary material
+3. Include all 89 scripts as supplementary material
 4. Include Lean 4 proof files as formal verification
 
 ### Open Problem Status (as of v85.0 Session 12)
@@ -451,24 +566,24 @@ When Priorities 1-4 close:
 | 2 | M_PS tension | **Threshold corrections reduce spread 62% (Session 20)** | Two-loop PS threshold matching |
 | 3 | Full CW Z_λ | **28 modes, threshold matching (Session 11)** | PS-specific coefficients |
 | 4 | CKM magnitudes | **V_us=0.2246 (0.1%), NLO matching, 7/7 PASS (Session 20)** | V_cb 23% off (NNLO needed) |
-| 5 | Proton decay | **Constrains M_PS > 2×10¹⁴ (Session 11)** | Resolves M_PS in favor of CW analytic |
+| 5 | Proton decay | **CW M_PS=10^{7.4} EXCLUDED, threshold 10^{15.5} marginal (S30)** | Unification NOT achieved at proton-safe scale |
 | 6 | 4D simulation | **κ₄=0.70, Z_λ(dyn)=0.108, 8/8 PASS (Session 13)** | GPU 64⁴ |
 | 7 | Regge continuum | **7 theorems, 0 sorry (Session 11)** | Complete |
 | 8 | Two-loop unification | **Spread 0.4; M_PS ~ 10¹⁴ derived (S8)** | Consistent with proton decay bound |
 | 9 | Z_λ effective potential | **RG-improved Z_λ = 0.21; κ₄ derived (S12)** | Two-loop SO(8) correction |
-| 10 | ρ_Λ spectral density | **BZ integral + triality + α⁵⁷/(4π) (S8)** | Derive f_supp mechanism |
+| 10 | ρ_Λ spectral density | **α⁵⁷/(4π) ~11% match, POSTDICTION not derivation (S30)** | Mechanism for α^n suppression unresolved |
 | 11 | CKM phase | **δ=2π/(3√3), 0.8% agreement ✅** | Complete |
 | 12 | D₄ anharmonic κ₄ / force constant J | **κ₄≈0.70 derived (Session 12): 4 methods** | Two-loop SO(8) correction to λ |
 | 13 | Circularity resolution | **PROVEN (Lean 4)** | Complete |
 | 14 | D₄ uniqueness | **GLOBAL MIN d=2–8 (Session 7)** | Complete; gap=0.825 |
 | 15 | 5-design T6 | **PROVEN (Lean 4)** | Complete |
 | 16 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | GUT-scale embedding |
-| 17 | Parsimony ratio | **CORRECTED: 2.5–5.0** | Complete |
+| 17 | Parsimony ratio | **Audit complete: conservative 1.7, generous 5.0 (S31)** | Complete; parameter classification done |
 | 18 | Lean 4 T3 Lieb-Robinson | **FORMALIZED (Session 8): 14 thms, 0 sorry** | Complete |
 | 19 | g−2 on D₄ | **Schwinger α/(2π) verified; O(a⁶) artifact (Session 4)** | Higher-loop BZ integrals |
 | 20 | Higgs VEV derivation | **CW mode decomp + impedance cascade (Session 7)** | Derive κ₄ from lattice action |
-| 21 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (Session 7)** | Complete; 3 methods agree |
+| 21 | θ₀ Koide phase | **DERIVED: 2/9 from SO(3)/S₃ (S7), Berry holonomy confirmed (S29)** | Complete; discrepancy 0.02% |
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
-| 23 | Topological defects | **3D vortex + 4D MD + anharmonic (S7+S8+S11)** | Defect mass spectrum |
+| 23 | Topological defects | **4D hedgehog + Wilson-Dirac 2D + 3D vortex (S7+S32)** | Full 4D non-Abelian G₂ gauge |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v86.0 complete; 52 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v88.0 complete; 98 scripts, 311 declarations** | Priority 2,4 closure → submit |
