@@ -90,7 +90,8 @@ def koide_theta_from_masses(me, mmu, mtau):
     sqrt_sum = np.sqrt(me) + np.sqrt(mmu) + np.sqrt(mtau)
     Q = mass_sum / sqrt_sum**2
 
-    # M_scale = (Σ√m)² / 9
+    # M_scale = (Σ√m)² / 9: factor 9 = 3² because Σcos(θ+2πn/3)=0
+    # forces Σ√m = 3√M, so M = (Σ√m)²/9
     M_scale = sqrt_sum**2 / 9.0
 
     # Extract θ₀ from tau mass (n = 0, largest mass):

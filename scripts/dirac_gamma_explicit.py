@@ -193,7 +193,8 @@ def compute_structure_coefficients(gammas, roots):
 
     # Pseudoinverse solution: c = R(R^T R)^{-1}
     RTR = R.T @ R  # (4, 4), always invertible for 24 spanning roots
-    # Verify conditioning before inversion
+    # Verify conditioning before inversion; threshold 1e10 is conservative
+    # (D₄ roots span R⁴ symmetrically so cond(RTR) ≈ 1 in practice)
     cond = np.linalg.cond(RTR)
     assert cond < 1e10, f"RTR poorly conditioned: cond={cond}"
     RTR_inv = np.linalg.inv(RTR)

@@ -129,6 +129,8 @@ def compute_bz_vacuum_polarization_mc(n_samples=500000, seed=42):
     # Avoid division by zero at k = 0
     mask = sum_sin2 > 1e-12
     integrand = np.zeros(n_samples)
+    # Simplified scalar: omits vertex structure and spinor traces present
+    # in the full multi-channel D₄ integrand (pi_0_published used for R analysis)
     integrand[mask] = 1.0 / sum_sin2[mask]
 
     # Mean of integrand over sampled points
