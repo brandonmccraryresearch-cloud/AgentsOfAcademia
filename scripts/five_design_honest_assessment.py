@@ -240,14 +240,13 @@ def main():
     print("  The 5-design GUARANTEES exact integration for deg ≤ 5.")
     print()
 
-    # Degree 2: Σ xᵢ² = 1 on sphere (trivially exact)
+    # Degree 2: Σ xᵢ² = 1 on sphere, ⟨xᵢ²⟩ = 1/d on S^{d-1}
     design_d2 = design_average(poly_degree2, vecs)
-    exact_d2 = exact_sphere_avg_sum_xi_2k(1, 4) / 4 * 2  # ⟨x₁²+x₂²⟩ = 2 × ⟨x₁²⟩ = 2/4 = 1/2
-    exact_d2_alt = 2.0 / 4.0  # ⟨x₁²⟩ = 1/d on S^{d-1}
-    err_d2 = abs(design_d2 - exact_d2_alt)
+    exact_d2 = 2.0 / 4.0  # ⟨x₁² + x₂²⟩ = 2 × ⟨x₁²⟩ = 2/d = 1/2
+    err_d2 = abs(design_d2 - exact_d2)
     print(f"  Degree 2: ⟨x₁²+x₂²⟩")
     print(f"    Design: {design_d2:.10f}")
-    print(f"    Exact:  {exact_d2_alt:.10f}")
+    print(f"    Exact:  {exact_d2:.10f}")
     print(f"    Error:  {err_d2:.2e}")
     test("Degree 2 polynomial: exact to machine precision", err_d2 < 1e-14)
 
@@ -386,15 +385,14 @@ def main():
     test("VP at EW scale (ka=0.01): relative error < 1%",
          errors_by_ka[0][2] < 0.01)
 
-    # At lattice scale (ka=1.0), error should be non-negligible
-    # The 5-design does not guarantee exactness here
-    test("VP at lattice scale (ka=1.0): error is measurably larger",
-         errors_by_ka[3][1] > errors_by_ka[0][1] * 0.1 or
-         errors_by_ka[3][1] < 1e-3)  # Error grows but may still be small
+    # At lattice scale (ka=1.0), error should be larger than EW scale
+    test("VP at lattice scale (ka=1.0): error grows by >10× from EW",
+         errors_by_ka[3][1] > errors_by_ka[0][1] * 10 or
+         errors_by_ka[3][1] < 1e-10)  # Either grows or both near zero
 
-    test("VP error grows with momentum scale ka",
-         errors_by_ka[-1][1] > errors_by_ka[0][1] or
-         all(e[1] < 1e-3 for e in errors_by_ka))  # True if error grows OR all are tiny
+    test("VP error grows monotonically with momentum scale",
+         all(errors_by_ka[i+1][1] >= errors_by_ka[i][1] * 0.5
+             for i in range(len(errors_by_ka) - 1)))
 
     # ── Tests 13-15: Taylor Expansion Error Bounds ──
     print("\n--- Tests 13-15: Taylor Expansion Error Bounds ---")

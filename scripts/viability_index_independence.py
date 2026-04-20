@@ -313,9 +313,15 @@ def main():
     #   b₃ = -11 + N_gen * (2/3) + 0       → -7 for N_gen=3
 
     def beta_coefficients(n_gen):
-        """One-loop beta function coefficients b_i for SU(3)×SU(2)×U(1)."""
-        # Using normalization conventions where b = (11C₂(G) - 4T(R)n_f - T(S)) / 3
-        # with GUT normalization for U(1): Y → √(5/3) Y
+        """One-loop beta function coefficients b_i for SU(3)×SU(2)×U(1).
+
+        Convention: b_i = a_i + n_gen × f_i + h_i, with GUT-normalized U(1).
+        Gives standard SM values for n_gen=3:
+          b₁ = 41/10, b₂ = -19/6, b₃ = -7
+        The universal f_i = 4/3 is correct in this convention (verified against
+        Particle Data Group and Martin & Vaughn); the different gauge group
+        Casimirs are absorbed into the gauge contribution a_i.
+        """
         b1 = Fraction(0) + n_gen * Fraction(4, 3) + Fraction(1, 10)
         b2 = Fraction(-22, 3) + n_gen * Fraction(4, 3) + Fraction(1, 6)
         b3 = Fraction(-11, 1) + n_gen * Fraction(4, 3) + Fraction(0)
