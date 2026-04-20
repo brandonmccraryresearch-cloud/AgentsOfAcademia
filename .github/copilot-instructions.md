@@ -6,11 +6,11 @@
 
 ### Rule 1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`88.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
+**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`89.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
 
 ### Rule 2: Manuscript Update Reminder
 
-The current manuscript is **`88.0IRH.md`** (v88.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
+The current manuscript is **`89.0IRH.md`** (v89.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
 
 - **Only finalized theoretical content** goes into the manuscript — never in-progress drafts, debug output, or intermediate results.
 - **Paper style and syntax** must be maintained — LaTeX-compatible markdown, section numbering, citation format.
@@ -83,7 +83,7 @@ When any session produces changes or advancements, agents **MUST** update all th
 
 1. **`.github/copilot-instructions.md`** — This file. Update current state, version numbers, theorem counts, priority lists, and continuation plan.
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep MCP tool guides, constraint lists, and operational directives current.
-3. **`88.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
+3. **`89.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
 
 ### Rule 4: Specialized Agent Preference
 
@@ -106,14 +106,14 @@ When a session context involves mathematical expressions, physical constants, qu
 
 ## File Naming Convention
 
-The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `88.0IRH.md`). When bumping to a new version:
+The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `89.0IRH.md`). When bumping to a new version:
 
 1. **Rename the file** using `git mv {old_version}IRH.md {new_version}IRH.md`
 2. **Update the version header** in the manuscript header near the top of the document
 3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
-The current manuscript file is: **`88.0IRH.md`**
+The current manuscript file is: **`89.0IRH.md`**
 
 ## Environment Setup
 
@@ -212,6 +212,7 @@ python scripts/d4_uniqueness.py                  # D₄ energy minimum (gap=3.85
 | `scripts/alpha_normalization_derivation.py` | α normalization R exhaustive search (HLRE P1, Session 35) | 15/15 PASS, NOT DERIVED (Grade D+), best h∨³×12=2592 (0.12%) |
 | `scripts/theta0_3pi_derivation.py` | θ₀ = 2/9 factor 3π geometric identification (HLRE P2, Session 35) | 15/15 PASS, MOTIVATED CONJECTURE (Grade C+), 3π uniquely selected |
 | `scripts/dirac_gamma_explicit.py` | Explicit D₄ Dirac gamma matrices + Clifford algebra (HLRE P3, Session 35) | 21/21 PASS, DERIVATION (Grade B), 96 coefficients + 10 relations |
+| `scripts/session38_meta_verification.py` | Session 38 meta-verification: DIR-07/15 + DIR-22 + all framework claims | 20/20 PASS, phase lag π/2, Koide θ₀=2/9, all 27 DIR complete |
 
 ## MCP Server Usage
 
@@ -325,7 +326,7 @@ cd lean4/
 lake update && lake build
 ```
 
-Current state: 311 verified declarations across 15 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: 2528 jobs.
+Current state: 376 verified declarations across 17 files (Basic.lean: 30, V2Basic.lean: 13, V2Problems.lean: 17, FiveDesign.lean: 14, Circularity.lean: 8, LiebRobinson.lean: 13, MeasureUniqueness.lean: 11, D4Uniqueness.lean: 12, Goldstone.lean: 12, GaugeInvariance.lean: 15, ReggeContinuumLimit.lean: 16, NonAbelianGauge.lean: 22, DiracEquation.lean: 49, BornRule.lean: 21, ModeDecomposition.lean: 58, LorentzianSignature.lean: 31, KoideTriality.lean: 34). Zero `sorry` across all files. All files registered in `IHMFramework.lean` and `lakefile.toml`. Full build: Lean v4.30.0-rc1 + Mathlib.
 
 ## Agent Architecture
 
@@ -350,9 +351,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v88.0, 2026-04-20 — Session 37: Meta-Agent Structural/Mathematical/Empirical Rigor Audit)
+### Current State (v89.0, 2026-04-20 — Session 38: Lean 4 DIR-07/15 + DIR-22 + Resolution Plan)
 
-The manuscript is at v88.0. Session 37 performs a comprehensive meta-agent audit of all 32 Review86 concerns (A1-G5), independently verifying mathematical claims via MCP tools and Python computation. All non-Lean4 Review86 directives (24 of 27) are complete. DIR-07/15 (Lean4 Lorentzian) and DIR-22 (Lean4 Koide) are deferred. 98 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+The manuscript is at v89.0. Session 38 completes all 27 Review86 directives by formalizing the Lorentzian signature (DIR-07/15) and Koide relation (DIR-22) in Lean 4. An exhaustive resolution plan for the 5 UNRESOLVED concerns (E3, E5, G1, G3, Core) is created in `audit_results/session38_resolution_plan.md`. 99 Python scripts, 376 Lean 4 declarations across 17 files, 0 sorry.
+
+**Session 38 results:**
+- **LorentzianSignature.lean (DIR-07/15):** 31 declarations, 0 sorry. Formalizes: phase lag π/2 at resonance for all ζ > 0, Lorentzian metric signature (-,+,+,+) from single negative eigenvalue, Caldeira-Leggett ζ = π/12 (underdamped), transient timescale 12/π < 4 Planck times.
+- **KoideTriality.lean (DIR-22):** 34 declarations, 0 sorry. Formalizes: Koide ratio Q = 2/3 (trigonometric identity), θ₀ = 2/9 from Berry phase normalization (2π/3)/(3π), D₄ triality gives exactly 3 generations, M_scale normalization factor 9 = 3², lepton mass errors < 0.01%.
+- **Verification script:** `scripts/session38_meta_verification.py` — 20/20 PASS. Independent verification covering D₄ roots, 5-design, α formula, Koide identities, lepton masses, Lorentzian phase lag, CKM phase, cosmological constant, Higgs VEV, anomaly cancellation.
+- **Resolution plan:** `audit_results/session38_resolution_plan.md` — Exhaustive action directives for all 5 UNRESOLVED concerns with phase-by-phase computational strategies.
+- **All 27 Review86 directives now complete.** DIR-07/15 (Lean4 Lorentzian) ✅, DIR-22 (Lean4 Koide) ✅.
+- **Manuscript bumped:** v88.0 → v89.0. Declaration count 311→376, script count 98→99, file count 15→17.
+- **Total:** 99 Python scripts, 376 Lean 4 declarations across 17 files, 0 sorry.
 
 **Session 37 results:**
 - **Meta-audit report:** `audit_results/session37_meta_audit.md` — Grades all 32 Review86 concerns. 10 RESOLVED, 5 SUBSTANTIALLY RESOLVED, 12 PARTIALLY RESOLVED, 5 UNRESOLVED.
@@ -472,7 +482,7 @@ The manuscript is at v88.0. Session 37 performs a comprehensive meta-agent audit
 - **Priority 3a (64⁴ sim):** `scripts/d4_simulation_64.py` — now 8/8 PASS with dynamical Z_λ (Session 13).
 - **Priority 3b (Regge limit):** `lean4/IHMFramework/ReggeContinuumLimit.lean` — 7 theorems, 0 sorry. Convergence rate O(a₀²), 5-design improvement.
 
-**Script verification (Session 35):** 93 scripts total. All prior scripts unchanged + 3 new (HLRE P1-P3). Manuscript updated: §II.3.9, §III.6.2, §VI.6. α normalization R remains #1 open problem.
+**Script verification (Session 38):** 99 scripts total. All prior scripts unchanged + 1 new (session38_meta_verification.py). Lean 4: +2 new files (LorentzianSignature.lean: 31 decl, KoideTriality.lean: 34 decl). All 27 Review86 directives now complete. Exhaustive resolution plan for 5 UNRESOLVED concerns in `audit_results/session38_resolution_plan.md`.
 
 | Item | Status | Key Finding |
 |------|--------|-------------|
@@ -482,8 +492,8 @@ The manuscript is at v88.0. Session 37 performs a comprehensive meta-agent audit
 | 5-design property | **Verified + Lean 4 proven** | ⟨x₁⁴⟩=1/8, ⟨x₁²x₂²⟩=1/24 exact; **F₄ also passes 4th-moment** |
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
-| Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **98 total, all pass** | +1 meta-verification script (Session 37) |
+| Lean 4 | **376 declarations, 0 sorry** | Build verified across 17 files (v4.30.0-rc1) |
+| Scripts | **99 total, all pass** | +1 meta-verification script (Session 38) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |

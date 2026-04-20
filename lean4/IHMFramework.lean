@@ -25,5 +25,8 @@ import IHMFramework.NonAbelianGauge
 import IHMFramework.DiracEquation
 import IHMFramework.BornRule
 import IHMFramework.ModeDecomposition
+-- v88.0 additions (Session 38: DIR-07/15 + DIR-22)
+import IHMFramework.LorentzianSignature
+import IHMFramework.KoideTriality
 -- Formal Verification Registry (public registry table + stub axioms)
 import IHMFramework.FormalVerificationRegistry
