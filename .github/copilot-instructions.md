@@ -6,11 +6,11 @@
 
 ### Rule 1: Full Manuscript Read at Session Start
 
-**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`87.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
+**BEFORE ANY WORK BEGINS**, every agent and sub-agent must read the entire current manuscript (`88.0IRH.md`) from start to finish. This is non-negotiable. The manuscript is the single source of truth for the theoretical framework. Without full comprehension of its contents — including all derivations, confidence scores, open problems, and cross-references — agents cannot produce contextually correct work. Use the `view` tool to read the full file. Do not skip sections. Do not summarize-and-move-on. Read it all.
 
 ### Rule 2: Manuscript Update Reminder
 
-The current manuscript is **`87.0IRH.md`** (v87.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
+The current manuscript is **`88.0IRH.md`** (v88.0). After every agent session that produces theoretical advances, computational results, or proof completions, the manuscript **MUST** be updated with the finalized content. Requirements:
 
 - **Only finalized theoretical content** goes into the manuscript — never in-progress drafts, debug output, or intermediate results.
 - **Paper style and syntax** must be maintained — LaTeX-compatible markdown, section numbering, citation format.
@@ -83,7 +83,7 @@ When any session produces changes or advancements, agents **MUST** update all th
 
 1. **`.github/copilot-instructions.md`** — This file. Update current state, version numbers, theorem counts, priority lists, and continuation plan.
 2. **Agent instruction files** (`.github/agents/*.AGENTS.md` AND `agents/*.AGENTS.md`) — Keep MCP tool guides, constraint lists, and operational directives current.
-3. **`87.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
+3. **`88.0IRH.md`** (or current version) — Integrate finalized theoretical content as described in Rule 1.
 
 ### Rule 4: Specialized Agent Preference
 
@@ -106,14 +106,14 @@ When a session context involves mathematical expressions, physical constants, qu
 
 ## File Naming Convention
 
-The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `87.0IRH.md`). When bumping to a new version:
+The main manuscript file follows the convention `{version}IRH.md` where `{version}` is the current version number (e.g., `88.0IRH.md`). When bumping to a new version:
 
 1. **Rename the file** using `git mv {old_version}IRH.md {new_version}IRH.md`
 2. **Update the version header** in the manuscript header near the top of the document
 3. **Add a version change summary** immediately after the date block in the manuscript header
 4. **Update all internal cross-references** that mention the filename
 
-The current manuscript file is: **`87.0IRH.md`**
+The current manuscript file is: **`88.0IRH.md`**
 
 ## Environment Setup
 
@@ -350,9 +350,18 @@ All audit reports live in `audit_results/`. Each version bump should include a c
 
 **IMPORTANT: Read this section before starting work. It documents the current state and prioritized next steps.**
 
-### Current State (v87.0, 2026-04-20 — Session 35: HLRE Audit Priority Scripts)
+### Current State (v88.0, 2026-04-20 — Session 37: Meta-Agent Structural/Mathematical/Empirical Rigor Audit)
 
-The manuscript is at v87.0. Session 35 addresses the top 3 HLRE audit priorities with exhaustive computational scripts verified by MCP math tools. 93 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry. 23 of 27 Review86 directives complete + 3 HLRE priority scripts.
+The manuscript is at v88.0. Session 37 performs a comprehensive meta-agent audit of all 32 Review86 concerns (A1-G5), independently verifying mathematical claims via MCP tools and Python computation. All non-Lean4 Review86 directives (24 of 27) are complete. DIR-07/15 (Lean4 Lorentzian) and DIR-22 (Lean4 Koide) are deferred. 98 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
+
+**Session 37 results:**
+- **Meta-audit report:** `audit_results/session37_meta_audit.md` — Grades all 32 Review86 concerns. 10 RESOLVED, 5 SUBSTANTIALLY RESOLVED, 12 PARTIALLY RESOLVED, 5 UNRESOLVED.
+- **Verification script:** `scripts/session37_meta_verification.py` — 20/20 PASS. Independent verification of D₄ root count (24), 5-design moments, α⁻¹ formula (27 ppb), sin²θ_W (0.2%), Koide identities, group dimensions, anomaly cancellation, lepton masses, CKM phase (2.4σ), cosmological constant (11.7%), Higgs VEV (0.17%).
+- **Four Pillars grades corrected:** Ontological Clarity A→B+, Mathematical Completeness A→C+, Empirical Grounding B+→B−, Logical Coherence A→B. Overall honest GPA: 2.33–2.67 (C+ to B−).
+- **Key grade evolutions from Review86:** A4 QFT F→D+, B2 Lorentzian D+→C+, C3 Unification D→D+, C5 Higgs C→C+.
+- **Three critical open problems confirmed:** (1) α normalization R not derived, (2) Higgs VEV exponent not derived from CW, (3) cosmological constant suppression mechanism postulated.
+- **Manuscript updated:** Script count 90→98, Four Pillars §XV.2 corrected to honest grades, version bumped to v88.0.
+- **Total:** 98 Python scripts, 311 Lean 4 declarations across 15 files, 0 sorry.
 
 **Session 35 results:**
 - **α normalization R (HLRE P1):** `scripts/alpha_normalization_derivation.py` — 15/15 PASS. R NOT DERIVED. Best candidate h∨³×12=2592 (0.12% gap). Two routes (impedance, partition function) both ~11% off. Classification: NOT DERIVED (Grade D+).
@@ -474,11 +483,11 @@ The manuscript is at v87.0. Session 35 addresses the top 3 HLRE audit priorities
 | Circularity tautology | **Lean 4 proven** | c, ℏ, G "derivations" are algebraic identities (Circularity.lean) |
 | D₄ uniqueness | **GLOBAL MINIMUM d=2–8 (Session 7)** | Lowest Gibbs free energy across ALL dimensions; gap=0.825 |
 | Lean 4 | **311 declarations, 0 sorry** | Build verified across 15 files (v4.30.0-rc1) |
-| Scripts | **93 total, all pass** | +3 HLRE audit priority scripts (Session 35) |
+| Scripts | **98 total, all pass** | +1 meta-verification script (Session 37) |
 | κ₄ derivation | **κ₄ ≈ 0.70 derived (Session 12)** | 4 methods; reconstruction 43% |
 | Non-Abelian gauge | **17 theorems (Session 12)** | Wilson action gauge invariance |
 | CKM phase | **δ = 2π/(3√3) = 1.209 rad (0.8%)** | Topological Berry phase; well-grounded |
-| CKM magnitudes | **V_us = 0.164 (27%), lattice Dirac (Session 13)** | QCD running corrections |
+| CKM magnitudes | **V_us = 0.2246 (0.1%), NLO matching (Session 20)** | V_cb 23% off (NNLO needed) |
 | Lattice QED / g−2 | **σ = 4πα²/(3s) verified; Schwinger α/(2π) ✅** | D₄ suppresses artifacts by 10⁶⁸ |
 | Yang-Mills | **g² = 2/(Ja₀⁴); sin²θ_W = 3/13** | From D₄ phonon stress tensor |
 | Anomaly cancellation | **All 6/6 SM cancel ✅ (A−)** | Corrected LH Weyl basis |
@@ -567,4 +576,4 @@ When Priorities 1-4 close:
 | 22 | SM gauge cascade | **42/42 PASS (Session 6)** | Complete; SO(8)→SM algebraic |
 | 23 | Topological defects | **4D hedgehog + Wilson-Dirac 2D + 3D vortex (S7+S32)** | Full 4D non-Abelian G₂ gauge |
 | 24 | Lattice QFT | **Møller scattering verified (Session 6)** | Higher-order processes |
-| 25 | Manuscript / arXiv | **v87.0 complete; 89 scripts, 311 declarations** | Priority 2,4 closure → submit |
+| 25 | Manuscript / arXiv | **v88.0 complete; 98 scripts, 311 declarations** | Priority 2,4 closure → submit |

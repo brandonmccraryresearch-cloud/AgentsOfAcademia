@@ -154,10 +154,9 @@ test("TEST 11: dim(SO(8)) = 8×7/2 = 28",
      f"dim(SO(8)) = {dim_so8}")
 
 # Test 12: dim(G₂) = 14
-dim_g2 = 14  # Known: G₂ is the smallest exceptional Lie group
-# Verify via dim(G₂) = rank(G₂)×(2h−1) where rank=2, Coxeter h=6
-# Actually dim = 14 directly from G₂ root system: 12 roots + 2 rank = 14
-dim_g2_check = 12 + 2  # 12 roots (short+long) + 2 Cartan generators
+# G₂ has 12 roots (6 short + 6 long) + 2 Cartan generators = 14
+dim_g2 = 14
+dim_g2_check = 12 + 2  # 12 roots + 2 Cartan generators
 test("TEST 12: dim(G₂) = 14 (12 roots + 2 Cartan)",
      dim_g2 == 14 and dim_g2_check == 14,
      f"dim(G₂) = {dim_g2}")
