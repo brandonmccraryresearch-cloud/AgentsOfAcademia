@@ -189,14 +189,17 @@ test("TEST 14: |W(D₄)| = 2³ × 4! = 192",
 # For the SM: Σ_L n_i Y_i³ - Σ_R n_i Y_i³ = 0
 # Equivalently, treating all as left-handed: Q_L, L_L are left-handed;
 # u_R^c, d_R^c, e_R^c are left-handed conjugates with Y → -Y
-Y_cubed_gen = (6 * (1/6)**3       # Q_L: 3 colors × 2 SU(2) doublet
-               + 2 * (-1/2)**3     # L_L: SU(2) doublet
-               + 3 * (-2/3)**3     # u_R^c: conjugate, Y = -2/3
-               + 3 * (1/3)**3      # d_R^c: conjugate, Y = +1/3
-               + 1 * (1)**3)       # e_R^c: conjugate, Y = +1
+Q_L_contrib = 6 * (1/6)**3       # Q_L: 3 colors × 2 SU(2), Y = +1/6
+L_L_contrib = 2 * (-1/2)**3      # L_L: 1 color × 2 SU(2), Y = -1/2
+u_Rc_contrib = 3 * (-2/3)**3     # u_R^c: 3 colors × 1, Y = -2/3
+d_Rc_contrib = 3 * (1/3)**3      # d_R^c: 3 colors × 1, Y = +1/3
+e_Rc_contrib = 1 * (1)**3        # e_R^c: 1 color × 1, Y = +1
+Y_cubed_gen = Q_L_contrib + L_L_contrib + u_Rc_contrib + d_Rc_contrib + e_Rc_contrib
 test("TEST 15: SM anomaly cancellation: Tr[Y³] = 0 per generation",
      abs(Y_cubed_gen) < 1e-14,
-     f"Tr[Y³] = {Y_cubed_gen:.15f}")
+     f"Tr[Y³] = {Q_L_contrib:+.6f} + {L_L_contrib:+.6f} + "
+     f"{u_Rc_contrib:+.6f} + {d_Rc_contrib:+.6f} + {e_Rc_contrib:+.6f}"
+     f" = {Y_cubed_gen:.15f}")
 
 # ---- SECTION 4: EMPIRICAL COMPARISONS ----
 print("\n--- Section 4: Empirical Comparisons ---\n")
