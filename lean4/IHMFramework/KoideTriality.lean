@@ -165,6 +165,10 @@ theorem orbifold_domain_pos : 0 < orbifoldDomainSize := by
 /-- The Berry phase divided by the orbifold domain size gives θ₀ = 2/9.
     This is the geometric normalization: θ₀ = (2π/3)/(3π) = 2/9.
 
+    Proof strategy: expand definitions, combine the two-level fraction
+    (2π/3)/(3π) into a single ratio, then cancel the common factor π
+    to obtain 2/9.
+
     Note: This is a MOTIVATED CONJECTURE — the ratio is well-defined
     geometrically, but the identification with the Koide phase is not
     derived from a dynamical principle. -/

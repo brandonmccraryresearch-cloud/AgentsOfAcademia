@@ -82,7 +82,7 @@ def phaseDenominator (fr : FrequencyRatio) : ℝ :=
 /-- At resonance, the phase denominator vanishes. -/
 theorem phaseDenom_zero_at_resonance (fr : FrequencyRatio)
     (hr : isResonant fr) : phaseDenominator fr = 0 := by
-  unfold phaseDenominator isResonant at *
+  unfold phaseDenominator isResonant at hr
   rw [hr]
   ring
 
@@ -94,7 +94,7 @@ def phaseNumerator (dr : DampingRatio) (fr : FrequencyRatio) : ℝ :=
 /-- At resonance with positive damping, the phase numerator is positive. -/
 theorem phaseNum_pos_at_resonance (dr : DampingRatio) (fr : FrequencyRatio)
     (hr : isResonant fr) : 0 < phaseNumerator dr fr := by
-  unfold phaseNumerator isResonant at *
+  unfold phaseNumerator isResonant at hr
   rw [hr]
   linarith [dr.zeta_pos]
 
