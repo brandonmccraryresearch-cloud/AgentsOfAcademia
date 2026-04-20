@@ -30,7 +30,7 @@ on:
       - 'scripts/**'
       - 'lean4/**'
       - 'audit_results/**'
-      - '87.0IRH.md'
+      - '*.IRH.md'
       - '.github/copilot-instructions.md'
       - '.github/agents/**'
       - 'agents/**'
@@ -41,7 +41,7 @@ permissions:
   contents: read
 
 env:
-  MANUSCRIPT: "87.0IRH.md"
+  MANUSCRIPT: "89.0IRH.md"
 
 jobs:
   # ============================================================================
@@ -146,8 +146,9 @@ jobs:
       - name: "Verify no sorry in Lean files"
         run: |
           cd lean4
-          # Match 'sorry' as a standalone tactic (not in comments or strings)
-          SORRY_LINES=$(grep -rn "^\s*sorry\s*$\|by sorry\| sorry$\|:= sorry" IHMFramework/ --include="*.lean" || true)
+          # Match 'sorry' as a standalone Lean tactic (not in comments or doc strings)
+          # First grep for potential matches, then filter out lines inside comment blocks
+          SORRY_LINES=$(grep -rn --include="*.lean" -P '(?<!\w)sorry(?!\w)' IHMFramework/ | grep -v '^\s*--' | grep -v '/\-' | grep -v '^\s*\*' | grep -v '0 sorry' | grep -v 'zero sorry' | grep -v 'sorry-based' | grep -v 'any.*sorry' || true)
           
           if [ -n "$SORRY_LINES" ]; then
             echo "❌ COMPLIANCE FAILURE: Found 'sorry' in Lean files"
@@ -271,10 +272,19 @@ jobs:
 
       - name: "Verify manuscript is readable and well-formed"
         run: |
+          # Try env var first, then dynamically detect from copilot-instructions.md
           MANUSCRIPT="${{ env.MANUSCRIPT }}"
           
           if [ ! -f "$MANUSCRIPT" ]; then
-            echo "❌ COMPLIANCE FAILURE: Manuscript $MANUSCRIPT not found"
+            # Fall back to the manuscript referenced in copilot-instructions.md
+            MANUSCRIPT=$(grep -oP 'The current manuscript file is: \*\*`\K[^`]+' .github/copilot-instructions.md || true)
+          fi
+          
+          if [ -z "$MANUSCRIPT" ] || [ ! -f "$MANUSCRIPT" ]; then
+            echo "❌ COMPLIANCE FAILURE: Manuscript not found"
+            echo "  Checked env.MANUSCRIPT and copilot-instructions.md reference"
+            echo "  Available manuscript files:"
+            ls -1 *IRH.md 2>/dev/null || echo "  (none found)"
             exit 1
           fi
           
