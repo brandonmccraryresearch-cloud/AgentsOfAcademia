@@ -92,7 +92,7 @@ AgentsOfAcademia/
 │   ├── IHMFramework.lean          # Root module (imports all submodules)
 │   ├── lakefile.toml              # Build config (Lean v4.30.0-rc1)
 │   ├── lean-toolchain             # Lean version pin
-│   └── IHMFramework/              # 16 Lean source files
+│   └── IHMFramework/              # 17 Lean source files + registry
 │       ├── Basic.lean             #   30 decl: core substrate axioms
 │       ├── V2Basic.lean           #   13 decl: stability, phonon
 │       ├── V2Problems.lean        #   17 decl: holographic projection
@@ -108,13 +108,15 @@ AgentsOfAcademia/
 │       ├── DiracEquation.lean     #   49 decl: lattice Dirac, Clifford
 │       ├── BornRule.lean          #   21 decl: Born rule, Gleason
 │       ├── ModeDecomposition.lean #   58 decl: irrep, Schur, branching
+│       ├── LorentzianSignature.lean # 31 decl: phase lag → metric
+│       ├── KoideTriality.lean     #   34 decl: Koide from triality
 │       └── FormalVerificationRegistry.lean  # Registry + stub axioms
 │
-├── scripts/                       # Computational verification (66 Python scripts)
+├── scripts/                       # Computational verification (99 Python scripts)
 │   ├── verify_numerical_predictions.py     # Master verification
 │   ├── alpha_first_principles_bz.py        # α blind BZ (18/18 PASS)
 │   ├── critical_damping_caldeira_leggett.py # Caldeira-Leggett (25/25)
-│   ├── ...                                  # (66 scripts total)
+│   ├── ...                                  # (99 scripts total)
 │   └── ward_identity_closure_v2.py
 │
 ├── docs/                          # Documentation

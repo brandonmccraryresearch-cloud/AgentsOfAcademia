@@ -1,6 +1,6 @@
 # AgentsOfAcademia
 
-[![Lean 4 Verified](https://img.shields.io/badge/Lean_4-Verified_%E2%9C%93-blue)](https://github.com/brandonmccraryresearch-cloud/AgentsOfAcademia/blob/main/lean4/IHMFramework/FormalVerificationRegistry.lean) ![Theorems](https://img.shields.io/badge/Theorems-311-green) ![Files](https://img.shields.io/badge/Lean_Files-15-green) ![Scripts](https://img.shields.io/badge/Python_Scripts-66-green) ![Sorry](https://img.shields.io/badge/sorry-0-brightgreen)
+[![Lean 4 Verified](https://img.shields.io/badge/Lean_4-Verified_%E2%9C%93-blue)](https://github.com/brandonmccraryresearch-cloud/AgentsOfAcademia/blob/main/lean4/IHMFramework/FormalVerificationRegistry.lean) ![Theorems](https://img.shields.io/badge/Declarations-376-green) ![Files](https://img.shields.io/badge/Lean_Files-17-green) ![Scripts](https://img.shields.io/badge/Python_Scripts-99-green) ![Sorry](https://img.shields.io/badge/sorry-0-brightgreen)
 
 ## Intrinsic Resonance Holography (IRH)
 
