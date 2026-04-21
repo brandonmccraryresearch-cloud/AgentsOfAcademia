@@ -30,3 +30,5 @@ import IHMFramework.LorentzianSignature
 import IHMFramework.KoideTriality
 -- Formal Verification Registry (public registry table + stub axioms)
 import IHMFramework.FormalVerificationRegistry
+import IHMFramework.BondPotential
+import IHMFramework.BZVacuumPolarization
