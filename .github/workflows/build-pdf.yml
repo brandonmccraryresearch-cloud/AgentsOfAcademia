@@ -34,7 +34,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "87.0IRH.md"
+      - "Interference_Geometry2.md"
       - "tools/template.html"
       - "tools/build-pdf.sh"
       - "tools/html-to-pdf.js"
@@ -44,7 +44,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-pdf:
@@ -122,8 +122,8 @@ jobs:
       # ----------------------------------------------------------------
       - name: Convert markdown to HTML
         run: |
-          MANUSCRIPT="${{ github.event.inputs.manuscript || '87.0IRH.md' }}"
-          BASENAME="$(basename "$MANUSCRIPT" .md)"
+          MANUSCRIPT="${{ github.event.inputs.manuscript || 'Interference$Geomet.md' }}"
+          BASENAME="$(basename "$MANUSCRIPT" Interference_Geometry2.md)"
 
           pandoc "$MANUSCRIPT" \
             --from=markdown+tex_math_dollars+pipe_tables+yaml_metadata_block+smart+footnotes+strikeout+superscript+subscript \
